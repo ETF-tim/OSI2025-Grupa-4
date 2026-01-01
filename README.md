@@ -1,2 +1,2 @@
-# OSI2025-Grupa-3
+# OSI2025-Grupa-4
 Projekat iz Osnova Softverskog Inženjerstva.
