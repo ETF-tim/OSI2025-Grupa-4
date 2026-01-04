@@ -2,6 +2,7 @@
 
 enum class PaymentMethod
 {
+    UNKNOWN,
     CASH,
     CREDIT_CARD,
     DIGITAL_WALLET
@@ -16,8 +17,8 @@ private:
     double price;
 
 public:
-    Bill(int id, int receiptOrderID, PaymentMethod paymentMethod, double price)
-        : id(id), receiptOrderID(receiptOrderID), paymentMethod(paymentMethod), price(price) {}
+    Bill();
+    Bill(int id, int receiptOrderID, PaymentMethod paymentMethod, double price);
 
     int getId() const;
     int getReceiptOrderID() const;
@@ -31,6 +32,5 @@ public:
 };
 
 bool isValidId(int id);
-bool isValidReceiptOrderID(int receiptOrderID);
 bool isValidPaymentMethod(PaymentMethod paymentMethod);
 bool isValidPrice(double price);

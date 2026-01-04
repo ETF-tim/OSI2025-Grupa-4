@@ -7,8 +7,8 @@ private:
     int workOrderID;
 
 public:
-    ServiceReport(int id, int workOrderID)
-        : id(id), workOrderID(workOrderID) {}
+    ServiceReport();
+    ServiceReport(int id, int workOrderID);
 
     int getId() const;
     int getWorkOrderID() const;
@@ -17,6 +17,4 @@ public:
     void setWorkOrderID(int workOrderID);
 };
 
-// Validation functions for all attributes of class ServiceReport
 bool isValidId(int id);
-bool isValidWorkOrderID(int workOrderID);

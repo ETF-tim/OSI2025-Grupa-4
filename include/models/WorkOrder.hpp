@@ -6,6 +6,7 @@
 
 enum class WorkOrderStatus
 {
+    UNKNOWN,
     IN_DIAGNOSTICS,
     IN_REPAIR,
     WAITING_FOR_PARTS,
@@ -30,7 +31,6 @@ public:
     WorkOrder(int id, int receiptOrderID, WorkOrderStatus status, const std::string &comment,
               std::time_t startDate, std::time_t endDate, int technicianID, double servicePrice);
 
-    // Getters
     int getId() const;
     int getReceiptOrderID() const;
     WorkOrderStatus getStatus() const;
@@ -41,7 +41,6 @@ public:
     std::map<int, int> getUsedParts() const;
     double getServicePrice() const;
 
-    // Setters
     void setId(int id);
     void setReceiptOrderID(int receiptOrderID);
     void setStatus(WorkOrderStatus status);
@@ -54,11 +53,9 @@ public:
 };
 
 bool isValidId(int id);
-bool isValidReceiptOrderID(int receiptOrderID);
 bool isValidStatus(WorkOrderStatus status);
 bool isValidComment(const std::string &comment);
 bool isValidStartDate(std::time_t startDate);
-bool isValidEndDate(std::time_t endDate);
-bool isValidTechnicianID(int technicianID);
+bool isValidEndDate(std::time_t startDate, std::time_t endDate);
 bool isValidUsedParts(const std::map<int, int> &usedParts);
 bool isValidServicePrice(double servicePrice);

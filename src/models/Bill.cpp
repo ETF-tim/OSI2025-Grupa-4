@@ -2,6 +2,11 @@
 #include <stdexcept>
 #include <limits>
 
+Bill::Bill() : id(-1), receiptOrderID(-1), paymentMethod(PaymentMethod::UNKNOWN), price(-1) {};
+
+Bill::Bill(int id, int receiptOrderID, PaymentMethod paymentMethod, double price)
+    : id(id), receiptOrderID(receiptOrderID), paymentMethod(paymentMethod), price(price) {}
+
 // Getters
 int Bill::getId() const
 {
@@ -33,7 +38,7 @@ void Bill::setId(int id)
 
 void Bill::setReceiptOrderID(int receiptOrderID)
 {
-    if (!isValidReceiptOrderID(receiptOrderID))
+    if (!isValidId(receiptOrderID))
         throw std::invalid_argument("ID prijemnog naloga mora biti izmedju 0 i 2147483646");
     this->receiptOrderID = receiptOrderID;
 }
@@ -55,21 +60,14 @@ void Bill::setPrice(double price)
 // Validation functions
 bool isValidId(int id)
 {
-    return id > 0 && id < INT_MAX;
+    return id >= 0 && id < INT_MAX;
 }
-
-bool isValidReceiptOrderID(int receiptOrderID)
-{
-    return receiptOrderID > 0 && receiptOrderID < INT_MAX;
-}
-
 bool isValidPaymentMethod(PaymentMethod paymentMethod)
 {
     return paymentMethod == PaymentMethod::CASH ||
            paymentMethod == PaymentMethod::CREDIT_CARD ||
            paymentMethod == PaymentMethod::DIGITAL_WALLET;
 }
-
 bool isValidPrice(double price)
 {
     return price >= 0.0;

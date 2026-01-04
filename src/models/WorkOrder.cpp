@@ -2,10 +2,8 @@
 #include <stdexcept>
 #include <limits>
 
-WorkOrder::WorkOrder()
-    : id(0), receiptOrderID(0), status(WorkOrderStatus::IN_DIAGNOSTICS), comment(), startDate(0), endDate(0), technicianID(0), usedParts(), servicePrice(0.0)
-{
-}
+WorkOrder::WorkOrder() : id(-1), receiptOrderID(-1), status(WorkOrderStatus::UNKNOWN),
+                         comment(""), startDate(0), endDate(0), technicianID(-1), servicePrice(-1) {}
 
 WorkOrder::WorkOrder(int id, int receiptOrderID, WorkOrderStatus status, const std::string &comment,
                      std::time_t startDate, std::time_t endDate, int technicianID, double servicePrice)
@@ -13,6 +11,7 @@ WorkOrder::WorkOrder(int id, int receiptOrderID, WorkOrderStatus status, const s
 {
 }
 
+// Getters
 int WorkOrder::getId() const { return id; }
 int WorkOrder::getReceiptOrderID() const { return receiptOrderID; }
 WorkOrderStatus WorkOrder::getStatus() const { return status; }
@@ -23,6 +22,7 @@ int WorkOrder::getTechnicianID() const { return technicianID; }
 std::map<int, int> WorkOrder::getUsedParts() const { return usedParts; }
 double WorkOrder::getServicePrice() const { return servicePrice; }
 
+// Setters with validation
 void WorkOrder::setId(int v)
 {
     if (!isValidId(v))
@@ -31,7 +31,7 @@ void WorkOrder::setId(int v)
 }
 void WorkOrder::setReceiptOrderID(int v)
 {
-    if (!isValidReceiptOrderID(v))
+    if (!isValidId(v))
         throw std::invalid_argument("ID prijemnog naloga mora biti izmedju 0 i 2147483646");
     receiptOrderID = v;
 }
@@ -61,7 +61,7 @@ void WorkOrder::setEndDate(std::time_t v)
 }
 void WorkOrder::setTechnicianID(int v)
 {
-    if (!isValidTechnicianID(v))
+    if (!isValidId(v))
         throw std::invalid_argument("ID tehnicara mora biti izmedju 0 i 2147483646");
     technicianID = v;
 }
@@ -78,13 +78,10 @@ void WorkOrder::setServicePrice(double v)
     servicePrice = v;
 }
 
+// Validation functions
 bool isValidId(int id)
 {
-    return id > 0 && id < INT_MAX;
-}
-bool isValidReceiptOrderID(int receiptOrderID)
-{
-    return receiptOrderID > 0 && receiptOrderID < INT_MAX;
+    return id >= 0 && id < INT_MAX;
 }
 bool isValidStatus(WorkOrderStatus status)
 {
@@ -105,10 +102,6 @@ bool isValidStartDate(std::time_t startDate)
 bool isValidEndDate(std::time_t startDate, std::time_t endDate)
 {
     return endDate >= startDate;
-}
-bool isValidTechnicianID(int technicianID)
-{
-    return technicianID > 0 && technicianID < INT_MAX;
 }
 bool isValidUsedParts(const std::map<int, int> &usedParts)
 {
