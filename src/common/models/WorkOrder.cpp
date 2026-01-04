@@ -2,11 +2,6 @@
 #include <stdexcept>
 #include <limits>
 
-WorkOrder::WorkOrder()
-    : id(0), receiptOrderID(0), status(WorkOrderStatus::IN_DIAGNOSTICS), comment(), startDate(0), endDate(0), technicianID(0), usedParts(), servicePrice(0.0)
-{
-}
-
 WorkOrder::WorkOrder(int id, int receiptOrderID, WorkOrderStatus status, const std::string &comment,
                      std::time_t startDate, std::time_t endDate, int technicianID, double servicePrice)
     : id(id), receiptOrderID(receiptOrderID), status(status), comment(comment), startDate(startDate), endDate(endDate), technicianID(technicianID), usedParts(), servicePrice(servicePrice)

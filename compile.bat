@@ -11,4 +11,5 @@ ctest --output-on-failure
 cd ..
 
 echo.
-echo Build i Test GOTOVI!
+echo Build i Test GOTOVI! 
+echo Aplikacija se nalazi u /build/bin
