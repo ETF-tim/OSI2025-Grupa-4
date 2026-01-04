@@ -28,55 +28,55 @@ double WorkOrder::getServicePrice() const { return servicePrice; }
 void WorkOrder::setId(int v)
 {
     if (!isValidId(v))
-        throw std::invalid_argument("WorkOrderID must be between 0 and 2147483647");
+        throw std::invalid_argument("ID radnog naloga mora biti izmedju 0 i 2147483647");
     id = v;
 }
 void WorkOrder::setReceiptOrderID(int v)
 {
     if (!isValidReceiptOrderID(v))
-        throw std::invalid_argument("ReceiptOrderID must be between 0 and 2147483647");
+        throw std::invalid_argument("ID prijemnog naloga mora biti izmedju 0 i 2147483647");
     receiptOrderID = v;
 }
 void WorkOrder::setStatus(WorkOrderStatus v)
 {
     if (!isValidStatus(v))
-        throw std::invalid_argument("Invalid WorkOrder status");
+        throw std::invalid_argument("Neispravan status popravke");
     status = v;
 }
 void WorkOrder::setComment(const std::string &v)
 {
     if (!isValidComment(v))
-        throw std::invalid_argument("Comment must be shorter than 100 characters");
+        throw std::invalid_argument("Komentar mora biti kraci od 100 karaktera");
     comment = v;
 }
 void WorkOrder::setStartDate(std::time_t v)
 {
     if (!isValidStartDate(v))
-        throw std::invalid_argument("Invalid start date");
+        throw std::invalid_argument("Neispravan datum pocetka popravke");
     startDate = v;
 }
 void WorkOrder::setEndDate(std::time_t v)
 {
     if (!isValidEndDate(startDate, v))
-        throw std::invalid_argument("Invalid end date");
+        throw std::invalid_argument("Neispravan datum zavrsetka popravke");
     endDate = v;
 }
 void WorkOrder::setTechnicianID(int v)
 {
     if (!isValidTechnicianID(v))
-        throw std::invalid_argument("TechnicianID must be between 0 and 2147483647");
+        throw std::invalid_argument("ID tehnicara mora biti izmedju 0 i 2147483647");
     technicianID = v;
 }
 void WorkOrder::setUsedParts(const std::map<int, int> &v)
 {
     if (!isValidUsedParts(v))
-        throw std::invalid_argument("UsedParts must have positive part IDs and quantities");
+        throw std::invalid_argument("ID dijela i kolicina moraju biti pozitivni");
     usedParts = v;
 }
 void WorkOrder::setServicePrice(double v)
 {
     if (!isValidServicePrice(v))
-        throw std::invalid_argument("ServicePrice must be non-negative");
+        throw std::invalid_argument("Cijena servisiranja mora biti nenegativna");
     servicePrice = v;
 }
 

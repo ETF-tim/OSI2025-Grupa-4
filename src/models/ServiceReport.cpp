@@ -16,13 +16,13 @@ int ServiceReport::getWorkOrderID() const
 void ServiceReport::setId(int id)
 {
     if (!isValidId(id))
-        throw std::invalid_argument("Service Report ID must be between 0 and 2147483647");
+        throw std::invalid_argument("ID servisnog izvestaja mora biti izmedju 0 i 2147483647");
     this->id = id;
 }
 void ServiceReport::setWorkOrderID(int workOrderID)
 {
     if (!isValidWorkOrderID(workOrderID))
-        throw std::invalid_argument("Work Order ID must be between 0 and 2147483647");
+        throw std::invalid_argument("ID radnog naloga mora biti izmedju 0 i 2147483647");
     this->workOrderID = workOrderID;
 }
 

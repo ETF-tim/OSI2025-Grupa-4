@@ -27,28 +27,28 @@ double Bill::getPrice() const
 void Bill::setId(int id)
 {
     if (!isValidId(id))
-        throw std::invalid_argument("Bill ID must be between 0 and 2147483647");
+        throw std::invalid_argument("ID racuna mora biti izmedju 0 i 2147483647");
     this->id = id;
 }
 
 void Bill::setReceiptOrderID(int receiptOrderID)
 {
     if (!isValidReceiptOrderID(receiptOrderID))
-        throw std::invalid_argument("Receipt Order ID must be between 0 and 2147483647");
+        throw std::invalid_argument("ID prijemnog naloga mora biti izmedju 0 i 2147483647");
     this->receiptOrderID = receiptOrderID;
 }
 
 void Bill::setPaymentMethod(PaymentMethod paymentMethod)
 {
     if (!isValidPaymentMethod(paymentMethod))
-        throw std::invalid_argument("Invalid payment method");
+        throw std::invalid_argument("Neispravan nacin placanja");
     this->paymentMethod = paymentMethod;
 }
 
 void Bill::setPrice(double price)
 {
     if (!isValidPrice(price))
-        throw std::invalid_argument("Price must be non-negative");
+        throw std::invalid_argument("Cijena mora biti nenegativna");
     this->price = price;
 }
 
