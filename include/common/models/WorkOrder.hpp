@@ -51,6 +51,7 @@ public:
     void setUsedParts(const std::map<int, int> &usedParts);
     void setServicePrice(double servicePrice);
 };
+
 bool isValidId(int id);
 bool isValidReceiptOrderID(int receiptOrderID);
 bool isValidStatus(WorkOrderStatus status);
