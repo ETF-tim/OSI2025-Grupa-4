@@ -27,14 +27,14 @@ double Bill::getPrice() const
 void Bill::setId(int id)
 {
     if (!isValidId(id))
-        throw std::invalid_argument("ID racuna mora biti izmedju 0 i 2147483647");
+        throw std::invalid_argument("ID racuna mora biti izmedju 0 i 2147483646");
     this->id = id;
 }
 
 void Bill::setReceiptOrderID(int receiptOrderID)
 {
     if (!isValidReceiptOrderID(receiptOrderID))
-        throw std::invalid_argument("ID prijemnog naloga mora biti izmedju 0 i 2147483647");
+        throw std::invalid_argument("ID prijemnog naloga mora biti izmedju 0 i 2147483646");
     this->receiptOrderID = receiptOrderID;
 }
 

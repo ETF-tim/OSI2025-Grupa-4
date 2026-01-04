@@ -13,7 +13,6 @@ WorkOrder::WorkOrder(int id, int receiptOrderID, WorkOrderStatus status, const s
 {
 }
 
-// Getters
 int WorkOrder::getId() const { return id; }
 int WorkOrder::getReceiptOrderID() const { return receiptOrderID; }
 WorkOrderStatus WorkOrder::getStatus() const { return status; }
@@ -24,17 +23,16 @@ int WorkOrder::getTechnicianID() const { return technicianID; }
 std::map<int, int> WorkOrder::getUsedParts() const { return usedParts; }
 double WorkOrder::getServicePrice() const { return servicePrice; }
 
-// Setters
 void WorkOrder::setId(int v)
 {
     if (!isValidId(v))
-        throw std::invalid_argument("ID radnog naloga mora biti izmedju 0 i 2147483647");
+        throw std::invalid_argument("ID radnog naloga mora biti izmedju 0 i 2147483646");
     id = v;
 }
 void WorkOrder::setReceiptOrderID(int v)
 {
     if (!isValidReceiptOrderID(v))
-        throw std::invalid_argument("ID prijemnog naloga mora biti izmedju 0 i 2147483647");
+        throw std::invalid_argument("ID prijemnog naloga mora biti izmedju 0 i 2147483646");
     receiptOrderID = v;
 }
 void WorkOrder::setStatus(WorkOrderStatus v)
@@ -64,7 +62,7 @@ void WorkOrder::setEndDate(std::time_t v)
 void WorkOrder::setTechnicianID(int v)
 {
     if (!isValidTechnicianID(v))
-        throw std::invalid_argument("ID tehnicara mora biti izmedju 0 i 2147483647");
+        throw std::invalid_argument("ID tehnicara mora biti izmedju 0 i 2147483646");
     technicianID = v;
 }
 void WorkOrder::setUsedParts(const std::map<int, int> &v)
@@ -80,7 +78,6 @@ void WorkOrder::setServicePrice(double v)
     servicePrice = v;
 }
 
-// Validation functions
 bool isValidId(int id)
 {
     return id > 0 && id < INT_MAX;
@@ -98,16 +95,16 @@ bool isValidStatus(WorkOrderStatus status)
 }
 bool isValidComment(const std::string &comment)
 {
-    return comment.length() <= 100; // Example: comment should not exceed 100 characters
+    return comment.length() <= 100;
 }
 bool isValidStartDate(std::time_t startDate)
 {
     std::time_t now = std::time(nullptr);
-    return startDate <= now; // Start date should not be in the future
+    return startDate <= now;
 }
 bool isValidEndDate(std::time_t startDate, std::time_t endDate)
 {
-    return endDate >= startDate; // End date should not be before start date
+    return endDate >= startDate;
 }
 bool isValidTechnicianID(int technicianID)
 {
@@ -118,7 +115,7 @@ bool isValidUsedParts(const std::map<int, int> &usedParts)
     for (const auto &part : usedParts)
     {
         if (part.first <= 0 || part.second <= 0)
-            return false; // Part ID and quantity must be positive
+            return false;
     }
     return true;
 }

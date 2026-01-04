@@ -30,7 +30,6 @@ public:
     void setPrice(double price);
 };
 
-// Validation functions for all attributes of class Bill
 bool isValidId(int id);
 bool isValidReceiptOrderID(int receiptOrderID);
 bool isValidPaymentMethod(PaymentMethod paymentMethod);

@@ -53,7 +53,6 @@ public:
     void setServicePrice(double servicePrice);
 };
 
-// Validation functions for all attributes of class WorkOrder
 bool isValidId(int id);
 bool isValidReceiptOrderID(int receiptOrderID);
 bool isValidStatus(WorkOrderStatus status);
