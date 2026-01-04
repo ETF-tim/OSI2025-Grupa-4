@@ -4,7 +4,8 @@ enum class PaymentMethod
 {
     CASH,
     CREDIT_CARD,
-    DIGITAL_WALLET
+    DIGITAL_WALLET,
+    UNKNOWN
 };
 
 class Bill
@@ -18,6 +19,7 @@ private:
 public:
     Bill(int id, int receiptOrderID, PaymentMethod paymentMethod, double price)
         : id(id), receiptOrderID(receiptOrderID), paymentMethod(paymentMethod), price(price) {}
+    Bill() : id(-1), receiptOrderID(-1), paymentMethod(PaymentMethod::UNKNOWN), price(-1.0) {};
 
     int getId() const;
     int getReceiptOrderID() const;

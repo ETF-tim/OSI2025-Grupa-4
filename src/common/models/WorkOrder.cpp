@@ -1,4 +1,4 @@
-#include "../../include/models/WorkOrder.hpp"
+#include "../../../include/common/models/WorkOrder.hpp"
 #include <stdexcept>
 #include <limits>
 
@@ -55,7 +55,7 @@ void WorkOrder::setStartDate(std::time_t v)
 }
 void WorkOrder::setEndDate(std::time_t v)
 {
-    if (!isValidEndDate(startDate, v))
+    if (!isValidEndDate(v))
         throw std::invalid_argument("Neispravan datum zavrsetka popravke");
     endDate = v;
 }
@@ -102,9 +102,10 @@ bool isValidStartDate(std::time_t startDate)
     std::time_t now = std::time(nullptr);
     return startDate <= now;
 }
-bool isValidEndDate(std::time_t startDate, std::time_t endDate)
+bool isValidEndDate(std::time_t endDate)
 {
-    return endDate >= startDate;
+    std::time_t now = std::time(nullptr);
+    return endDate >= 0 && endDate <= now;
 }
 bool isValidTechnicianID(int technicianID)
 {

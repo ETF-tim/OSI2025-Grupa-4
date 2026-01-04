@@ -1,8 +1,7 @@
-#include "../../include/models/Bill.hpp"
+#include "../../../include/common/models/Bill.hpp"
 #include <stdexcept>
 #include <limits>
 
-// Getters
 int Bill::getId() const
 {
     return id;
@@ -23,7 +22,6 @@ double Bill::getPrice() const
     return price;
 }
 
-// Setters with validation
 void Bill::setId(int id)
 {
     if (!isValidId(id))
@@ -52,7 +50,6 @@ void Bill::setPrice(double price)
     this->price = price;
 }
 
-// Validation functions
 bool isValidId(int id)
 {
     return id > 0 && id < INT_MAX;
