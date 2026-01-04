@@ -39,5 +39,5 @@ cmake --preset=mingw-release && cmake --build --preset=mingw-release && cd build
 cmake --preset=linux-release && cmake --build --preset=linux-release && cd build && ctest --output-on-failure && cd .. && cmake --install build --prefix "build" && find build -maxdepth 1 ! -name bin ! -name build -exec rm -rf {} + && echo "Linux Build, Test i Instalacija GOTOVA!"
 ```
 
-###NAPONENA: 
+### NAPONENA: 
 *Sve komande su konfigurisane tako da nakon uspješne instalacije brišu sve privremene build fajlove i izvršne fajlove testova, ostavljajući samo izvršne fajlove u `build/bin` folderu*
