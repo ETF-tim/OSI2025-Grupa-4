@@ -5,6 +5,7 @@
 #include <map>
 
 #include "../include/common/models/WorkOrder.hpp"
+#include "../include/common/util/Validate.hpp"
 
 TEST (WorkOrderGTest, BasicValidSettersGetters) {
     WorkOrder wo;
@@ -76,14 +77,12 @@ TEST (WorkOrderGTest, EdgeValidValues) {
 
 TEST (WorkOrderGTest, InvalidIdThrows) {
     WorkOrder wo;
-    EXPECT_THROW (wo.setId (0), std::invalid_argument);
     EXPECT_THROW (wo.setId (-1), std::invalid_argument);
     EXPECT_THROW (wo.setId (INT_MAX), std::invalid_argument);
 }
 
 TEST (WorkOrderGTest, InvalidReceiptOrderIDThrows) {
     WorkOrder wo;
-    EXPECT_THROW (wo.setReceiptOrderID (0), std::invalid_argument);
     EXPECT_THROW (wo.setReceiptOrderID (-5), std::invalid_argument);
     EXPECT_THROW (wo.setReceiptOrderID (INT_MAX), std::invalid_argument);
 }
@@ -102,7 +101,6 @@ TEST (WorkOrderGTest, InvalidCommentThrows) {
 
 TEST (WorkOrderGTest, InvalidTechnicianIDThrows) {
     WorkOrder wo;
-    EXPECT_THROW (wo.setTechnicianID (0), std::invalid_argument);
     EXPECT_THROW (wo.setTechnicianID (-1), std::invalid_argument);
     EXPECT_THROW (wo.setTechnicianID (INT_MAX), std::invalid_argument);
 }

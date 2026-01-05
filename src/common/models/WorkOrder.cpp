@@ -3,6 +3,8 @@
 #include <limits>
 #include <stdexcept>
 
+#include "../../../include/common/util/Validate.hpp"
+
 WorkOrder::WorkOrder ()
     : id (-1)
     , receiptOrderID (-1)
@@ -56,66 +58,38 @@ double WorkOrder::getServicePrice () const {
 
 // Setters with validation
 void WorkOrder::setId (int v) {
-    if (!isValidId (v)) throw std::invalid_argument ("ID radnog naloga mora biti izmedju 0 i 2147483646");
+    if (!Validate::isValidId (v)) throw std::invalid_argument ("ID radnog naloga mora biti izmedju 0 i 2147483646");
     id = v;
 }
 void WorkOrder::setReceiptOrderID (int v) {
-    if (!isValidId (v)) throw std::invalid_argument ("ID prijemnog naloga mora biti izmedju 0 i 2147483646");
+    if (!Validate::isValidId (v)) throw std::invalid_argument ("ID prijemnog naloga mora biti izmedju 0 i 2147483646");
     receiptOrderID = v;
 }
 void WorkOrder::setStatus (WorkOrderStatus v) {
-    if (!isValidStatus (v)) throw std::invalid_argument ("Neispravan status popravke");
+    if (!Validate::isValidStatus (v)) throw std::invalid_argument ("Neispravan status popravke");
     status = v;
 }
 void WorkOrder::setComment (const std::string& v) {
-    if (!isValidComment (v)) throw std::invalid_argument ("Komentar mora biti kraci od 100 karaktera");
+    if (!Validate::isValidComment (v)) throw std::invalid_argument ("Komentar mora biti kraci od 100 karaktera");
     comment = v;
 }
 void WorkOrder::setStartDate (std::time_t v) {
-    if (!isValidStartDate (v)) throw std::invalid_argument ("Neispravan datum pocetka popravke");
+    if (!Validate::isValidStartDate (v)) throw std::invalid_argument ("Neispravan datum pocetka popravke");
     startDate = v;
 }
 void WorkOrder::setEndDate (std::time_t v) {
-    if (!isValidEndDate (startDate, v)) throw std::invalid_argument ("Neispravan datum zavrsetka popravke");
+    if (!Validate::isValidEndDate (startDate, v)) throw std::invalid_argument ("Neispravan datum zavrsetka popravke");
     endDate = v;
 }
 void WorkOrder::setTechnicianID (int v) {
-    if (!isValidId (v)) throw std::invalid_argument ("ID tehnicara mora biti izmedju 0 i 2147483646");
+    if (!Validate::isValidId (v)) throw std::invalid_argument ("ID tehnicara mora biti izmedju 0 i 2147483646");
     technicianID = v;
 }
 void WorkOrder::setUsedParts (const std::map<int, int>& v) {
-    if (!isValidUsedParts (v)) throw std::invalid_argument ("ID dijela i kolicina moraju biti pozitivni");
+    if (!Validate::isValidUsedParts (v)) throw std::invalid_argument ("ID dijela i kolicina moraju biti pozitivni");
     usedParts = v;
 }
 void WorkOrder::setServicePrice (double v) {
-    if (!isValidServicePrice (v)) throw std::invalid_argument ("Cijena servisiranja mora biti nenegativna");
+    if (!Validate::isValidPrice (v)) throw std::invalid_argument ("Cijena servisiranja mora biti nenegativna");
     servicePrice = v;
-}
-
-// Validation functions
-bool isValidId (int id) {
-    return id >= 0 && id < INT_MAX;
-}
-bool isValidStatus (WorkOrderStatus status) {
-    return status == WorkOrderStatus::IN_DIAGNOSTICS || status == WorkOrderStatus::IN_REPAIR ||
-           status == WorkOrderStatus::WAITING_FOR_PARTS || status == WorkOrderStatus::COMPLETED;
-}
-bool isValidComment (const std::string& comment) {
-    return comment.length () <= 100;
-}
-bool isValidStartDate (std::time_t startDate) {
-    std::time_t now = std::time (nullptr);
-    return startDate <= now;
-}
-bool isValidEndDate (std::time_t startDate, std::time_t endDate) {
-    return endDate >= startDate;
-}
-bool isValidUsedParts (const std::map<int, int>& usedParts) {
-    for (const auto& part : usedParts) {
-        if (part.first <= 0 || part.second <= 0) return false;
-    }
-    return true;
-}
-bool isValidServicePrice (double servicePrice) {
-    return servicePrice >= 0.0;
 }
