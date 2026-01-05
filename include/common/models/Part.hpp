@@ -25,8 +25,3 @@ class Part {
         void setCriticalAmount (int v);
         void setPrice (double v);
 };
-
-bool isValidId (int id);
-bool isValidName (const std::string& name);
-bool isValid (int amount);
-bool isValidPrice (double price);

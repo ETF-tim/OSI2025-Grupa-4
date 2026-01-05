@@ -29,10 +29,3 @@ class Person {
         void setPhone (const std::string& v);
         void setPin (int v);
 };
-
-bool isValidId (int id);
-bool isValidFirstName (const std::string& firstName);
-bool isValidLastName (const std::string& lastName);
-bool isValidEmail (const std::string& email);
-bool isValidPhone (const std::string& phone);
-bool isValidPin (int pin);

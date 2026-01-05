@@ -43,11 +43,3 @@ class WorkOrder {
         void setUsedParts (const std::map<int, int>& usedParts);
         void setServicePrice (double servicePrice);
 };
-
-bool isValidId (int id);
-bool isValidStatus (WorkOrderStatus status);
-bool isValidComment (const std::string& comment);
-bool isValidStartDate (std::time_t startDate);
-bool isValidEndDate (std::time_t startDate, std::time_t endDate);
-bool isValidUsedParts (const std::map<int, int>& usedParts);
-bool isValidServicePrice (double servicePrice);

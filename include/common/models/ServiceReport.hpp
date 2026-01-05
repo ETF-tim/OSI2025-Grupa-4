@@ -1,20 +1,17 @@
 #pragma once
 
-class ServiceReport
-{
-private:
-    int id;
-    int workOrderID;
+class ServiceReport {
+    private:
+        int id;
+        int workOrderID;
 
-public:
-    ServiceReport();
-    ServiceReport(int id, int workOrderID);
+    public:
+        ServiceReport ();
+        ServiceReport (int id, int workOrderID);
 
-    int getId() const;
-    int getWorkOrderID() const;
+        int getId () const;
+        int getWorkOrderID () const;
 
-    void setId(int id);
-    void setWorkOrderID(int workOrderID);
+        void setId (int id);
+        void setWorkOrderID (int workOrderID);
 };
-
-bool isValidId(int id);
