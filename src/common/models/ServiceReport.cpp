@@ -1,4 +1,4 @@
-#include "../../include/models/ServiceReport.hpp"
+#include "../../../include/common/models/ServiceReport.hpp"
 #include <stdexcept>
 #include <limits>
 

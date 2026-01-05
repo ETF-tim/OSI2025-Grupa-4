@@ -1,4 +1,4 @@
-#include "../../include/models/Bill.hpp"
+#include "../../../include/common/models/Bill.hpp"
 #include <stdexcept>
 #include <limits>
 
