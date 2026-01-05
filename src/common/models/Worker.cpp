@@ -7,13 +7,11 @@ Worker::Worker()
 Worker::Worker(int id, const std::string &firstname, const std::string &lastname, const std::string &email, const std::string &phone, int pin, Role role)
     : Person(id, firstname, lastname, email, phone, pin), role(role) {}
 
-// Getters
 Role Worker::getRole() const
 {
     return role;
 }
 
-// Setters with validation
 void Worker::setRole(Role v)
 {
     if (!isValidRole(v))
@@ -21,7 +19,6 @@ void Worker::setRole(Role v)
     role = v;
 }
 
-// Validation function
 bool isValidRole(Role role)
 {
     if (role == Role::RECEPTIONIST ||

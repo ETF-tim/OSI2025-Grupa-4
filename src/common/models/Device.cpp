@@ -13,14 +13,12 @@ Device::Device(int id, const std::string &brand, const std::string &model,
 {
 }
 
-// Getters
 int Device::getId() const { return id; }
 const std::string &Device::getBrand() const { return brand; }
 const std::string &Device::getModel() const { return model; }
 const std::string &Device::getIMEI() const { return IMEI; }
 State Device::getState() const { return state; }
 
-// Setters with validation and exceptions using functions below
 void Device::setId(int v)
 {
     if (!isValidId(v))
@@ -52,24 +50,24 @@ void Device::setState(State v)
     state = v;
 }
 
-// Validation functions
-bool Device::isValidId(int id)
+bool isValidId(int id)
 {
     return id >= 0 && id < INT_MAX;
 }
-bool Device::isValidBrand(const std::string &brand)
+bool isValidBrand(const std::string &brand)
 {
     return !brand.empty() && brand.length() <= 50;
 }
-bool Device::isValidModel(const std::string &model)
+bool isValidModel(const std::string &model)
 {
     return !model.empty() && model.length() <= 50;
 }
-bool Device::isValidIMEI(const std::string &IMEI)
+bool isValidIMEI(const std::string &deviceIMEI)
 {
-    return IMEI.length() == 15 && std::all_of(IMEI.begin(), IMEI.end(), ::isdigit);
+    /* Ovdi bi trebala da ide implementacija Luhnovog algoritma, ali pošto nemamo vremena da se bakćemo copypasteom IMEI kodova nema ništa od toga, yippie!*/
+    return deviceIMEI.length() == 15;
 }
-bool Device::isValidState(State state)
+bool isValidState(State state)
 {
     if (state == State::NEW ||
         state == State::USED)

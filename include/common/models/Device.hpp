@@ -38,5 +38,5 @@ public:
 bool isValidId(int id);
 bool isValidBrand(const std::string &brand);
 bool isValidModel(const std::string &model);
-bool isValidIMEI(const std::string &IMEI);
+bool isValidIMEI(const std::string &deviceIMEI);
 bool isValidState(State state);

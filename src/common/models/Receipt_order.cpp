@@ -10,14 +10,12 @@ ReceiptOrder::ReceiptOrder(int id, int userID, const std::string &deviceIMEI,
     : id(id), userID(userID), deviceIMEI(deviceIMEI),
       description(description), priceAssessment(priceAssessment) {}
 
-// Getters
 int ReceiptOrder::getId() const { return id; }
 int ReceiptOrder::getUserId() const { return userID; }
 const std::string &ReceiptOrder::getDeviceIMEI() const { return deviceIMEI; }
 const std::string &ReceiptOrder::getDescription() const { return description; }
 double ReceiptOrder::getPriceAssessment() const { return priceAssessment; }
 
-// Setters with validation
 void ReceiptOrder::setId(int v)
 {
    if (!isValidId(v))
@@ -63,7 +61,6 @@ void ReceiptOrder::setPriceAssessment(double v)
    priceAssessment = v;
 }
 
-// Validation functions
 bool isValidId(int id)
 {
    return id >= 0 && id < INT_MAX;

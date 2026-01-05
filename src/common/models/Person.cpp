@@ -7,7 +7,6 @@ Person::Person()
 Person::Person(int id, const std::string &firstname, const std::string &lastname, const std::string &email, const std::string &phone, int pin)
     : id(id), firstname(firstname), lastname(lastname), email(email), phone(phone), pin(pin) {}
 
-// Getters
 int Person::getId() const
 {
     return id;
@@ -33,7 +32,6 @@ int Person::getPin() const noexcept
     return pin;
 }
 
-// Setters with validation
 void Person::setId(int v)
 {
     if (!isValidId(v))
@@ -71,7 +69,6 @@ void Person::setPin(int v)
     pin = v;
 }
 
-// Validation functions
 bool isValidId(int id)
 {
     return id >= 0 && id < INT_MAX;
@@ -92,14 +89,14 @@ bool isValidEmail(const std::string &email)
     auto atPos = email.find('@');
     auto dotPos = email.rfind('.');
 
-    // Mora postojati @ i tačka nakon njega
+    
     if (atPos == std::string::npos || dotPos == std::string::npos)
         return false;
 
     if (atPos == 0 || atPos == email.length() - 1)
-        return false; // @ ne sme biti na početku/ kraju
+        return false; 
     if (dotPos < atPos || dotPos == email.length() - 1)
-        return false; // tačka mora biti nakon @ i ne poslednja
+        return false; 
 
     return true;
 }
@@ -117,5 +114,5 @@ bool isValidPhone(const std::string &phone)
 }
 bool isValidPin(int pin)
 {
-    return pin >= 1000 && pin <= 9999; // 4-cifreni PIN
+    return pin >= 1000 && pin <= 9999; 
 }

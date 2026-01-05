@@ -28,7 +28,6 @@ double Part::getPrice() const
     return price;
 }
 
-// Setters with validation
 void Part::setId(int v)
 {
     if (!isValidId(v))
@@ -44,27 +43,26 @@ void Part::setName(const std::string &v)
 }
 void Part::setAmount(int v)
 {
-    if (!isValidAmount(v))
+    if (!isValid(v))
         throw std::invalid_argument("Kolicina mora biti nenegativna");
 
     amount = v;
 }
 void Part::setCriticalAmount(int v)
 {
-    if (!isValidCriticalAmount(v))
+    if (!isValid(v))
         throw std::invalid_argument("Kriticna kolicina mora biti nenegativna");
 
     criticalAmount = v;
 }
 void Part::setPrice(double v)
 {
-    if (!isValidPrice(v))
+    if (!isValid(v))
         throw std::invalid_argument("Cijena mora biti nenegativna");
 
     price = v;
 }
 
-// Validation functions
 bool isValidId(int id)
 {
     return id >= 0 && id < INT_MAX;
@@ -75,17 +73,7 @@ bool isValidName(const std::string &name)
     return !name.empty() && name.length() <= 100;
 }
 
-bool isValidAmount(int amount)
+bool isValid(int number)
 {
-    return amount >= 0; // Količina mora biti nenegativna
-}
-
-bool isValidCriticalAmount(int criticalAmount)
-{
-    return criticalAmount >= 0; // Kritična količina mora biti nenegativna
-}
-
-bool isValidPrice(double price)
-{
-    return price >= 0.0; // Cijena mora biti nenegativna
+    return number >= 0;
 }
