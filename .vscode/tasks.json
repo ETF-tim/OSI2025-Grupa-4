@@ -9,9 +9,9 @@
 				"-fdiagnostics-color=always",
 				"-g",
 				"${workspaceFolder}\\src\\*.cpp",
-				"${workspaceFolder}\\src\\models\\*.cpp",
-				"${workspaceFolder}\\src\\util\\*.cpp",
-				"${workspaceFolder}\\test\\*.cpp",
+				"${workspaceFolder}\\src\\common\\models\\*.cpp",
+				"${workspaceFolder}\\src\\common\\util\\*.cpp",
+				"${workspaceFolder}\\tests\\*.cpp",
 				"-o",
 				"${fileDirname}\\${fileBasenameNoExtension}.exe"
 			],
