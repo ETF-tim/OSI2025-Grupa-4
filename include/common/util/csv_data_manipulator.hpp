@@ -75,7 +75,7 @@ class CSVData {
         // --- private functions --- //
         void _read_file (const std::string& filename, std::vector<std::vector<std::string>>& target, int& cols);
         void _append_data (std::vector<std::vector<std::string>>& data);
-        static bool is_digits (const std::string& str);
+        bool is_digits (const std::string& str) const;
 
 };  // CSVData
 

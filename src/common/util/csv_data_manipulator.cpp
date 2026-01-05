@@ -36,15 +36,39 @@ bool os_safe_getline (istream& is, string& s) {
     return !s.empty ();
 }
 
-// Pomoćna funkcija za provjeru brojeva
-inline bool is_digits (const string& str) {
+static bool is_digits (const std::string& str) {
     if (str.empty ()) return false;
-    return std::all_of (str.begin (), str.end (), [] (unsigned char c) {
-        return std::isdigit (c) || c == '.' || c == '-';
-    });
+
+    size_t i = 0;
+
+    if (str[i] == '+' || str[i] == '-') {
+        ++i;
+        if (i >= str.length ()) return false;
+    }
+
+    bool has_digit = false;
+    bool has_decimal_point = false;
+
+    for (; i < str.length (); ++i) {
+        char c = str[i];
+
+        if (std::isdigit (static_cast<unsigned char> (c))) {
+            has_digit = true;
+        } else if (c == '.') {
+            if (has_decimal_point) return false;
+            has_decimal_point = true;
+        } else {
+            return false;
+        }
+    }
+
+    return has_digit;
 }
 
-// --- KONSTRUKTORI ---
+// Dodaj i member funkciju
+bool CSVData::is_digits (const std::string& str) const {
+    return ::is_digits (str);
+}
 
 CSVData::CSVData () : m_is_modified (false), m_is_unified (true), m_rows (0), m_cols (0) {}
 
