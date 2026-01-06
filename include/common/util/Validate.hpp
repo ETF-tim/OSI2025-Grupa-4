@@ -12,7 +12,7 @@ enum class Role;
 namespace Validate {
 // ---Common---
 bool isValidId (int id);
-bool isValidNonNegative (int amount);  // (za amount, criticalAmount, price)
+bool isValidNonNegative (int amount);  // (za amount, criticalAmount)
 
 // Client - nema
 
