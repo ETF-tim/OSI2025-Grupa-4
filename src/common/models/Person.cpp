@@ -1,12 +1,20 @@
 #include "../../../include/common/models/Person.hpp"
-#include "../../../include/common/util/Validate.hpp"
+
 #include <limits>
 #include <stdexcept>
 
+#include "../../../include/common/util/Validate.hpp"
+
 Person::Person () : id (-1), firstname (""), lastname (""), email (""), phone (""), pin (-1) {}
 Person::Person (int id, const std::string& firstname, const std::string& lastname, const std::string& email, const std::string& phone,
-                int pin)
-    : id (id), firstname (firstname), lastname (lastname), email (email), phone (phone), pin (pin) {}
+                int pin) {
+    Person::setId (id);
+    Person::setFirstName (firstname);
+    Person::setLastName (lastname);
+    Person::setEmail (email);
+    Person::setPhone (phone);
+    Person::setPin (pin);
+}
 
 int Person::getId () const {
     return id;
@@ -52,5 +60,3 @@ void Person::setPin (int v) {
     if (!Validate::isValidPin (v)) throw std::invalid_argument ("Neispravan PIN");
     pin = v;
 }
-
-

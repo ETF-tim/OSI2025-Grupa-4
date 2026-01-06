@@ -16,16 +16,16 @@ WorkOrder::WorkOrder ()
     , servicePrice (-1) {}
 
 WorkOrder::WorkOrder (int id, int receiptOrderID, WorkOrderStatus status, const std::string& comment, std::time_t startDate,
-                      std::time_t endDate, int technicianID, double servicePrice)
-    : id (id)
-    , receiptOrderID (receiptOrderID)
-    , status (status)
-    , comment (comment)
-    , startDate (startDate)
-    , endDate (endDate)
-    , technicianID (technicianID)
-    , usedParts ()
-    , servicePrice (servicePrice) {}
+                      std::time_t endDate, int technicianID, double servicePrice) {
+    WorkOrder::setId (id);
+    WorkOrder::setReceiptOrderID (receiptOrderID);
+    WorkOrder::setStatus (status);
+    WorkOrder::setComment (comment);
+    WorkOrder::setStartDate (startDate);
+    WorkOrder::setEndDate (endDate);
+    WorkOrder::setTechnicianID (technicianID);
+    WorkOrder::setServicePrice (servicePrice);
+}
 
 // Getters
 int WorkOrder::getId () const {

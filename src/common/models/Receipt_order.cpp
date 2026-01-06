@@ -7,8 +7,14 @@
 
 ReceiptOrder::ReceiptOrder () : id (-1), userID (-1), deviceIMEI (""), description (""), priceAssessment (-1) {}
 
-ReceiptOrder::ReceiptOrder (int id, int userID, const std::string& deviceIMEI, const std::string& description, double priceAssessment)
-    : id (id), userID (userID), deviceIMEI (deviceIMEI), description (description), priceAssessment (priceAssessment) {}
+ReceiptOrder::ReceiptOrder (int id, int userID, const std::string& deviceIMEI, const std::string& description,
+                            double priceAssessment) {
+    ReceiptOrder::setId (id);
+    ReceiptOrder::setUserId (userID);
+    ReceiptOrder::setDeviceIMEI (deviceIMEI);
+    ReceiptOrder::setDescription (description);
+    ReceiptOrder::setPriceAssessment (priceAssessment);
+}
 
 int ReceiptOrder::getId () const {
     return id;

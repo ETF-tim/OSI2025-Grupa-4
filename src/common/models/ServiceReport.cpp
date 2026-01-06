@@ -7,7 +7,10 @@
 
 ServiceReport::ServiceReport () : id (-1), workOrderID (-1) {}
 
-ServiceReport::ServiceReport (int id, int workOrderID) : id (id), workOrderID (workOrderID) {}
+ServiceReport::ServiceReport (int id, int workOrderID) {
+    ServiceReport::setId (id);
+    ServiceReport::setWorkOrderID (workOrderID);
+}
 
 // Getters
 int ServiceReport::getId () const {

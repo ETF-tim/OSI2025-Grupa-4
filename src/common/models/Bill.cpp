@@ -6,8 +6,12 @@
 #include "../../../include/common/util/Validate.hpp"
 Bill::Bill () : id (-1), receiptOrderID (-1), paymentMethod (PaymentMethod::UNKNOWN), price (-1) {};
 
-Bill::Bill (int id, int receiptOrderID, PaymentMethod paymentMethod, double price)
-    : id (id), receiptOrderID (receiptOrderID), paymentMethod (paymentMethod), price (price) {}
+Bill::Bill (int id, int receiptOrderID, PaymentMethod paymentMethod, double price) {
+    Bill::setId (id);
+    Bill::setReceiptOrderID (receiptOrderID);
+    Bill::setPaymentMethod (paymentMethod);
+    Bill::setPrice (price);
+}
 
 // Getters
 int Bill::getId () const {

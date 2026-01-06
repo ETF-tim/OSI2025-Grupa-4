@@ -6,8 +6,13 @@
 
 #include "../../../include/common/util/Validate.hpp"
 Device::Device () : id (-1), brand (""), model (""), IMEI (""), state (State::UNKNOWN) {}
-Device::Device (int id, const std::string& brand, const std::string& model, const std::string& IMEI, State state)
-    : id (id), brand (brand), model (model), IMEI (IMEI), state (state) {}
+Device::Device (int id, const std::string& brand, const std::string& model, const std::string& IMEI, State state) {
+    Device::setId (id);
+    Device::setBrand (brand);
+    Device::setModel (model);
+    Device::setIMEI (IMEI);
+    Device::setState (state);
+}
 
 int Device::getId () const {
     return id;

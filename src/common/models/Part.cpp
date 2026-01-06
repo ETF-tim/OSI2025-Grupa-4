@@ -5,8 +5,13 @@
 
 #include "../../../include/common/util/Validate.hpp"
 Part::Part () : id (-1), name (""), amount (-1), criticalAmount (-1), price (-1) {}
-Part::Part (int id, const std::string& name, int amount, int criticalAmount, double price)
-    : id (id), name (name), amount (amount), criticalAmount (criticalAmount), price (price) {}
+Part::Part (int id, const std::string& name, int amount, int criticalAmount, double price) {
+    Part::setId (id);
+    Part::setName (name);
+    Part::setAmount (amount);
+    Part::setCriticalAmount (criticalAmount);
+    Part::setPrice (price);
+}
 
 // Getters
 int Part::getId () const {
