@@ -148,8 +148,7 @@ void CSVData::delete_col (int col) {
 void CSVData::_read_file (const string& filename, vector<vector<string>>& target, int& cols) {
     ifstream file (filename);
     if (!file.is_open ()) {
-        cerr << "Greška: Neuspješno otvaranje fajla " << filename << endl;
-        return;
+        throw std::invalid_argument ("Neuspješno otvaranje fajla: " + filename);
     }
 
     string line;
