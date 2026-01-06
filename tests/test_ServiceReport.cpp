@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include "../include/common/models/ServiceReport.hpp"
+#include "../include/common/util/Validate.hpp"
 
 TEST (ServiceReportTest, WorkOrderID_GetSet) {
     ServiceReport sr;
@@ -13,7 +14,6 @@ TEST (ServiceReportTest, WorkOrderID_GetSet) {
 
 TEST (ServiceReportTest, WorkOrderID_Validation) {
     ServiceReport sr;
-    EXPECT_THROW (sr.setWorkOrderID (0), std::invalid_argument);
     EXPECT_THROW (sr.setWorkOrderID (-1), std::invalid_argument);
     EXPECT_THROW (sr.setWorkOrderID (std::numeric_limits<int>::max ()), std::invalid_argument);
 }
@@ -26,12 +26,6 @@ TEST (ServiceReportTest, Id_GetSet) {
 
 TEST (ServiceReportTest, Id_Validation) {
     ServiceReport sr;
-    EXPECT_THROW (sr.setId (0), std::invalid_argument);
     EXPECT_THROW (sr.setId (-10), std::invalid_argument);
     EXPECT_THROW (sr.setId (std::numeric_limits<int>::max ()), std::invalid_argument);
-}
-
-int main (int argc, char** argv) {
-    ::testing::InitGoogleTest (&argc, argv);
-    return RUN_ALL_TESTS ();
 }

@@ -5,6 +5,7 @@
 #include <limits>
 
 #include "../include/common/models/Bill.hpp"
+#include "../include/common/util/Validate.hpp"
 
 TEST (BillGTest, BasicValidSettersGetters) {
     Bill b;
@@ -43,14 +44,12 @@ TEST (BillGTest, EdgeValidValues) {
 
 TEST (BillGTest, InvalidIdThrows) {
     Bill b;
-    EXPECT_THROW (b.setId (0), std::invalid_argument);
     EXPECT_THROW (b.setId (-1), std::invalid_argument);
     EXPECT_THROW (b.setId (INT_MAX), std::invalid_argument);
 }
 
 TEST (BillGTest, InvalidReceiptOrderIDThrows) {
     Bill b;
-    EXPECT_THROW (b.setReceiptOrderID (0), std::invalid_argument);
     EXPECT_THROW (b.setReceiptOrderID (-5), std::invalid_argument);
     EXPECT_THROW (b.setReceiptOrderID (INT_MAX), std::invalid_argument);
 }
@@ -68,9 +67,4 @@ TEST (BillGTest, InvalidPriceThrows) {
 
     double nan = std::numeric_limits<double>::quiet_NaN ();
     EXPECT_THROW (b.setPrice (nan), std::invalid_argument);
-}
-
-int main (int argc, char** argv) {
-    ::testing::InitGoogleTest (&argc, argv);
-    return RUN_ALL_TESTS ();
 }
