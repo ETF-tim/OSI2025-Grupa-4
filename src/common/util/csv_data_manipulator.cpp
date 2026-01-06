@@ -248,3 +248,16 @@ void CSVData::make_data_unique () {
     m_rows = static_cast<int> (m_data.size ());
     m_is_modified = true;
 }
+
+void CSVData::print_csv_data () {
+    cout << "\n=== CSV Data (" << m_rows << " rows, " << m_cols << " cols) ===" << endl;
+    for (int i = 0; i < m_rows; i++) {
+        vector<string> row = CSVData::get_row (i);
+        for (int j = 0; j < row.size (); j++) {
+            cout << row[j];
+            if (j < row.size () - 1) cout << " | ";
+        }
+        cout << endl;
+    }
+    cout << "================================\n" << endl;
+}
