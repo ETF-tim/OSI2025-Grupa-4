@@ -113,7 +113,6 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-# Only install if executables were created
 if(TARGET KlijentApp AND TARGET ZaposleniApp)
     install(TARGETS KlijentApp ZaposleniApp RUNTIME DESTINATION bin)
 endif()
