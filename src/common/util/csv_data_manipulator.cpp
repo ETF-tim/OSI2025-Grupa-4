@@ -111,6 +111,18 @@ void CSVData::add_row (vector<string> row_data) {
     if (static_cast<size_t> (m_cols) < new_row_size) m_cols = static_cast<int> (new_row_size);
     m_is_modified = true;
 }
+void CSVData::add_row (vector<string> row_data, int pos) {
+    if (pos < 0 || pos >= m_data.size ()) return;
+
+    vector<vector<string>>::iterator it = m_data.begin () + pos;
+
+    size_t new_row_size = row_data.size ();
+    if (new_row_size != m_cols && m_is_unified) m_is_unified = false;
+
+    m_data.insert (it, row_data);
+    m_rows++;
+    if (m_cols < new_row_size) m_cols = new_row_size;
+}
 
 void CSVData::delete_row (int row) {
     if (row < 0 || static_cast<size_t> (row) >= m_data.size ()) return;
@@ -148,7 +160,7 @@ void CSVData::delete_col (int col) {
 void CSVData::_read_file (const string& filename, vector<vector<string>>& target, int& cols) {
     ifstream file (filename);
     if (!file.is_open ()) {
-        throw std::invalid_argument ("Neuspješno otvaranje fajla: " + filename);
+        throw std::invalid_argument ("Neuspjesno otvaranje fajla: " + filename);
     }
 
     string line;

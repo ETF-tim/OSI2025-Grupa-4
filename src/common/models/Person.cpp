@@ -36,7 +36,7 @@ int Person::getPin () const {
 }
 
 void Person::setId (int v) {
-    if (!Validate::isValidId (v)) throw std::invalid_argument ("ID osobe mora biti između 0 i 2147483646");
+    if (!Validate::isValidId (v)) throw std::invalid_argument ("ID osobe mora biti izmedju 0 i 2147483646");
     id = v;
 }
 void Person::setFirstName (const std::string& v) {
