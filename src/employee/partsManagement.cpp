@@ -69,15 +69,6 @@ void createPart () {
     std::cin.ignore ();  // Clear newline character from input buffer
     //------------------
 
-    // Creating new Part object
-    try {
-        Part newPart (tempId, tempName, tempAmount, tempCriticalAmount, tempPrice);
-    } catch (std::exception& e) {
-        std::cout << e.what () << std::endl;
-        std::cerr << "Neuspjesno kreiranje novog dijela";
-        return;
-    }  //------------------
-
     // Re-add header and new part to CSV data
     parts.add_row (header, 0);  // Re-add header row
     parts.add_row ({std::to_string (tempId), tempName, std::to_string (tempAmount), std::to_string (tempCriticalAmount),
