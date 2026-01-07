@@ -9,7 +9,7 @@
 #include "../../include/common/util/Validate.hpp"
 #include "../../include/common/util/csv_data_manipulator.hpp"
 
-void createPart () {
+void PartManager::createPart () {
     // Opening CSV file
     CSVData parts;
     try {
@@ -81,7 +81,7 @@ void createPart () {
     std::cout << "Uspjesno kreiran novi dio!" << std::endl;
 }
 
-void listParts () {
+void PartManager::listParts () {
     // Opening CSV file
     CSVData parts;
     try {
@@ -109,7 +109,7 @@ void listParts () {
     parts.print_csv_data ();
 }
 
-void editPart () {
+void PartManager::editPart () {
     // Opening CSV file
     CSVData parts;
     try {
@@ -213,7 +213,7 @@ void editPart () {
     std::cout << "Uspjesno uređen dio!" << std::endl;
 }
 
-void deletePart () {
+void PartManager::deletePart () {
     // Opening CSV file
     CSVData parts;
     try {
