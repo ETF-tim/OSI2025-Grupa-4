@@ -1,0 +1,7 @@
+id,firstname,lastname,email,phone,pin
+1,John,Doe,john.doe@example.com,+1234567890,1234
+3,Michael,Johnson,michael.j@example.com,+1122334455,9012
+4,Emily,Brown,emily.brown@example.com,+5566778899,1041
+5,David,Williams,david.w@example.com,+6677889900,7890
+6,Sarah,Jones,sarah.jones@example.com,+4433221100,2345
+7,Robert,Davis,robert.davis@example.com,+9988776655,6789
