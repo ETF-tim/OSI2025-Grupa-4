@@ -88,7 +88,7 @@ void listParts () {
         parts = CSVData ("./data/parts.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
-        std::cerr << "Neuspjesno kreiranje novog dijela";
+        std::cerr << "Neuspjesno prikazivanje liste dijelova";
         return;
     }  //------------------
 
@@ -116,7 +116,7 @@ void editPart () {
         parts = CSVData ("./data/parts.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
-        std::cerr << "Neuspjesno kreiranje novog dijela";
+        std::cerr << "Neuspjesno azuriranje dijela";
         return;
     }  //------------------
 
@@ -220,7 +220,7 @@ void deletePart () {
         parts = CSVData ("./data/parts.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
-        std::cerr << "Neuspjesno kreiranje novog dijela";
+        std::cerr << "Neuspjesno brisanje dijela";
         return;
     }  //------------------
 
