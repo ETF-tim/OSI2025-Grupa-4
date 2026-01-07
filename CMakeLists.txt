@@ -15,8 +15,12 @@ file(GLOB_RECURSE COMMON_SRC "src/common/*.cpp")
 file(GLOB_RECURSE CLIENT_MODULE_SRC "src/client/*.cpp")
 file(GLOB_RECURSE EMPLOYEE_MODULE_SRC "src/employee/*.cpp")
 
+# Debug: Print what files were found
+message(STATUS "COMMON_SRC files found: ${COMMON_SRC}")
+message(STATUS "CLIENT_MODULE_SRC files found: ${CLIENT_MODULE_SRC}")
+message(STATUS "EMPLOYEE_MODULE_SRC files found: ${EMPLOYEE_MODULE_SRC}")
 
-
+# Common library - shared by all modules
 if(COMMON_SRC)
     add_library(common_lib STATIC ${COMMON_SRC})
     target_include_directories(common_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -26,6 +30,7 @@ else()
     target_include_directories(common_lib INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 endif()
 
+# Employee module library
 if(EMPLOYEE_MODULE_SRC)
     add_library(employee_lib STATIC ${EMPLOYEE_MODULE_SRC})
     target_include_directories(employee_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -34,6 +39,7 @@ else()
     message(WARNING "No source files found in src/employee/")
 endif()
 
+# Client module library
 if(CLIENT_MODULE_SRC)
     add_library(client_lib STATIC ${CLIENT_MODULE_SRC})
     target_include_directories(client_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -42,6 +48,7 @@ else()
     message(WARNING "No source files found in src/client/")
 endif()
 
+# Executables
 if(TARGET employee_lib)
     add_executable(ZaposleniApp src/mainEmployee.cpp)
     target_link_libraries(ZaposleniApp PRIVATE employee_lib common_lib)
@@ -79,17 +86,22 @@ if(BUILD_TESTS)
             get_filename_component(test_name ${test_source} NAME_WE)
             add_executable(${test_name} ${test_source})
             
-            set(TEST_LIBS GTest::gtest_main common_lib)
-            
-            if(TARGET employee_lib AND NOT test_name MATCHES ".*[Cc]lient.*|.*[Kk]lijent.*")
-                list(APPEND TEST_LIBS employee_lib)
+            if(test_name MATCHES ".*[Uu]sers.*" OR test_name MATCHES ".*[Ee]mployee.*" OR test_name MATCHES ".*[Zz]aposleni.*")
+                if(TARGET employee_lib)
+                    target_link_libraries(${test_name} PRIVATE employee_lib common_lib GTest::gtest_main)
+                else()
+                    target_link_libraries(${test_name} PRIVATE common_lib GTest::gtest_main)
+                endif()
+            elseif(test_name MATCHES ".*[Cc]lient.*" OR test_name MATCHES ".*[Kk]lijent.*")
+                if(TARGET client_lib)
+                    target_link_libraries(${test_name} PRIVATE client_lib common_lib GTest::gtest_main)
+                else()
+                    target_link_libraries(${test_name} PRIVATE common_lib GTest::gtest_main)
+                endif()
+            else()
+                target_link_libraries(${test_name} PRIVATE common_lib GTest::gtest_main)
             endif()
             
-            if(TARGET client_lib AND test_name MATCHES ".*[Cc]lient.*|.*[Kk]lijent.*")
-                list(APPEND TEST_LIBS client_lib)
-            endif()
-            
-            target_link_libraries(${test_name} PRIVATE ${TEST_LIBS})
             add_test(NAME ${test_name} COMMAND ${test_name})
         endforeach()
     else()
