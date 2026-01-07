@@ -1,6 +1,9 @@
 #pragma once
 
-void createUser ();
-void listUsers ();
-void editUser ();
-void deleteUser ();
+class UserManager {
+    public:
+        void createUser ();
+        void listUsers ();
+        void editUser ();
+        void deleteUser ();
+};

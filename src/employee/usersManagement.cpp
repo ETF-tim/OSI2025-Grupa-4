@@ -10,7 +10,7 @@
 #include "../../include/common/util/Validate.hpp"
 #include "../../include/common/util/csv_data_manipulator.hpp"
 
-void createUser () {
+void UserManager::createUser () {
     // Opening CSV file
     CSVData users;
     try {
@@ -82,7 +82,7 @@ void createUser () {
     std::cout << "Uspjesno kreiran novi korisnik!" << std::endl;
 }
 
-void listUsers () {
+void UserManager::listUsers () {
     // Opening CSV file
     CSVData users;
     try {
@@ -110,7 +110,7 @@ void listUsers () {
     users.print_csv_data ();
 }
 
-void editUser () {
+void UserManager::editUser () {
     // Opening CSV file
     CSVData users;
     try {
@@ -211,7 +211,7 @@ void editUser () {
     std::cout << "Uspjesno azuriran podatak korisnika!" << std::endl;
 }
 
-void deleteUser () {
+void UserManager::deleteUser () {
     // Opening CSV file
     CSVData users;
     try {
