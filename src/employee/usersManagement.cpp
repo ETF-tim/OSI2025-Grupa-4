@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "../../include/common/models/Part.hpp"
+#include "../../include/common/models/Client.hpp"
 #include "../../include/common/util/GeneratePIN.hpp"
 #include "../../include/common/util/GenerateUniqueId.hpp"
 #include "../../include/common/util/Validate.hpp"
