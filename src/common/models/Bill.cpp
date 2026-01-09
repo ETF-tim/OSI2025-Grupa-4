@@ -4,11 +4,11 @@
 #include <stdexcept>
 
 #include "../../../include/common/util/Validate.hpp"
-Bill::Bill () : id (-1), receiptOrderID (-1), paymentMethod (PaymentMethod::UNKNOWN), price (-1) {};
+Bill::Bill () : id (-1), workOrderID (-1), paymentMethod (PaymentMethod::UNKNOWN), price (-1) {};
 
-Bill::Bill (int id, int receiptOrderID, PaymentMethod paymentMethod, double price) {
+Bill::Bill (int id, int workOrderID, PaymentMethod paymentMethod, double price) {
     Bill::setId (id);
-    Bill::setReceiptOrderID (receiptOrderID);
+    Bill::setWorkOrderID (workOrderID);
     Bill::setPaymentMethod (paymentMethod);
     Bill::setPrice (price);
 }
@@ -18,8 +18,8 @@ int Bill::getId () const {
     return id;
 }
 
-int Bill::getReceiptOrderID () const {
-    return receiptOrderID;
+int Bill::getWorkOrderID () const {
+    return workOrderID;
 }
 
 PaymentMethod Bill::getPaymentMethod () const {
@@ -36,9 +36,9 @@ void Bill::setId (int id) {
     this->id = id;
 }
 
-void Bill::setReceiptOrderID (int receiptOrderID) {
-    if (!Validate::isValidId (receiptOrderID)) throw std::invalid_argument ("ID prijemnog naloga mora biti izmedju 0 i 2147483646");
-    this->receiptOrderID = receiptOrderID;
+void Bill::setWorkOrderID (int workOrderID) {
+    if (!Validate::isValidId (workOrderID)) throw std::invalid_argument ("ID radnog naloga mora biti izmedju 0 i 2147483646");
+    this->workOrderID = workOrderID;
 }
 
 void Bill::setPaymentMethod (PaymentMethod paymentMethod) {
