@@ -206,3 +206,5 @@ TEST_F (PartsManagementTest, CreatePartGeneratesUniqueId) {
     EXPECT_NE (content.find ("10,Sprocket"), std::string::npos);
     EXPECT_NE (content.find ("15,Lever"), std::string::npos);
 }
+
+

@@ -66,8 +66,9 @@ class UsersManagementTest : public ::testing::Test {
 };
 
 TEST_F (UsersManagementTest, ListUsers_PrintsHeaderAndUsers) {
-    std::string output = capture_stdout ([] () {
-        listUsers ();
+    UserManager mgr;
+    std::string output = capture_stdout ([&mgr] () {
+        mgr.listUsers ();
     });
 
     EXPECT_NE (output.find ("LISTA KORISNIKA"), std::string::npos);
@@ -78,9 +79,10 @@ TEST_F (UsersManagementTest, ListUsers_PrintsHeaderAndUsers) {
 }
 
 TEST_F (UsersManagementTest, EditUser_UpdatesEmail) {
+    UserManager mgr;
     std::string simulated_input = "1\n3\nnewjohn@example.com\n";
-    provide_stdin_and_run (simulated_input, [] () {
-        editUser ();
+    provide_stdin_and_run (simulated_input, [&mgr] () {
+        mgr.editUser ();
     });
 
     auto rows = read_csv (users_file.string ());
@@ -97,8 +99,10 @@ TEST_F (UsersManagementTest, EditUser_UpdatesEmail) {
 
 TEST_F (UsersManagementTest, DeleteUser_RemovesRow) {
     std::string simulated_input = "2\n";
-    provide_stdin_and_run (simulated_input, [] () {
-        deleteUser ();
+    UserManager mgr;
+
+    provide_stdin_and_run (simulated_input, [&mgr] () {
+        mgr.deleteUser ();
     });
 
     auto rows = read_csv (users_file.string ());
