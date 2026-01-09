@@ -10,13 +10,13 @@
 #include "../../include/common/util/csv_data_manipulator.hpp"
 
 // Function for converting string to state enum
-State stringToState (const std::string& stateStr) {
-    if (stateStr == "NEW")
-        return State::NEW;
-    else if (stateStr == "USED")
-        return State::USED;
+std::string DeviceManager::stateToString (int stateInt) {
+    if (stateInt == 1)
+        return "NEW";
+    else if (stateInt == 2)
+        return "USED";
     else
-        throw std::invalid_argument ("Neispravan string za State");
+        return "UNKNOWN";
 }
 
 void DeviceManager::createDevice () {
@@ -70,22 +70,20 @@ void DeviceManager::createDevice () {
     } while (!Validate::isValidIMEI (IMEI));
 
     // -> Input and validation for part price
-    std::string stanje;
-    State myState;
+    std::cout << "Izaberite stanje uredjaja:" << std::endl;
+    std::cout << "1. NEW" << std::endl;
+    std::cout << "2. USED" << std::endl;
+    int attributeChoice;
     do {
-        std::cout << "Unesite stanje uredjaja: ";
-        std::cin >> stanje;
-        for (char& c : stanje) {
-            c = std::toupper (c);
-        }
-        myState = stringToState (stanje);
-    } while (!Validate::isValidState (myState));
-    std::cin.ignore ();  // Clear newline character from input buffer
+        std::cout << "Unesite broj stanja (1-2): ";
+        std::cin >> attributeChoice;
+        std::cin.ignore ();  // Clear newline character from input buffer
+    } while (attributeChoice < 1 || attributeChoice > 2);
     //------------------
 
     // Re-add header and new device to CSV data
     devices.add_row (header, 0);  // Re-add header row
-    devices.add_row ({std::to_string (tempId), brand, model, IMEI, stanje}, tempId + 1);
+    devices.add_row ({std::to_string (tempId), brand, model, IMEI, stateToString (attributeChoice)});
 
     //------------------
 
@@ -190,16 +188,16 @@ void DeviceManager::editDevice () {
             break;
         }
         case 4: {  // state
+            std::cout << "Izaberite novo stanje uredjaja:" << std::endl;
+            std::cout << "1. NEW" << std::endl;
+            std::cout << "2. USED" << std::endl;
+            int attributeChoice;
             do {
-                std::cout << "Unesite novo stanje uredjaja: ";
-                std::cin >> newStateStr;
-                for (char& c : newStateStr) {
-                    c = std::toupper (c);
-                }
-                myState = stringToState (newStateStr);
-
-            } while (!Validate::isValidState (myState));
-            newItem = newStateStr;
+                std::cout << "Unesite broj stanja (1-2): ";
+                std::cin >> attributeChoice;
+                std::cin.ignore ();  // Clear newline character from input buffer
+            } while (attributeChoice < 1 || attributeChoice > 2);
+            newItem = stateToString (attributeChoice);
             break;
         }
     }  //------------------
