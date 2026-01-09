@@ -238,15 +238,15 @@ void DeviceManager::deleteDevice () {
     std::cin.ignore ();  // Clear newline character from input buffer
 
     // -> Check if it exists
-    bool partFound = false;
+    bool serviceReportFound = false;
     int rowIndex;
     for (rowIndex = 1; rowIndex < devices.rows (); rowIndex++) {  // Start from 1 to skip header row
         if (std::stoi (devices.get_value (rowIndex, 0)) == deleteId) {
-            partFound = true;
+            serviceReportFound = true;
             break;
         }
     }
-    if (!partFound) {
+    if (!serviceReportFound) {
         std::cerr << "Uredjaj sa unesenim ID-em nije pronadjen." << std::endl;
         return;
     }  //------------------
