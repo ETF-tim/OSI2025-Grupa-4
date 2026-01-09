@@ -12,8 +12,8 @@ TEST (BillGTest, BasicValidSettersGetters) {
     EXPECT_NO_THROW (b.setId (1));
     EXPECT_EQ (b.getId (), 1);
 
-    EXPECT_NO_THROW (b.setReceiptOrderID (2));
-    EXPECT_EQ (b.getReceiptOrderID (), 2);
+    EXPECT_NO_THROW (b.setWorkOrderID (2));
+    EXPECT_EQ (b.getWorkOrderID (), 2);
 
     EXPECT_NO_THROW (b.setPaymentMethod (PaymentMethod::CASH));
     EXPECT_EQ (b.getPaymentMethod (), PaymentMethod::CASH);
@@ -28,8 +28,8 @@ TEST (BillGTest, EdgeValidValues) {
     EXPECT_NO_THROW (b.setId (INT_MAX - 1));
     EXPECT_EQ (b.getId (), INT_MAX - 1);
 
-    EXPECT_NO_THROW (b.setReceiptOrderID (INT_MAX - 1));
-    EXPECT_EQ (b.getReceiptOrderID (), INT_MAX - 1);
+    EXPECT_NO_THROW (b.setWorkOrderID (INT_MAX - 1));
+    EXPECT_EQ (b.getWorkOrderID (), INT_MAX - 1);
 
     EXPECT_NO_THROW (b.setPrice (0.0));
     EXPECT_DOUBLE_EQ (b.getPrice (), 0.0);
@@ -48,10 +48,10 @@ TEST (BillGTest, InvalidIdThrows) {
     EXPECT_THROW (b.setId (INT_MAX), std::invalid_argument);
 }
 
-TEST (BillGTest, InvalidReceiptOrderIDThrows) {
+TEST (BillGTest, InvalidWorkOrderIDThrows) {
     Bill b;
-    EXPECT_THROW (b.setReceiptOrderID (-5), std::invalid_argument);
-    EXPECT_THROW (b.setReceiptOrderID (INT_MAX), std::invalid_argument);
+    EXPECT_THROW (b.setWorkOrderID (-5), std::invalid_argument);
+    EXPECT_THROW (b.setWorkOrderID (INT_MAX), std::invalid_argument);
 }
 
 TEST (BillGTest, InvalidPaymentMethodThrows) {
