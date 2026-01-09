@@ -104,7 +104,7 @@ void DeviceManager::listDevice () {
         return;
     }  //------------------
 
-    // Print parts list
+    // Print device list
     std::cout << "----- LISTA UREDJAJA -----" << std::endl;
     devices.print_csv_data ();
 }
@@ -120,7 +120,7 @@ void DeviceManager::editDevice () {
         return;
     }  //------------------
 
-    // Pring parts list
+    // Print device list
     listDevice ();
 
     // Choose device to edit by ID and check if it exists
