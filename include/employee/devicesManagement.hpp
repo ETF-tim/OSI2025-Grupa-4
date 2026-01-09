@@ -7,6 +7,7 @@ class DeviceManager {
         void listDevice ();
         void editDevice ();
         void deleteDevice ();
+        bool searchForDevice (int deviceId);
 
     private:
         std::string stateToString (int stateInt);

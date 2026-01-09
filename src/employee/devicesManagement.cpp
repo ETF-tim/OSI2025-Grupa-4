@@ -261,3 +261,23 @@ void DeviceManager::deleteDevice () {
     listDevice ();
     std::cout << "Uspjesno obrisan uredjaj!" << std::endl;
 }
+
+bool DeviceManager::searchForDevice (int deviceId) {
+    // Opening CSV file
+    CSVData devices;
+    try {
+        devices = CSVData ("./data/devices.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        std::cerr << "Neuspjesno pretrazivanje uredjaja";
+        return false;
+    }  //------------------
+
+    // Check if device exists
+    for (int rowIndex = 1; rowIndex < devices.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (devices.get_value (rowIndex, 0)) == deviceId) {
+            return true;
+        }
+    }
+    return false;
+}
