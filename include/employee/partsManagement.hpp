@@ -6,4 +6,5 @@ class PartManager {
         void listParts ();
         void editPart ();
         void deletePart ();
+        bool searchForPart (int partId);
 };
