@@ -112,7 +112,12 @@ void CSVData::add_row (vector<string> row_data) {
     m_is_modified = true;
 }
 void CSVData::add_row (vector<string> row_data, int pos) {
-    if (pos < 0 || pos >= m_data.size ()) return;
+    if (pos < 0 || pos > m_data.size ())
+        return;
+    else if (pos == m_data.size ()) {
+        add_row (move (row_data));
+        return;
+    }
 
     vector<vector<string>>::iterator it = m_data.begin () + pos;
 
