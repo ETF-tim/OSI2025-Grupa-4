@@ -273,11 +273,31 @@ bool DeviceManager::searchForDevice (int deviceId) {
         return false;
     }  //------------------
 
-    // Check if device exists
+    // Find device by ID
     for (int rowIndex = 1; rowIndex < devices.rows (); rowIndex++) {  // Start from 1 to skip header row
         if (std::stoi (devices.get_value (rowIndex, 0)) == deviceId) {
             return true;
         }
     }
     return false;
+}
+
+std::string DeviceManager::getDeviceIMEI (int deviceId) {
+    // Opening CSV file
+    CSVData devices;
+    try {
+        devices = CSVData ("./data/devices.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        std::cerr << "Neuspjesno pretrazivanje uredjaja";
+        return "";
+    }  //------------------
+
+    // Find device by ID and return IMEI if it exists
+    for (int rowIndex = 1; rowIndex < devices.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (devices.get_value (rowIndex, 0)) == deviceId) {
+            return devices.get_value (rowIndex, 3);
+        }
+    }
+    return "";
 }
