@@ -5,10 +5,10 @@
 
 #include "../../../include/common/util/Validate.hpp"
 
-ReceiptOrder::ReceiptOrder () : id (-1), userID (-1), deviceIMEI (""), description (""), priceAssessment (-1) {}
+ReceiptOrder::ReceiptOrder () : id (-1), userID (-1), deviceIMEI (""), description (""), priceAssessment (-1), isFree (true) {}
 
-ReceiptOrder::ReceiptOrder (int id, int userID, const std::string& deviceIMEI, const std::string& description,
-                            double priceAssessment) {
+ReceiptOrder::ReceiptOrder (int id, int userID, const std::string& deviceIMEI, const std::string& description, double priceAssessment)
+    : isFree (true) {
     ReceiptOrder::setId (id);
     ReceiptOrder::setUserId (userID);
     ReceiptOrder::setDeviceIMEI (deviceIMEI);
@@ -30,6 +30,9 @@ const std::string& ReceiptOrder::getDescription () const {
 }
 double ReceiptOrder::getPriceAssessment () const {
     return priceAssessment;
+}
+bool ReceiptOrder::getIsFree () const {
+    return isFree;
 }
 
 void ReceiptOrder::setId (int v) {
@@ -65,4 +68,8 @@ void ReceiptOrder::setPriceAssessment (double v) {
         throw std::invalid_argument ("Procjena cijene mora biti nenegativna");
     }
     priceAssessment = v;
+}
+
+void ReceiptOrder::setIsFree (bool v) {
+    isFree = v;
 }

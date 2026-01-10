@@ -85,3 +85,51 @@ TEST (ReceiptOrder_Setters_InvalidPriceAssessment, ThrowsOnNegative) {
     EXPECT_NO_THROW (r.setPriceAssessment (0.0));
     EXPECT_NO_THROW (r.setPriceAssessment (1.23));
 }
+
+TEST (ReceiptOrder_CopyConstructor, CopiesAllFields) {
+    std::string imei = "123456789012345";
+    std::string desc = "Copy constructor test";
+    ReceiptOrder orig (7, 20, imei, desc, 50.5);
+
+    ReceiptOrder cpy (orig);
+    EXPECT_EQ (cpy.getId (), orig.getId ());
+    EXPECT_EQ (cpy.getUserId (), orig.getUserId ());
+    EXPECT_EQ (cpy.getDeviceIMEI (), orig.getDeviceIMEI ());
+    EXPECT_EQ (cpy.getDescription (), orig.getDescription ());
+    EXPECT_DOUBLE_EQ (cpy.getPriceAssessment (), orig.getPriceAssessment ());
+}
+
+TEST (ReceiptOrder_AssignmentOperator, CopiesAllFields) {
+    ReceiptOrder a;
+    ReceiptOrder b (9, 30, "987654321098765", "Assignment test", 75.25);
+
+    a = b;
+    EXPECT_EQ (a.getId (), b.getId ());
+    EXPECT_EQ (a.getUserId (), b.getUserId ());
+    EXPECT_EQ (a.getDeviceIMEI (), b.getDeviceIMEI ());
+    EXPECT_EQ (a.getDescription (), b.getDescription ());
+    EXPECT_DOUBLE_EQ (a.getPriceAssessment (), b.getPriceAssessment ());
+}
+
+TEST (ReceiptOrder_MoveConstructor, TransfersValues) {
+    ReceiptOrder tmp (11, 40, "111111111111111", "Move ctor test", 100.0);
+    ReceiptOrder moved (std::move (tmp));
+
+    EXPECT_EQ (moved.getId (), 11);
+    EXPECT_EQ (moved.getUserId (), 40);
+    EXPECT_EQ (moved.getDeviceIMEI (), "111111111111111");
+    EXPECT_EQ (moved.getDescription (), "Move ctor test");
+    EXPECT_DOUBLE_EQ (moved.getPriceAssessment (), 100.0);
+}
+
+TEST (ReceiptOrder_MoveAssignment, TransfersValues) {
+    ReceiptOrder a;
+    ReceiptOrder b (12, 41, "222222222222222", "Move assign test", 150.0);
+
+    a = std::move (b);
+    EXPECT_EQ (a.getId (), 12);
+    EXPECT_EQ (a.getUserId (), 41);
+    EXPECT_EQ (a.getDeviceIMEI (), "222222222222222");
+    EXPECT_EQ (a.getDescription (), "Move assign test");
+    EXPECT_DOUBLE_EQ (a.getPriceAssessment (), 150.0);
+}

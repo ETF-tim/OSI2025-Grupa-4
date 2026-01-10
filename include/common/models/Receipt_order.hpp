@@ -8,6 +8,7 @@ class ReceiptOrder {
         std::string deviceIMEI;
         std::string description;
         double priceAssessment;
+        bool isFree;
 
     public:
         ReceiptOrder ();
@@ -18,10 +19,12 @@ class ReceiptOrder {
         const std::string& getDeviceIMEI () const;
         const std::string& getDescription () const;
         double getPriceAssessment () const;
+        bool getIsFree () const;
 
         void setId (int v);
         void setUserId (int v);
         void setDeviceIMEI (const std::string& v);
         void setDescription (const std::string& v);
         void setPriceAssessment (double v);
+        void setIsFree (bool v);
 };

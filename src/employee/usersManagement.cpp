@@ -259,3 +259,23 @@ void UserManager::deleteUser () {
     listUsers ();
     std::cout << "Uspjesno obrisan korisnik!" << std::endl;
 }
+
+bool UserManager::searchForUser (int userId) {
+    // Opening CSV file
+    CSVData users;
+    try {
+        users = CSVData ("./data/users.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        std::cerr << "Neuspjesno pretrazivanje korisnika";
+        return false;
+    }  //------------------
+
+    // Check if user exists
+    for (int rowIndex = 1; rowIndex < users.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (users.get_value (rowIndex, 0)) == userId) {
+            return true;
+        }
+    }
+    return false;
+}

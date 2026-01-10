@@ -260,3 +260,23 @@ void PartManager::deletePart () {
     listParts ();
     std::cout << "Uspjesno obrisan dio!" << std::endl;
 }
+
+bool PartManager::searchForPart (int partId) {
+    // Opening CSV file
+    CSVData parts;
+    try {
+        parts = CSVData ("./data/parts.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        std::cerr << "Neuspjesno pretrazivanje dijela";
+        return false;
+    }  //------------------
+
+    // Check if part exists
+    for (int rowIndex = 1; rowIndex < parts.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (parts.get_value (rowIndex, 0)) == partId) {
+            return true;
+        }
+    }
+    return false;
+}
