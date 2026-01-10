@@ -97,3 +97,102 @@ TEST (ReceiptOrderManagerTest, Delete_RemovesEntry) {
     EXPECT_EQ (final_csv.find ("1,10,IMEI1,Desc1,10.0"), std::string::npos);
     EXPECT_NE (final_csv.find ("2,11,IMEI2,Desc2,20.0"), std::string::npos);
 }
+TEST (ReceiptOrderManagerTest, Add_AppendsNewEntry) {
+    const std::string receipt_orders_path = "./data/receiptOrders.csv";
+    const std::string users_path = "./data/users.csv";
+    const std::string devices_path = "./data/devices.csv";
+
+    write_csv (users_path, {"id,firstName,lastName,email,phone,pin", "13,Test,User,test@example.com,1234567890,1111",
+                            "999,Dummy,User,dummy@example.com,0000000000,0000"});
+
+    write_csv (devices_path,
+               {"ID,Brand,Model,IMEI,State", "3,TestBrand,TestModel,IMEI3,NEW", "999,DummyBrand,DummyModel,DummyIMEI,NEW"});
+
+    write_csv (receipt_orders_path, {"id,user_id,device_imei,description,price,taken"});
+
+    UserManager userManager;
+    DeviceManager deviceManager;
+    ReceiptOrderManager mgr (userManager, deviceManager);
+
+    std::istringstream input ("13\n3\nDesc3\n30.0\n");
+    std::streambuf* oldCin = std::cin.rdbuf (input.rdbuf ());
+
+    std::ostringstream captured;
+    std::streambuf* oldCout = std::cout.rdbuf (captured.rdbuf ());
+
+    mgr.createReceiptOrder ();
+
+    std::cin.rdbuf (oldCin);
+    std::cout.rdbuf (oldCout);
+
+    std::string final_csv = read_file (receipt_orders_path);
+
+    EXPECT_NE (final_csv.find ("13"), std::string::npos);
+    EXPECT_NE (final_csv.find ("IMEI3"), std::string::npos);
+    EXPECT_NE (final_csv.find ("Desc3"), std::string::npos);
+    EXPECT_NE (final_csv.find ("30"), std::string::npos);
+    EXPECT_NE (final_csv.find ("1"), std::string::npos);
+
+    EXPECT_NE (final_csv.find ("id,user_id,device_imei,description,price,taken"), std::string::npos);
+}
+
+TEST (ReceiptOrderManagerTest, ListFree_PrintsOnlyFreeEntries) {
+    const std::string path = "./data/receiptOrders.csv";
+    write_csv (path, {"id,user_id,device_imei,description,price,taken", "1,10,IMEI1,Desc1,10.0,1", "2,11,IMEI2,Desc2,20.0,0",
+                      "3,12,IMEI3,Desc3,30.0,1"});
+
+    UserManager userManager;
+    DeviceManager deviceManager;
+    ReceiptOrderManager mgr (userManager, deviceManager);
+
+    std::ostringstream captured;
+    std::streambuf* oldCout = std::cout.rdbuf (captured.rdbuf ());
+
+    mgr.listFreeReceiptOrders ();
+
+    std::cout.rdbuf (oldCout);
+    std::string out = captured.str ();
+
+    EXPECT_NE (out.find ("1 | 10 | IMEI1 | Desc1 | 10.0 | 1"), std::string::npos);
+    EXPECT_NE (out.find ("3 | 12 | IMEI3 | Desc3 | 30.0 | 1"), std::string::npos);
+
+    EXPECT_EQ (out.find ("2 | 11 | IMEI2"), std::string::npos);
+    EXPECT_EQ (out.find ("IMEI2"), std::string::npos);
+
+    EXPECT_NE (out.find ("LISTA SLOBODNIH PRIJEMNIH NALOGA"), std::string::npos);
+    EXPECT_NE (out.find ("=== CSV Data"), std::string::npos);
+}
+TEST (ReceiptOrderManagerTest, IsReceiptOrderFree_ReturnsCorrectStatus) {
+    const std::string path = "./data/receiptOrders.csv";
+    write_csv (path, {"id,user_id,device_imei,description,price,taken", "1,10,IMEI1,Desc1,10.0,1", "2,11,IMEI2,Desc2,20.0,0"});
+
+    UserManager userManager;
+    DeviceManager deviceManager;
+    ReceiptOrderManager mgr (userManager, deviceManager);
+
+    EXPECT_TRUE (mgr.isReceiptOrderFree (1));
+    EXPECT_FALSE (mgr.isReceiptOrderFree (2));
+
+    EXPECT_FALSE (mgr.isReceiptOrderFree (999));
+}
+
+TEST (ReceiptOrderManagerTest, ChangeReceiptOrderStatus_UpdatesCsvFile) {
+    const std::string path = "./data/receiptOrders.csv";
+    write_csv (path, {"id,user_id,device_imei,description,price,taken", "1,10,IMEI1,Desc1,10.0,1", "2,11,IMEI2,Desc2,20.0,0"});
+
+    UserManager userManager;
+    DeviceManager deviceManager;
+    ReceiptOrderManager mgr (userManager, deviceManager);
+
+    mgr.changeReceiptOrderStatus (2, true);
+
+    std::string final_csv = read_file (path);
+
+    EXPECT_NE (final_csv.find ("2,11,IMEI2,Desc2,20.0,1"), std::string::npos);
+
+    EXPECT_NE (final_csv.find ("1,10,IMEI1,Desc1,10.0,1"), std::string::npos);
+
+    mgr.changeReceiptOrderStatus (1, false);
+    final_csv = read_file (path);
+    EXPECT_NE (final_csv.find ("1,10,IMEI1,Desc1,10.0,0"), std::string::npos);
+}
