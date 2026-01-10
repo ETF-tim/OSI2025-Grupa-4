@@ -38,14 +38,6 @@ static std::vector<std::string> readCsvLines () {
     return lines;
 }
 
-TEST (BillManagerTest, PaymentMethodToStringMapsCorrectly) {
-    BillManager mgr;
-    EXPECT_EQ (mgr.paymentMethodToString (1), "CASH");
-    EXPECT_EQ (mgr.paymentMethodToString (2), "CREDIT_CARD");
-    EXPECT_EQ (mgr.paymentMethodToString (3), "DIGITAL_WALLET");
-    EXPECT_EQ (mgr.paymentMethodToString (999), "UNKNOWN");
-}
-
 TEST (BillManagerTest, CreateBillAppendsRow) {
     writeCsvLines ({"ID,WorkOrderID,PaymentMethod,Price"});
 

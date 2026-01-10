@@ -13,4 +13,9 @@ class ReceiptOrderManager {
         void listReceiptOrders ();
         void deleteReceiptOrder ();
         bool searchForReceiptOrder (int receiptOrderId);
+
+        void listFreeReceiptOrders ();
+        bool isReceiptOrderFree (int receiptOrderId);
+
+        void changeReceiptOrderStatus (int receiptOrderId, bool newStatus);
 };
