@@ -2,5 +2,5 @@ ID,FirstName,LastName,Email,Phone,PIN,Role
 1,Marko,Slavuljica,marko.slavuljica@yahoo.com,065517906,1234,TECHNICIAN
 2,M,Slavuljica,marko.slavuljica@gmail.com,065517906,1234,RECEPTIONIST
 3,Luka,Slavuljica,marko.slavuljica@yandex.com,065517906,1234,SERVICE_OWNER
-4,Kos,Slavuljica,marko.slavuljica@student.etf.unobl.org,065517906,1234,SERVICE_OWNER
-5,n,n,mail@yahooo.com,123456789,3333,SERVICE_OWNER
+5,n,Dobric,mail@yahooo.com,123456789,3333,SERVICE_OWNER
+0,Dragan,Markovic,gagi@gmail.com,+232532651,1041,SERVICE_OWNER
