@@ -1,6 +1,7 @@
 #include "../../include/employee/receiptOrdersManagement.hpp"
 
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -95,8 +96,8 @@ void ReceiptOrderManager::createReceiptOrder () {
 
     // Re-add header and new part to CSV data
     receiptOrders.add_row (header, 0);  // Re-add header row
-    receiptOrders.add_row (
-        {std::to_string (tempId), std::to_string (tempUserId), tempDeviceIMEI, tempDescription, std::to_string (tempPriceAssessment)});
+    receiptOrders.add_row ({std::to_string (tempId), std::to_string (tempUserId), tempDeviceIMEI, tempDescription,
+                            std::to_string (tempPriceAssessment), std::to_string (true)});
     //------------------
 
     // Writing updated data back to CSV file
@@ -199,4 +200,81 @@ bool ReceiptOrderManager::searchForReceiptOrder (int receiptOrderId) {
         }
     }
     return false;
+}
+
+void ReceiptOrderManager::listFreeReceiptOrders () {
+    // Opening CSV file
+    CSVData receiptOrders;
+    try {
+        receiptOrders = CSVData ("./data/receiptOrders.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        std::cerr << "Neuspjesno prikazivanje liste slobodnih prijemnih naloga";
+        return;
+    }  //------------------
+
+    // Store and remove header row
+    std::vector<std::string> header = receiptOrders.get_row (0);
+    receiptOrders.delete_row (0);  // Remove header row
+    //------------------
+
+    // Sorting CSV data by receiptOrder ID in ascending order
+    receiptOrders.sort_by_col (0, CSVData::ASC);
+
+    // Re-add header row
+    receiptOrders.add_row (header, 0);  // Re-add header row
+    //------------------
+
+    // Filtering free receipt orders (delete where taken status is true)
+    for (int rowIndex = 1; rowIndex < receiptOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (receiptOrders.get_value (rowIndex, 5) == "0") {
+            receiptOrders.delete_row (rowIndex);
+            rowIndex--;  // Adjust index after deletion
+        }
+    }
+    //------------------
+
+    // Print free receipt orders list
+    std::cout << "----- LISTA SLOBODNIH PRIJEMNIH NALOGA -----" << std::endl;
+    receiptOrders.print_csv_data ();
+}
+
+bool ReceiptOrderManager::isReceiptOrderFree (int receiptOrderId) {
+    // Opening CSV file
+    CSVData receiptOrders;
+    try {
+        receiptOrders = CSVData ("./data/receiptOrders.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        std::cerr << "Neuspjesno provjeravanje statusa prijemnog naloga";
+        return false;
+    }  //------------------
+
+    for (int rowIndex = 1; rowIndex < receiptOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (receiptOrders.get_value (rowIndex, 0)) == receiptOrderId) {
+            return receiptOrders.get_value (rowIndex, 5) == "1";
+        }
+    }
+    return false;
+}
+
+void ReceiptOrderManager::changeReceiptOrderStatus (int receiptOrderId, bool newStatus) {
+    // Opening CSV file
+    CSVData receiptOrders;
+    try {
+        receiptOrders = CSVData ("./data/receiptOrders.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        throw std::logic_error ("Neuspjesno mijenjanje statusa prijemnog naloga");
+    }  //------------------
+
+    for (int rowIndex = 1; rowIndex < receiptOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (receiptOrders.get_value (rowIndex, 0)) == receiptOrderId) {
+            receiptOrders.set_value (rowIndex, 5, std::to_string (newStatus));
+            break;
+        }
+    }
+
+    // Writing updated data back to CSV file
+    receiptOrders.write_data ("./data/receiptOrders.csv");
 }
