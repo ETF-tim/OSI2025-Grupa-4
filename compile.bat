@@ -1,5 +1,5 @@
 @echo off
-echo Building project...
+echo Zapocinjem build-anje projekta...
 cmake --preset=mingw-release >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
     echo CMake configuration FAILED!
@@ -13,7 +13,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo.
-echo Pokrećem testove:
+echo Pokrecem testove:
 echo ================
 cd build
 ctest --output-on-failure
@@ -30,6 +30,6 @@ if %TEST_RESULT% NEQ 0 (
 
 echo.
 echo ========================================
-echo Build i Test GOTOVI! Sve testove PROŠLI
+echo Build i Test GOTOVI! Sve testove PROSLI
 echo ========================================
 echo Aplikacija se nalazi u /build/bin
