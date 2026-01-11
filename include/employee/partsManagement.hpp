@@ -7,4 +7,6 @@ class PartManager {
         void editPart ();
         void deletePart ();
         bool searchForPart (int partId);
+        bool isPartAvailable (int partId, int quantity);
+        bool decreasePartStock (int partId, int quantity);
 };

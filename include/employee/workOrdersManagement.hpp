@@ -9,8 +9,11 @@ class WorkOrderManager {
 
     public:
         WorkOrderManager (ReceiptOrderManager& receiptOrderManager, PartManager& partManager);
-        void createWorkOrder (int receiptOrderID, int technicianID);
+        void createWorkOrder (int);
         void listWorkOrders ();
+        void updateWorkOrders ();
         void deleteWorkOrder ();
         bool searchForWorkOrder (int workOrderId);
+        void listCompletedWorkOrders ();
+        bool isWorkOrderCompleted (int workOrderId);
 };
