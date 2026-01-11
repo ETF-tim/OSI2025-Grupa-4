@@ -11,7 +11,7 @@
 #include "../../include/employee/partsManagement.hpp"
 #include "../../include/employee/receiptOrdersManagement.hpp"
 
-void WorkOrderManager::createWorkOrder (int receiptOrderID, int technicianID) {
+void WorkOrderManager::createWorkOrder (int technicianID) {
     // Opening CSV file
     CSVData workOrders;
     try {
@@ -42,14 +42,20 @@ void WorkOrderManager::createWorkOrder (int receiptOrderID, int technicianID) {
 
     // ----------------
 
+    int temptReceiptOrderID;
+    std::cout << "Unesite ID prijemnog naloga za koji kreirate radni nalog: ";
+    std::cin >> temptReceiptOrderID;
+    std::cin.ignore ();  // Clear newline character from input buffer
+    // ----------------
+
     // Check if receipt order exists
-    if (!receiptOrderManager.searchForReceiptOrder (receiptOrderID)) {
+    if (!receiptOrderManager.searchForReceiptOrder (temptReceiptOrderID)) {
         std::cerr << "Prijemni nalog sa unesenim ID-em nije pronadjen." << std::endl;
         return;
     }  //------------------
 
     // Check if receipt order is free
-    if (!receiptOrderManager.isReceiptOrderFree (receiptOrderID)) {
+    if (!receiptOrderManager.isReceiptOrderFree (temptReceiptOrderID)) {
         std::cerr << "Prijemni nalog sa unesenim ID-em nije slobodan." << std::endl;
         return;
     }  //------------------
@@ -61,7 +67,7 @@ void WorkOrderManager::createWorkOrder (int receiptOrderID, int technicianID) {
         std::cout << "Dodaj dio u popravku? (d/n):";
         char choice;
         std::cin >> choice;
-        if (choice == 'n') break;
+        if (choice == 'n') break;  // If input is 'n', exit from the loop
 
         int partId, quantity;
 
@@ -69,15 +75,22 @@ void WorkOrderManager::createWorkOrder (int receiptOrderID, int technicianID) {
         std::cin >> partId;
         std::cout << "Unesite kolicinu dijela koji zelite uzeti sa skladista:";
         std::cin >> quantity;
+        std::cin.ignore ();  // Clear newline from buffer
+
+        // Check 1: does part exist
         if (!partManager.searchForPart (partId)) {
             std::cout << "Dio sa unesenim ID-em nije pronadjen." << std::endl;
-        } else if (partManager.searchForPart (partId)) {
-            if (!partManager.isPartAvailable (partId, quantity))
-                std::cout << "Nema dovoljno delova u skladistu" << std::endl;
-            else if (partManager.isPartAvailable (partId)) {
-                partManager.editPart ();
-                std::cout << "Promenjena kolicina dela sa zadatim id-em u skladistu " << std::endl;
-                // potrebno promeniti mapu usedParts
-            }
+            continue;
         }
+
+        // Check 2: is part available with this quantity
+        if (!partManager.isPartAvailable (partId, quantity)) {
+            std::cout << "Nema dovoljno delova u skladistu" << std::endl;
+            continue;
+        }
+
+        partManager.decreasePartStock (partId, quantity);
+
+        usedParts[partId] += quantity;
+        std::cout << "Dio je dodan u popravku!" << std::endl;
     }
