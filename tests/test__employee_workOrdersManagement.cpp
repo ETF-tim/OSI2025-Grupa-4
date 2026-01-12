@@ -30,7 +30,6 @@ static void remove_file (const std::string& path) {
     fs::remove (path, ec);
 }
 
-// Create a minimal workOrders.csv with header and given rows (each row should be a CSV line)
 static void create_workOrders_csv (const std::vector<std::string>& rows) {
     ensure_data_dir ();
     std::string path = "./data/workOrders.csv";
@@ -41,10 +40,7 @@ static void create_workOrders_csv (const std::vector<std::string>& rows) {
     write_file (path, contents);
 }
 
-// Tests
-
 TEST (WorkOrderManager_CSV, SearchForWorkOrder_FindsExistingAndNotFound) {
-    // Prepare data
     create_workOrders_csv ({"id,receiptOrderId,status,comment,startDate,endDate,technicianId,parts,servicePrice",
                             "42,10,IN_DIAGNOSTICS,comment,0,0,3,,0", "100,11,COMPLETED,done,0,0,4,1:2,150"});
 
@@ -58,7 +54,6 @@ TEST (WorkOrderManager_CSV, SearchForWorkOrder_FindsExistingAndNotFound) {
     EXPECT_TRUE (wom.searchForWorkOrder (100));
     EXPECT_FALSE (wom.searchForWorkOrder (7));
 
-    // Cleanup
     remove_file ("./data/workOrders.csv");
 }
 
@@ -74,12 +69,11 @@ TEST (WorkOrderManager_CSV, IsWorkOrderCompleted_ReturnsCorrectStatus) {
 
     EXPECT_TRUE (wom.isWorkOrderCompleted (1));
     EXPECT_FALSE (wom.isWorkOrderCompleted (2));
-    EXPECT_FALSE (wom.isWorkOrderCompleted (999));  // non-existent
+    EXPECT_FALSE (wom.isWorkOrderCompleted (999));
 
     remove_file ("./data/workOrders.csv");
 }
 
-// Ensure tests don't leave data directory or related CSV files behind.
 class CleanDataDir : public ::testing::Environment {
     public:
         void TearDown () override {
@@ -87,7 +81,7 @@ class CleanDataDir : public ::testing::Environment {
             remove_file ("./data/workOrders.csv");
             remove_file ("./data/receiptOrders.csv");
             remove_file ("./data/users.csv");
-            // Optionally remove directory if empty
+
             fs::path data_dir = fs::path ("./data");
             fs::remove (data_dir, ec);
         }
