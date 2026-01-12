@@ -10,5 +10,6 @@ class DeviceIntakeManager {
         ReceiptOrderManager& receiptOrderManager;
 
     public:
+        DeviceIntakeManager (UserManager& um, DeviceManager& dm, ReceiptOrderManager& rom);
         void intakeDevice ();
 };
