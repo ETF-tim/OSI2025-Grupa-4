@@ -303,12 +303,6 @@ bool PartManager::isPartAvailable (int partID, int quantity) {
 }
 
 bool PartManager::decreasePartStock (int partID, int quantity) {
-    // Validacija ulaza
-    if (quantity <= 0) {
-        std::cerr << "Kolicina mora biti pozitivna" << std::endl;
-        return false;
-    }
-
     // Opening CSV file
     CSVData parts;
     try {
@@ -323,6 +317,39 @@ bool PartManager::decreasePartStock (int partID, int quantity) {
         if (std::stoi (parts.get_value (rowIndex, 0)) == partID) {
             int currentAmount = std::stoi (parts.get_value (rowIndex, 2));
             int newAmount = currentAmount - quantity;
+
+            if (newAmount < 0) {  // Moze i bez provere, ali je bolje ako bi neko
+                                  // rucno promenio kriticnu kolicinu
+                std::cerr << "Kolicina ne moze biti negativna" << std::endl;
+                return false;
+            }
+            parts.set_value (rowIndex, 2, std::to_string (newAmount));
+
+            // Writing updated data back to CSV file
+            parts.write_data ("./data/parts.csv");
+            //------------------
+            std::cout << "Uspjesno promijenjena kolicina dijela!" << std::endl;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PartManager::increasePartStock (int partID, int quantity) {
+    // Opening CSV file
+    CSVData parts;
+    try {
+        parts = CSVData ("./data/parts.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        std::cerr << "Neuspjesno smanjenje kolicine dijela";
+        return false;
+    }  //------------------
+
+    for (int rowIndex = 1; rowIndex < parts.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (parts.get_value (rowIndex, 0)) == partID) {
+            int currentAmount = std::stoi (parts.get_value (rowIndex, 2));
+            int newAmount = currentAmount + quantity;
 
             if (newAmount < 0) {  // Moze i bez provere, ali je bolje ako bi neko
                                   // rucno promenio kriticnu kolicinu

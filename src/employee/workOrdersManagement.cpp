@@ -38,6 +38,37 @@ std::string partsToString (const std::map<int, int>& parts) {
     return result;
 }
 
+std::map<int, int> stringToParts (const std::string s) {
+    std::map<int, int> parts;
+    if (s.empty ()) return parts;
+
+    size_t start = 0;
+    size_t end = s.find (';');
+
+    while (end != std::string::npos) {
+        std::string pair = s.substr (start, end - start);
+        size_t colonPos = pair.find (':');
+        if (colonPos != std::string::npos) {
+            int partId = std::stoi (pair.substr (0, colonPos));
+            int quantity = std::stoi (pair.substr (colonPos + 1));
+            parts[partId] = quantity;
+        }
+        start = end + 1;
+        end = s.find (';', start);
+    }
+
+    // Process last pair
+    std::string pair = s.substr (start);
+    size_t colonPos = pair.find (':');
+    if (colonPos != std::string::npos) {
+        int partId = std::stoi (pair.substr (0, colonPos));
+        int quantity = std::stoi (pair.substr (colonPos + 1));
+        parts[partId] = quantity;
+    }
+
+    return parts;
+}
+
 void WorkOrderManager::createWorkOrder (int technicianID) {
     // Opening CSV file
     CSVData workOrders;
@@ -239,10 +270,10 @@ void WorkOrderManager::updateWorkOrders () {
     int foundIndex = -1;
     std::cout << "Unesite ID radnog naloga koji zelite azurirati: ";
     std::cin >> temptWorkOrderID;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline character from input buffer
     // ----------------
 
-    for (int rowIndex = 0; rowIndex < workOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
+    for (int rowIndex = 0; rowIndex < workOrders.rows (); rowIndex++) {
         if (std::stoi (workOrders.get_value (rowIndex, 0)) == temptWorkOrderID) {
             std::cout << "Radni nalog pronadjen u csv fajlu." << std::endl;
             found = true;
@@ -257,25 +288,71 @@ void WorkOrderManager::updateWorkOrders () {
     }
     // Select which parts will be used during the repair
     std::map<int, int> usedParts;
+    std::string currentParts = workOrders.get_value (foundIndex, 7);
+    usedParts = stringToParts (currentParts);
+
+    std::cout << "Trenutni dijelovi u popravci: " << currentParts << std::endl;
+
+    CSVData parts;
+    std::string NazivUredjaja;
+    std::string kolicinaNaStanju;
+    std::string kriticnaKolicina;
+    std::string cijenaDijela;
+
+    int foundPartIndex;
+    bool partFound = false;
+
+    try {
+        parts = CSVData ("./data/parts.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        std::cerr << "Neuspjesno otvaranje fajla sa dijelovima";
+        return;
+    }
+
+    for (const auto& [partId, qty] : usedParts) {
+        for (int rowIndex = 1; rowIndex < parts.rows (); rowIndex++) {  // Start from 1 to skip header row
+            if (std::stoi (parts.get_value (rowIndex, 0)) == partId) {
+                foundPartIndex = rowIndex;
+                partFound = true;
+                break;
+            }
+        }
+
+        if (!partFound) {
+            std::cout << "Dio " << partId << " ne postoji u parts.csv." << std::endl;
+        } else {
+            NazivUredjaja = parts.get_value (foundPartIndex, 1);
+            kolicinaNaStanju = parts.get_value (foundPartIndex, 2);
+            kriticnaKolicina = parts.get_value (foundPartIndex, 3);
+            cijenaDijela = parts.get_value (foundPartIndex, 4);
+
+            std::cout << "Dio:" << NazivUredjaja << "," << " Kolicina na stanju:" << kolicinaNaStanju << ","
+                      << " Kriticna kolicina:" << kriticnaKolicina << "," << " Cijena dijela:" << cijenaDijela << ","
+                      << "Uzeta kolicina dijela u popravci:" << "," << qty << std::endl;
+        }
+        partFound = false;
+    }
 
     std::cout << "Azuriranje dijelova u popravci uredjaja." << std::endl;
     std::cout << "Ako nema dodavanja novih dijelova, u sljedecoj poruci unesite n/N" << std::endl;
 
     while (true) {
-        std::cout << "Dodaj dio u popravku? (d/n):";
+        std::cout << "Dodaj dio u popravku ili promijeni kolicinu nekog dijela? (d/n):";
         char choice;
         std::cin >> choice;
-        std::cin.ignore ();  // Clear newline from buffer
+        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline from buffer
 
         if (choice == 'n' || choice == 'N') break;  // If input is 'n', exit from the loop
 
         int partId, quantity;
 
-        std::cout << "Unesite id dijela koji zelite dodati: ";
+        std::cout << "Unesite id dijela koji zelite dodati/promijeniti: ";
         std::cin >> partId;
-        std::cout << "Unesite kolicinu dijela koji zelite uzeti sa skladista: ";
+        std::cout << "Unesite pozitivnu kolicinu za uzimanje dijelova,\n";
+        std::cout << "ili negativnu za vracanje dijelova na skladiste.\n";
         std::cin >> quantity;
-        std::cin.ignore ();  // Clear newline from buffer
+        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline from buffer
 
         // Check 1: does part exist
         if (!partManager.searchForPart (partId)) {
@@ -284,17 +361,48 @@ void WorkOrderManager::updateWorkOrders () {
         }
 
         // Check 2: is part available with this quantity
-        if (!partManager.isPartAvailable (partId, quantity)) {
-            std::cout << "Nema dovoljno delova u skladistu." << std::endl;
-            std::cout << "Mozete promeniti status u WAITING_FOR_PARTS nakon zavrsetka unosa." << std::endl;
-            continue;
+        if (quantity > 0) {
+            // Uzimanje dijelova sa skladišta
+            if (!partManager.isPartAvailable (partId, quantity)) {
+                std::cout << "Nema dovoljno dijelova u skladistu." << std::endl;
+                continue;
+            }
+
+            partManager.decreasePartStock (partId, quantity);
+            usedParts[partId] += quantity;
+        } else if (quantity < 0) {
+            int absQty = std::abs (quantity);
+
+            // Provjera da li radni nalog ima toliko dijelova
+            if (usedParts[partId] < absQty) {
+                std::cout << "Ne mozete vratiti vise dijelova nego sto je uzeto." << std::endl;
+                continue;
+            }
+
+            partManager.increasePartStock (partId, absQty);
+            usedParts[partId] -= absQty;
+        } else {
+            std::cout << "Kolicina ne moze biti 0." << std::endl;
+        }
+    }
+
+    std::cout << "\n----- Nova lista dijelova u popravci -----" << std::endl;
+    for (const auto& [partId, qty] : usedParts) {
+        partFound = false;
+        for (int rowIndex = 1; rowIndex < parts.rows (); rowIndex++) {
+            if (std::stoi (parts.get_value (rowIndex, 0)) == partId) {
+                foundPartIndex = rowIndex;
+                partFound = true;
+                break;
+            }
         }
 
-        partManager.decreasePartStock (partId, quantity);
-
-        usedParts[partId] += quantity;
-        std::cout << "Dio je dodan u popravku!" << std::endl;
+        if (partFound) {
+            NazivUredjaja = parts.get_value (foundPartIndex, 1);
+            std::cout << "  - Dio: " << NazivUredjaja << " (ID: " << partId << "), Kolicina: " << qty << std::endl;
+        }
     }
+
     WorkOrderStatus currentStatus;
     std::cout << "Izaberite novo stanje radnog naloga, ako zelite promjeniti:" << std::endl;
     std::cout << "1. IN_DIAGNOSTICS" << std::endl;
@@ -306,7 +414,7 @@ void WorkOrderManager::updateWorkOrders () {
     do {
         std::cout << "Unesite broj stanja (1-4): ";
         std::cin >> attributeChoice;
-        std::cin.ignore ();  // Clear newline character from input buffer
+        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline character from input buffer
     } while (attributeChoice < 1 || attributeChoice > 4);
 
     switch (attributeChoice) {
@@ -326,11 +434,11 @@ void WorkOrderManager::updateWorkOrders () {
     double servicePrice = 0;
     std::string comment;
     int response;
-    std::cout << "Da li zelite uneti komentar: (d=1/n!=1)" << std::endl;
+    std::cout << "Da li zelite uneti komentar: (d=1/n=2)" << std::endl;
     do {
         std::cout << "Unesite odgovor: ";
         std::cin >> response;
-        std::cin.ignore ();  // Clear newline character from input buffer
+        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline character from input buffer
     } while (response < 1 || response > 2);
 
     if (response == 1) {
@@ -339,7 +447,7 @@ void WorkOrderManager::updateWorkOrders () {
         std::getline (std::cin, comment);
     }
 
-    std::cout << "Da li zelite promijeniti cijenu popravke uredjaja: (d=1/n!=1)" << std::endl;
+    std::cout << "Da li zelite promijeniti cijenu popravke uredjaja: (d=1/n=2)" << std::endl;
     do {
         std::cout << "Unesite odgovor: ";
         std::cin >> response;
@@ -353,7 +461,7 @@ void WorkOrderManager::updateWorkOrders () {
         std::cin >> servicePrice;
     }
 
-    std::cout << "Da li je radni nalog zaista zavrsen: (d=1/n!=1)" << std::endl;
+    std::cout << "Da li je radni nalog zaista zavrsen: (d=1/n=2)" << std::endl;
     do {
         std::cout << "Unesite odgovor: ";
         std::cin >> response;
