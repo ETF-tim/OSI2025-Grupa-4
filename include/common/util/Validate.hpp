@@ -14,6 +14,11 @@ namespace Validate {
 bool isValidId (int id);
 bool isValidNonNegative (int amount);  // (za amount, criticalAmount)
 
+// -- Service data ---
+bool isValidServiceName (const std::string& name);
+bool isValidServiceAddress (const std::string& address);
+bool isValidJIB (const std::string& jib);
+
 // Client - nema
 
 // Bill
