@@ -282,6 +282,12 @@ bool PartManager::searchForPart (int partId) {
 }
 
 bool PartManager::isPartAvailable (int partID, int quantity) {
+    // Validacija ulaza
+    if (quantity <= 0) {
+        std::cerr << "Kolicina mora biti pozitivna" << std::endl;
+        return false;
+    }
+
     // Opening CSV file
     CSVData parts;
     try {
@@ -295,7 +301,6 @@ bool PartManager::isPartAvailable (int partID, int quantity) {
     for (int rowIndex = 1; rowIndex < parts.rows (); rowIndex++) {  // Start from 1 to skip header row
         if (std::stoi (parts.get_value (rowIndex, 0)) == partID) {
             int currentStock = std::stoi (parts.get_value (rowIndex, 2));
-            int criticalQuantity = std::stoi (parts.get_value (rowIndex, 3));
             return (currentStock - quantity >= 0);
         }
     }

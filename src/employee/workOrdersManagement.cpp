@@ -11,9 +11,9 @@
 #include "../../include/common/util/csv_data_manipulator.hpp"
 #include "../../include/employee/partsManagement.hpp"
 #include "../../include/employee/receiptOrdersManagement.hpp"
-#include "workOrdersManagement.hpp"
+#include "../../include/employee/workOrdersManagement.hpp"
 
-std::string statusToString (WorkOrderStatus status) {
+std::string WorkOrderManager::statusToString (WorkOrderStatus status) {
     switch (status) {
         case WorkOrderStatus::IN_DIAGNOSTICS:
             return "IN_DIAGNOSTICS";
@@ -28,7 +28,7 @@ std::string statusToString (WorkOrderStatus status) {
     }
 }
 
-std::string partsToString (const std::map<int, int>& parts) {
+std::string WorkOrderManager::partsToString (const std::map<int, int>& parts) {
     if (parts.empty ()) return "";
     std::string result;
     for (const auto& p : parts) {
@@ -37,6 +37,9 @@ std::string partsToString (const std::map<int, int>& parts) {
     }
     return result;
 }
+
+WorkOrderManager::WorkOrderManager (ReceiptOrderManager& receiptOrderManager, PartManager& partManager)
+    : receiptOrderManager (receiptOrderManager), partManager (partManager) {}
 
 void WorkOrderManager::createWorkOrder (int technicianID) {
     // Opening CSV file
@@ -69,7 +72,6 @@ void WorkOrderManager::createWorkOrder (int technicianID) {
 
     // Print list of free receipt orders
     receiptOrderManager.listFreeReceiptOrders ();
-
     // ----------------
 
     int temptReceiptOrderID;
@@ -128,31 +130,33 @@ void WorkOrderManager::createWorkOrder (int technicianID) {
             break;
         }
     }
-    IMEIUredjaja = receiptOrders.get_value (foundReceiptOrderIndex, 2);
-    imeKlijenta = users.get_value (foundUserIndex, 1);
-    prezimeKlijenta = users.get_value (foundUserIndex, 2);
-
     if (!receiptFound || !userFound) {
         std::cerr << "Greska pri pronalazenju podataka o klijentu." << std::endl;
         return;
     }
 
-    std::cout << "Ime klijenta:" << imeKlijenta << std::endl;
-    std::cout << "Prezime klijenta:" << prezimeKlijenta << std::endl;
-    std::cout << "IMEI uredjaja klijenta:" << IMEIUredjaja << std::endl;
+    IMEIUredjaja = receiptOrders.get_value (foundReceiptOrderIndex, 2);
+    imeKlijenta = users.get_value (foundUserIndex, 1);
+    prezimeKlijenta = users.get_value (foundUserIndex, 2);
+
+    std::cout << "Ime klijenta: " << imeKlijenta << std::endl;
+    std::cout << "Prezime klijenta: " << prezimeKlijenta << std::endl;
+    std::cout << "IMEI uredjaja klijenta: " << IMEIUredjaja << std::endl;
 
     std::cout << "Da li su ovi podaci tacni? (d/n): ";
     char confirm;
-    std::cin >> confirm;
-    std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
-
-    if (confirm != 'd' && confirm != 'D') {
+    do {
+        std::cin >> confirm;
+        std::cin.ignore ();  // Clear newline character from input buffer}
+    } while (confirm != 'd' && confirm != 'D' && confirm != 'n' && confirm != 'N');
+    if (confirm == 'n' || confirm == 'N') {
         std::cout << "Kreiranje radnog naloga prekinuto." << std::endl;
         return;
     }
 
-    std::cout << "Promjena statusa prijemnog naloga sa slobodan na zauset" << std::endl;
+    std::cout << "Promjena statusa prijemnog naloga sa slobodan na zauzet" << std::endl;
     receiptOrderManager.changeReceiptOrderStatus (temptReceiptOrderID, 0);  // change receipt order status from free to not free
+
     // Set initial status to IN_DIAGNOSTICS when starting work on device
     WorkOrderStatus currentStatus = WorkOrderStatus::IN_DIAGNOSTICS;
     std::cout << "\n Radni nalog je kreiran. Status: IN_DIAGNOSTICS" << std::endl;
@@ -161,17 +165,17 @@ void WorkOrderManager::createWorkOrder (int technicianID) {
     std::time_t startDate = std::time (nullptr);  // Current date/time
     std::time_t endDate = 0;
     double servicePrice = 0;  // Will be updated when work is COMPLETED
+
     std::string comment;
-    int response;
-    std::cout << "Da li zelite uneti komentar: (d=1/n=2)" << std::endl;
+    std::cout << "Da li zelite uneti komentar: (d/n)" << std::endl;
     do {
         std::cout << "Unesite odgovor: ";
-        std::cin >> response;
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline character from input buffer
-    } while (response < 1 || response > 2);
+        std::cin >> confirm;
+        std::cin.ignore ();  // Clear newline character from input buffer
+    } while (confirm != 'd' && confirm != 'D' && confirm != 'n' && confirm != 'N');
 
-    if (response == 1) {
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
+    if (confirm == 'd' || confirm == 'D') {
+        std::cin.ignore ();
         std::cout << "Unesite komentar:" << std::endl;
         std::getline (std::cin, comment);
     }
@@ -264,8 +268,10 @@ void WorkOrderManager::updateWorkOrders () {
     while (true) {
         std::cout << "Dodaj dio u popravku? (d/n):";
         char choice;
-        std::cin >> choice;
-        std::cin.ignore ();  // Clear newline from buffer
+        do {
+            std::cin >> choice;
+            std::cin.ignore ();  // Clear newline from buffer
+        } while (choice != 'd' && choice != 'D' && choice != 'n' && choice != 'N');
 
         if (choice == 'n' || choice == 'N') break;  // If input is 'n', exit from the loop
 
@@ -323,45 +329,43 @@ void WorkOrderManager::updateWorkOrders () {
             currentStatus = WorkOrderStatus::COMPLETED;
             break;
     }
+
     double servicePrice = 0;
     std::string comment;
-    int response;
-    std::cout << "Da li zelite uneti komentar: (d=1/n!=1)" << std::endl;
+    char response;
+    std::cout << "Da li zelite uneti komentar: (d/n)" << std::endl;
     do {
-        std::cout << "Unesite odgovor: ";
         std::cin >> response;
-        std::cin.ignore ();  // Clear newline character from input buffer
-    } while (response < 1 || response > 2);
+        std::cin.ignore ();  // Clear newline from buffer
+    } while (response != 'd' && response != 'D' && response != 'n' && response != 'N');
 
-    if (response == 1) {
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
+    if (response == 'd' || response == 'D') {
+        std::cin.ignore ();
         std::cout << "Unesite komentar:" << std::endl;
         std::getline (std::cin, comment);
     }
 
-    std::cout << "Da li zelite promijeniti cijenu popravke uredjaja: (d=1/n!=1)" << std::endl;
+    std::cout << "Da li zelite promijeniti cijenu popravke uredjaja: (d/n)" << std::endl;
     do {
-        std::cout << "Unesite odgovor: ";
         std::cin >> response;
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
-        // Clear newline character from input buffer
-    } while (response < 1 || response > 2);
+        std::cin.ignore ();  // Clear newline from buffer
+    } while (response != 'd' && response != 'D' && response != 'n' && response != 'N');
 
-    if (response == 1) {
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
+    if (response == 'd' || response == 'D') {
+        std::cin.ignore ();
         std::cout << "Unesite cijenu:" << std::endl;
         std::cin >> servicePrice;
     }
 
-    std::cout << "Da li je radni nalog zaista zavrsen: (d=1/n!=1)" << std::endl;
+    std::cout << "Da li je radni nalog zaista zavrsen: (d/n)" << std::endl;
     do {
         std::cout << "Unesite odgovor: ";
         std::cin >> response;
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
+        std::cin.ignore ();
         // Clear newline character from input buffer
-    } while (response < 1 || response > 2);
+    } while (response != 'd' && response != 'D' && response != 'n' && response != 'N');
 
-    if (response == 1) {
+    if (response == 'd' || response == 'D') {
         std::time_t endDate = std::time (nullptr);  // Current date/time
         workOrders.set_value (foundIndex, 5, std::to_string (endDate));
         do {
@@ -473,7 +477,7 @@ void WorkOrderManager::listCompletedWorkOrders () {
     workOrders.add_row (header, 0);  // Re-add header row
     //------------------
 
-    // Filtering free receipt orders (delete where taken status is true)
+    // Filtering free work orders (delete where taken status is true)
     for (int rowIndex = 1; rowIndex < workOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
         if (workOrders.get_value (rowIndex, 2) != "COMPLETED") {
             workOrders.delete_row (rowIndex);
