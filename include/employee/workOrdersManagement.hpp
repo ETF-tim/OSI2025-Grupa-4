@@ -1,6 +1,10 @@
 #pragma once
+#include <map>
+
 #include "../../include/employee/partsManagement.hpp"
 #include "../../include/employee/receiptOrdersManagement.hpp"
+
+enum class WorkOrderStatus;
 
 class WorkOrderManager {
     private:
@@ -16,4 +20,8 @@ class WorkOrderManager {
         bool searchForWorkOrder (int workOrderId);
         void listCompletedWorkOrders ();
         bool isWorkOrderCompleted (int workOrderId);
+
+    private:
+        std::string statusToString (WorkOrderStatus status);
+        std::string partsToString (const std::map<int, int>& parts);
 };
