@@ -350,9 +350,6 @@ void EmployeeManager::mainEmployeesManagement() {
             case 3:
                 editEmployee();
                 break;
-                
-                break;
-                
             case 4:
                 deleteEmployee();
                 break;

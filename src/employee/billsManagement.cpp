@@ -155,3 +155,32 @@ bool BillManager::searchForBill (int billId) {
     }
     return false;
 }
+
+void BillManager::mainBillsManagement () {
+    int choice = -1;
+    while (choice != 0) {
+        std::cout << "\n----- MENADZMENT RACUNA -----\n";
+        std::cout << "1. Prikaz liste racuna\n";
+        std::cout << "2. Brisanje racuna\n";
+        std::cout << "0. Za povratak na izborni meni\n";
+        std::cout << "-----------------------------\n";
+        std::cout << "Unesite izbor: ";
+        std::cin >> choice;
+        switch (choice) {
+            case 1:
+                listBills ();
+                break;
+
+            case 2:
+                deleteBill ();
+                break;
+
+            case 0:
+                break;
+
+            default:
+                std::cout << "Pogresan izbor. Pokusajte ponovo.\n";
+                break;
+        }
+    }
+}

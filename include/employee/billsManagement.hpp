@@ -9,7 +9,7 @@ class BillManager {
         void listBills ();
         void deleteBill ();
         bool searchForBill (int billId);
-
+        void mainBillsManagement ();
     private:
         std::string paymentMethodToString (int paymentMethodInt);
 };
