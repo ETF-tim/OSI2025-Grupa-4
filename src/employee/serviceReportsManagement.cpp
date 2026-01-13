@@ -129,3 +129,30 @@ bool ServiceReportManager::searchForServiceReport (int serviceReportID) {
     }
     return false;
 }
+
+void ServiceReportManager::mainServiceReportsManager() {
+    int choice;
+    do {
+        std::cout << "\n----- MENADZER SERVISNIH IZVJESTAJA -----" << std::endl;
+        std::cout << "1. Prikazi servisne izvjestaje" << std::endl;
+        std::cout << "2. Obrisi servisni izvjestaj" << std::endl;
+        std::cout << "0. Izlaz iz menadzera servisnih izvjestaja" << std::endl;
+        std::cout << "Unesite vas izbor: ";
+        std::cin >> choice;
+        std::cin.ignore ();
+        switch (choice) {
+            case 1:
+                listServiceReport ();
+                break;
+            case 2:
+                deleteServiceReport ();
+                break;
+            case 0:
+                std::cout << "Izlaz iz menadzera servisnih izvjestaja." << std::endl;
+                break;
+            default:
+                std::cout << "Nepostojeca opcija. Pokusajte ponovo." << std::endl;
+                break;
+        }
+    } while (choice != 0);
+}   

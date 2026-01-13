@@ -405,5 +405,5 @@ void PartManager::mainPartsManager() {
             default:
                 std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
         }
-    } while (choice != 5);
+    } while (choice != 0);
 }

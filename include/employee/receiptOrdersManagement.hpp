@@ -18,4 +18,5 @@ class ReceiptOrderManager {
         bool isReceiptOrderFree (int receiptOrderId);
 
         void changeReceiptOrderStatus (int receiptOrderId, bool newStatus);
+        void mainReceiptOrdersManager();
 };

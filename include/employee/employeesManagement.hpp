@@ -11,4 +11,5 @@ class EmployeeManager {
         void mainEmployeesManagement();
     private:
         std::string roleToString (int roleInt);
+        
 };

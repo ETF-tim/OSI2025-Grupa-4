@@ -355,6 +355,7 @@ void EmployeeManager::mainEmployeesManagement() {
                 break;
                 
             case 0:
+                std::cout << "Povratak na izborni meni...\n";
                 break;
                 
             default:

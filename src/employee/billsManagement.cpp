@@ -167,7 +167,7 @@ void BillManager::mainBillsManagement () {
         std::cout << "Unesite izbor: ";
         std::cin >> choice;
         switch (choice) {
-            case 1:
+            case 1: 
                 listBills ();
                 break;
             case 2:
@@ -180,6 +180,7 @@ void BillManager::mainBillsManagement () {
             default:
                 std::cout << "Pogresan izbor. Pokusajte ponovo.\n";
                 break;
+                
         }
     }
 }

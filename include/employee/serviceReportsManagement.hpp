@@ -7,4 +7,5 @@ class ServiceReportManager {
         void listServiceReport ();
         void deleteServiceReport ();
         bool searchForServiceReport (int serviceReportID);
+        void mainServiceReportsManager();
 };

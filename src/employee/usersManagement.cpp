@@ -279,3 +279,38 @@ bool UserManager::searchForUser (int userId) {
     }
     return false;
 }
+
+void UserManager::mainUserManagement () {
+    int choice;
+    do {
+        std::cout << "----- UPRAVLJANJE KORISNICIMA -----" << std::endl;
+        std::cout << "1. Kreiraj novog korisnika" << std::endl;
+        std::cout << "2. Prikazi listu korisnika" << std::endl;
+        std::cout << "3. Uredi podatke korisnika" << std::endl;
+        std::cout << "4. Obrisi korisnika" << std::endl;
+        std::cout << "0. Izlaz iz upravljanja korisnicima" << std::endl;
+        std::cout << "Unesite vas izbor (0-4): ";
+        std::cin >> choice;
+        std::cin.ignore ();  // Clear newline character from input buffer
+
+        switch (choice) {
+            case 1:
+                createUser ();
+                break;
+            case 2:
+                listUsers ();
+                break;
+            case 3:
+                editUser ();
+                break;
+            case 4:
+                deleteUser ();
+                break;
+            case 5:
+                std::cout << "Izlaz iz upravljanja korisnicima..." << std::endl;
+                break;
+            default:
+                std::cerr << "Pogresan unos. Pokusajte ponovo." << std::endl;
+        }
+    } while (choice != 0);
+}

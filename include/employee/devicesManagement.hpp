@@ -12,4 +12,5 @@ class DeviceManager {
         void mainDeviceManager();
     private:
         std::string stateToString (int stateInt);
+        
 };

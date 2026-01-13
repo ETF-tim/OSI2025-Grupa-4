@@ -11,4 +11,5 @@ class PartManager {
         bool decreasePartStock (int partId, int quantity);
         bool increasePartStock (int partId, int quantity);
         void mainPartsManager();
+        
 };

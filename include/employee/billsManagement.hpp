@@ -12,4 +12,5 @@ class BillManager {
         void mainBillsManagement ();
     private:
         std::string paymentMethodToString (int paymentMethodInt);
+        
 };

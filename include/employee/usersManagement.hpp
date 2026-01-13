@@ -7,5 +7,5 @@ class UserManager {
         void editUser ();
         void deleteUser ();
         bool searchForUser (int userId);
-        
+        void mainUserManagement ();
 };
