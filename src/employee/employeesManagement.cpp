@@ -320,3 +320,49 @@ bool EmployeeManager::searchForEmployee (int employeeId) {
     }
     return false;
 }
+
+void EmployeeManager::mainEmployeesManagement() {
+
+    
+    int choice = -1;
+    while (choice != 0) {
+        std::cout << "\n========================================\n";
+        std::cout << "     SISTEM ZA UPRAVLJANJE ZAPOSLENIMA    \n";
+        std::cout << "========================================\n";
+        std::cout << "1. Pregled svih zaposlenih\n";
+        std::cout << "2. Kreiranje novog zaposlenog\n";
+        std::cout << "3. Azuriranje podataka o zaposlenom\n";
+        std::cout << "4. Brisanje zaposlenog\n";
+        std::cout << "0. Za povratak na izborni meni\n";
+        std::cout << "----------------------------------------\n";
+        std::cout << "Unesite izbor: ";
+        std::cin >> choice;
+        
+        switch (choice) {
+            case 1:
+                listEmployees();
+                break;
+                
+            case 2:
+                createEmployee();
+                break;
+                
+            case 3:
+                editEmployee();
+                break;
+                
+                break;
+                
+            case 4:
+                deleteEmployee();
+                break;
+                
+            case 0:
+                break;
+                
+            default:
+                std::cout << "Pogresan izbor. Pokusajte ponovo.\n";
+                break;
+        }
+    }
+}
