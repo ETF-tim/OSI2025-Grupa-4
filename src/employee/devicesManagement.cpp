@@ -301,3 +301,37 @@ std::string DeviceManager::getDeviceIMEI (int deviceId) {
     }
     return "";
 }
+
+void DeviceManager::mainDeviceManager() {
+    int choice;
+    do {
+        std::cout << "----- UPRAVLJANJE UREDJAJIMA -----" << std::endl;
+        std::cout << "1. Kreiraj uredjaj" << std::endl;
+        std::cout << "2. Prikazi uredjaje" << std::endl;
+        std::cout << "3. Uredi uredjaj" << std::endl;
+        std::cout << "4. Obrisi uredjaj" << std::endl;
+        std::cout << "0. Izlaz" << std::endl;
+        std::cout << "Izaberite opciju (0-4): ";
+        std::cin >> choice;
+        std::cin.ignore ();
+        switch (choice) {
+            case 1:
+                createDevice ();
+                break;
+            case 2:
+                listDevice ();
+                break;
+            case 3:
+                editDevice ();
+                break;
+            case 4:
+                deleteDevice ();
+                break;
+            case 0:
+                std::cout << "Izlaz iz upravljanja uredjajima." << std::endl;
+                break;
+            default:
+                std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
+        }
+    } while (choice != 5);
+}

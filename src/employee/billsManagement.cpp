@@ -170,7 +170,6 @@ void BillManager::mainBillsManagement () {
             case 1:
                 listBills ();
                 break;
-
             case 2:
                 deleteBill ();
                 break;
