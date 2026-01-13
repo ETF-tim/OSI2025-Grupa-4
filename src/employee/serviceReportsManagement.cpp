@@ -1,5 +1,6 @@
 #include "../../include/employee/serviceReportsManagement.hpp"
 
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -9,6 +10,37 @@
 #include "../../include/common/util/Validate.hpp"
 #include "../../include/common/util/csv_data_manipulator.hpp"
 #include "serviceReportsManagement.hpp"
+
+std::map<int, int> stringToParts (const std::string s) {
+    std::map<int, int> parts;
+    if (s.empty ()) return parts;
+
+    size_t start = 0;
+    size_t end = s.find (';');
+
+    while (end != std::string::npos) {
+        std::string pair = s.substr (start, end - start);
+        size_t colonPos = pair.find (':');
+        if (colonPos != std::string::npos) {
+            int partId = std::stoi (pair.substr (0, colonPos));
+            int quantity = std::stoi (pair.substr (colonPos + 1));
+            parts[partId] = quantity;
+        }
+        start = end + 1;
+        end = s.find (';', start);
+    }
+
+    // Process last pair
+    std::string pair = s.substr (start);
+    size_t colonPos = pair.find (':');
+    if (colonPos != std::string::npos) {
+        int partId = std::stoi (pair.substr (0, colonPos));
+        int quantity = std::stoi (pair.substr (colonPos + 1));
+        parts[partId] = quantity;
+    }
+
+    return parts;
+}
 
 void ServiceReportManager::createServiceReport (int WorkOrderID) {
     // Opening CSV file
@@ -130,4 +162,143 @@ bool ServiceReportManager::searchForServiceReport (int serviceReportID) {
     }
     return false;
 }
-void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {}
+void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
+    CSVData serviceReport;
+    CSVData workOrders;
+    CSVData receiptOrders;
+    CSVData users;
+    CSVData devices;
+    CSVData parts;
+
+    try {
+        workOrders = CSVData ("./data/workOrders.csv");
+        receiptOrders = CSVData ("./data/receiptOrders.csv");
+        users = CSVData ("./data/users.csv");
+        devices = CSVData ("./data/devices.csv");
+        parts = CSVData ("./data/parts.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        throw std::logic_error ("Neuspjesno kreiranje TXT fajla ");
+    }  //------------------
+    int foundserviceReportRow = -1;
+    int rowIndex = -1;
+
+    for (rowIndex = 1; rowIndex < serviceReport.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (serviceReport.get_value (rowIndex, 0)) == serviceReportID) {
+            foundserviceReportRow = rowIndex;
+            break;
+        }
+    }
+    if (foundserviceReportRow == -1) {
+        std::cerr << "Servisni izvjestaj nalog sa unesenim ID-em nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+
+    std::string workOrderId = workOrders.get_value (foundserviceReportRow, 1);
+    int foundWorkOrderRow = -1;
+
+    for (rowIndex = 1; rowIndex < workOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if ((workOrders.get_value (rowIndex, 0)) == workOrderId) {
+            foundWorkOrderRow = rowIndex;
+            break;
+        }
+    }
+    if (foundWorkOrderRow == -1) {
+        std::cerr << "Radni nalog sa unesenim ID-em nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+
+    std::string receiptOrderId = workOrders.get_value (foundWorkOrderRow, 1);
+    std::string comment = workOrders.get_value (foundWorkOrderRow, 3);
+    std::string usedParts = workOrders.get_value (foundWorkOrderRow, 7);
+    std::string servicePrice = workOrders.get_value (foundWorkOrderRow, 8);
+
+    int foundReceiptOrderRow = -1;
+
+    for (rowIndex = 1; rowIndex < receiptOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (receiptOrders.get_value (rowIndex, 0)) == std::stoi (receiptOrderId)) {
+            foundReceiptOrderRow = rowIndex;
+            break;
+        }
+    }
+    if (foundReceiptOrderRow == -1) {
+        std::cerr << "Prijemni nalog sa zadatim ID-em nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+
+    std::string userID = receiptOrders.get_value (foundReceiptOrderRow, 1);
+    std::string deviceIMEI = receiptOrders.get_value (foundReceiptOrderRow, 2);
+    std::string description = receiptOrders.get_value (foundReceiptOrderRow, 3);
+
+    int foundUserRow = -1;
+
+    for (rowIndex = 1; rowIndex < users.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (users.get_value (rowIndex, 0)) == std::stoi (userID)) {
+            foundUserRow = rowIndex;
+            break;
+        }
+    }
+    if (foundUserRow == -1) {
+        std::cerr << "Korisnik sa zadatim ID-em nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+
+    std::string firstname = users.get_value (foundUserRow, 1);
+    std::string lastname = users.get_value (foundUserRow, 2);
+    std::string phone = users.get_value (foundUserRow, 4);
+
+    std::map<int, int> dijelovi = stringToParts (usedParts);
+
+    int foundDeviceRow = -1;
+
+    for (rowIndex = 1; rowIndex < devices.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (devices.get_value (rowIndex, 3)) == std::stoi (deviceIMEI)) {
+            foundDeviceRow = rowIndex;
+            break;
+        }
+    }
+    if (foundDeviceRow == -1) {
+        std::cerr << "Uredjaj sa zadatim IMEI-om nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+
+    std::string brand = devices.get_value (foundDeviceRow, 1);
+    std::string model = devices.get_value (foundDeviceRow, 2);
+
+    std::string fileName = "nalog_" + std::to_string (serviceReportID);
+
+    std::ofstream file ("./ServiceReports/" + fileName + ".txt");
+
+    if (!file) {
+        std::cout << "Nije moguce kreirati fajl!\n";
+        return;
+    }
+    file << "====== SERVISNI IZVJESTAJ ======\n";
+
+    file << "Korisnik: " << firstname << " " << lastname << "\n";
+    file << "Telefon: " << phone << "\n";
+    file << "\n";
+    file << "Marka: " << brand << "\n";
+    file << "IMEI uredjaja: " << deviceIMEI << "\n";
+    file << "Model: " << model << "\n";
+    file << "Opis: " << description << "\n";
+    file << "Izvrseni radovi: " << comment << "\n";
+
+    file << "Dijelovi korisceni u popravci:" << "\n";
+    for (const auto& [partId, qty] : dijelovi) {
+        for (int rowIndex = 1; rowIndex < parts.rows (); rowIndex++) {  // Start from 1 to skip header row
+            if (std::stoi (parts.get_value (rowIndex, 0)) == partId) {
+                std::string partName = parts.get_value (rowIndex, 1);
+                file << "  - " << partName << "\n";
+                break;
+            }
+        }
+    }
+    file << "\n";
+    file << "Cijena rada: " << servicePrice << "\n";
+    file << "\nPotpis servisa: ____________\n";
+    file << "Potpis klijenta: ___________\n";
+
+    file.close ();
+    std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
+}
