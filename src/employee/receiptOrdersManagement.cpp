@@ -1,5 +1,6 @@
 #include "../../include/employee/receiptOrdersManagement.hpp"
 
+#include <fstream>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -11,11 +12,21 @@
 #include "../../include/common/util/csv_data_manipulator.hpp"
 #include "../../include/employee/devicesManagement.hpp"
 #include "../../include/employee/usersManagement.hpp"
+#include "receiptOrdersManagement.hpp"
 
 ReceiptOrderManager::ReceiptOrderManager (UserManager& userManager, DeviceManager& deviceManager)
     : userManager (userManager), deviceManager (deviceManager) {}
 
 void ReceiptOrderManager::createReceiptOrder () {
+    char confirm;
+    std::cout << "Da li ste sigurni da zelite kreirati radni nalog? (d/n): ";
+    std::cin >> confirm;
+
+    if (confirm != 'd' && confirm != 'D') {
+        std::cout << "Kreiranje radnog naloga otkazano." << std::endl;
+        return;
+    }
+
     // Opening CSV file
     CSVData receiptOrders;
     try {
@@ -277,4 +288,96 @@ void ReceiptOrderManager::changeReceiptOrderStatus (int receiptOrderId, bool new
 
     // Writing updated data back to CSV file
     receiptOrders.write_data ("./data/receiptOrders.csv");
+}
+void ReceiptOrderManager::generateTXTFile (int receiptOrderId) {
+    CSVData receiptOrders;
+    CSVData users;
+    CSVData devices;
+
+    try {
+        receiptOrders = CSVData ("./data/receiptOrders.csv");
+        users = CSVData ("./data/users.csv");
+        devices = CSVData ("./data/devices.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        throw std::logic_error ("Neuspjesno kreiranje TXT fajla ");
+    }  //------------------
+
+    int foundReceiptOrderRow = -1;
+    int rowIndex = -1;
+
+    for (rowIndex = 1; rowIndex < receiptOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (receiptOrders.get_value (rowIndex, 0)) == receiptOrderId) {
+            foundReceiptOrderRow = rowIndex;
+            break;
+        }
+    }
+    if (foundReceiptOrderRow == -1) {
+        std::cerr << "Prijemni nalog sa unesenim ID-em nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+
+    std::string userID = receiptOrders.get_value (foundReceiptOrderRow, 1);
+    std::string deviceIMEI = receiptOrders.get_value (foundReceiptOrderRow, 2);
+    std::string description = receiptOrders.get_value (foundReceiptOrderRow, 3);
+    std::string priceAssessment = receiptOrders.get_value (foundReceiptOrderRow, 4);
+
+    int foundUserRow = -1;
+
+    for (rowIndex = 1; rowIndex < users.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (users.get_value (rowIndex, 0) == userID) {
+            foundUserRow = rowIndex;
+            break;
+        }
+    }
+    if (foundUserRow == -1) {
+        std::cerr << "Korisnik sa zadatim ID-em nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+
+    std::string firstname = users.get_value (foundUserRow, 1);
+    std::string lastname = users.get_value (foundUserRow, 2);
+    std::string email = users.get_value (foundUserRow, 3);
+    std::string phone = users.get_value (foundUserRow, 4);
+    std::string pin = users.get_value (foundUserRow, 5);
+
+    int foundDeviceRow = -1;
+
+    for (rowIndex = 1; rowIndex < devices.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (devices.get_value (rowIndex, 3) == deviceIMEI) {
+            foundDeviceRow = rowIndex;
+            break;
+        }
+    }
+    if (foundDeviceRow == -1) {
+        std::cerr << "Uredjaj sa zadatim IMEI-om nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+
+    std::string brand = devices.get_value (foundDeviceRow, 1);
+    std::string model = devices.get_value (foundDeviceRow, 2);
+    std::string state = devices.get_value (foundDeviceRow, 4);
+
+    std::string fileName = "nalog_" + std::to_string (receiptOrderId);
+
+    std::ofstream file ("./ReceiptOrders/" + fileName + ".txt");
+
+    if (!file) {
+        std::cout << "Nije moguce kreirati fajl!\n";
+        return;
+    }
+
+    file << "====== PRIJEMNI NALOG ======\n";
+    file << "ID: " << receiptOrderId << "\n";
+    file << "Korisnik: " << firstname << " " << lastname << "\n";
+    file << "Email: " << email << "\n";
+    file << "Telefon: " << phone << "\n";
+    file << "IMEI uredjaja: " << deviceIMEI << "\n";
+    file << "Marka: " << brand << "\n";
+    file << "Model: " << model << "\n";
+    file << "Opis: " << description << "\n";
+    file << "Stanje uredjaja: " << state << "\n";
+    file << "Procjena cijene: " << priceAssessment << "\n";
+    file.close ();
+    std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
 }
