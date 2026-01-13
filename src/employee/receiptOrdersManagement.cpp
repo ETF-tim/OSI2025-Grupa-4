@@ -289,7 +289,7 @@ void ReceiptOrderManager::changeReceiptOrderStatus (int receiptOrderId, bool new
     // Writing updated data back to CSV file
     receiptOrders.write_data ("./data/receiptOrders.csv");
 }
-void ReceiptOrderManager::generateTXTFile (int receiptOrderId) {
+void ReceiptOrderManager::generateReceiptOrderTXTFile (int receiptOrderId) {
     CSVData receiptOrders;
     CSVData users;
     CSVData devices;

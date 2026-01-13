@@ -8,6 +8,7 @@
 #include "../../include/common/util/GenerateUniqueId.hpp"
 #include "../../include/common/util/Validate.hpp"
 #include "../../include/common/util/csv_data_manipulator.hpp"
+#include "serviceReportsManagement.hpp"
 
 void ServiceReportManager::createServiceReport (int WorkOrderID) {
     // Opening CSV file
@@ -129,3 +130,4 @@ bool ServiceReportManager::searchForServiceReport (int serviceReportID) {
     }
     return false;
 }
+void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {}
