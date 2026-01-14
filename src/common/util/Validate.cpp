@@ -1,5 +1,6 @@
 #include "../../../include/common/util/Validate.hpp"
 
+#include <algorithm>
 #include <iostream>
 
 #include "../../../include/common/models/Bill.hpp"
@@ -25,6 +26,17 @@ bool isValidNonNegative (int amount) {
         std::cerr << "Vrijednost mora biti nenegativna" << std::endl;
         return false;
     }
+}
+
+// -- Service data ---
+bool isValidServiceName (const std::string& name) {
+    return !name.empty () && name.length () <= 20;
+}
+bool isValidServiceAddress (const std::string& address) {
+    return !address.empty () && address.length () <= 50;
+}
+bool isValidJIB (const std::string& jib) {
+    return jib.length () == 13 && std::all_of (jib.begin (), jib.end (), ::isdigit);
 }
 
 // Bill

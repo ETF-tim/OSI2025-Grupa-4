@@ -81,6 +81,18 @@ void DeviceManager::createDevice () {
     } while (attributeChoice < 1 || attributeChoice > 2);
     //------------------
 
+    bool deviceFound = false;
+    int rowIndex;
+    for (rowIndex = 1; rowIndex < devices.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (((devices.get_value (rowIndex, 3))) == IMEI) {
+            deviceFound = true;
+            break;
+        }
+    }
+    if (deviceFound) {
+        std::cerr << "Uredjaj sa zadatim IMEI-om je vec pronadjen u bazi." << std::endl;
+        return;
+    }
     // Re-add header and new device to CSV data
     devices.add_row (header, 0);  // Re-add header row
     devices.add_row ({std::to_string (tempId), brand, model, IMEI, stateToString (attributeChoice)});

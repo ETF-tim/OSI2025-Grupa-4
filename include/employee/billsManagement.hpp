@@ -9,8 +9,8 @@ class BillManager {
         void listBills ();
         void deleteBill ();
         bool searchForBill (int billId);
-        void mainBillsManagement ();
+        void generateBillTXTFile (int billId);
+
     private:
         std::string paymentMethodToString (int paymentMethodInt);
-        
 };
