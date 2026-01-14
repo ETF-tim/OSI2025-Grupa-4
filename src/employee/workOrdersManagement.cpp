@@ -740,11 +740,8 @@ void WorkOrderManager::generateWorkOrderTXTFile (int workOrderId) {
     std::string model = devices.get_value (foundDeviceRow, 2);
     std::string state = devices.get_value (foundDeviceRow, 4);
 
-<<<<<<< HEAD
-=======
     int foundPartIndex = -1;
     bool partFound = false;
->>>>>>> 1a971dc03f47d262a0f6310ab6a1c3e050adab2a
     std::string technicianName = employees.get_value (foundEmployeeRow, 1) + " " + employees.get_value (foundEmployeeRow, 2);
 
     std::string fileName = "nalog_" + std::to_string (workOrderId);
@@ -755,11 +752,7 @@ void WorkOrderManager::generateWorkOrderTXTFile (int workOrderId) {
         std::cout << "Nije moguce kreirati fajl!\n";
         return;
     }
-<<<<<<< HEAD
     file << "====== RADNI NALOG ======\n";
-=======
-    file << "====== PRIJEMNI NALOG ======\n";
->>>>>>> 1a971dc03f47d262a0f6310ab6a1c3e050adab2a
     file << "ID: " << workOrderId << "\n";
     file << "ID prijemnog naloga: " << receiptOrderId << "\n";
     file << "Datum: " << formatTimestamp (endDate) << "\n";
@@ -774,11 +767,9 @@ void WorkOrderManager::generateWorkOrderTXTFile (int workOrderId) {
     file << "Model: " << model << "\n";
     file << "Opis: " << description << "\n";
     file << "Stanje uredjaja: " << state << "\n";
-<<<<<<< HEAD
+
     file << "Dijelovi korisceni u popravci: " << "\n";
 
-=======
->>>>>>> 1a971dc03f47d262a0f6310ab6a1c3e050adab2a
     for (const auto& [partId, qty] : dijelovi) {
         for (int rowIndex = 1; rowIndex < parts.rows (); rowIndex++) {  // Start from 1 to skip header row
             if (std::stoi (parts.get_value (rowIndex, 0)) == partId) {
@@ -790,10 +781,9 @@ void WorkOrderManager::generateWorkOrderTXTFile (int workOrderId) {
     }
     file << "\n";
     file << "Cijena rada: " << servicePrice << "\n";
-<<<<<<< HEAD
+
     file << "\nPotpis servisa: ____________\n";
-=======
->>>>>>> 1a971dc03f47d262a0f6310ab6a1c3e050adab2a
+
     file.close ();
     std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
 }
