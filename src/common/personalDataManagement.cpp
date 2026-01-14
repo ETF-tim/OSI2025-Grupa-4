@@ -23,7 +23,7 @@ std::string roleToString (int roleInt) {
 PersonalDataManager::PersonalDataManager (UserManager& um, EmployeeManager& em) : userManager (um), employeeManager (em) {}
 
 void PersonalDataManager::listPersonalData (int id, std::string role) {
-    if (role == "user") {
+    if (role == "CLIENT") {
         // Opening CSV file
         CSVData users;
         try {
@@ -83,7 +83,7 @@ void PersonalDataManager::editPersonalData (int id, std::string role) {
     std::cout << "---- Trenutni podaci korisnika su ----" << std::endl;
     listPersonalData (id, role);
 
-    if (role == "user") {
+    if (role == "CLIENT") {
         // Opening CSV file
         CSVData users;
         try {
