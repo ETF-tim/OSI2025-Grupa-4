@@ -372,3 +372,38 @@ bool PartManager::increasePartStock (int partID, int quantity) {
     }
     return false;
 }
+
+void PartManager::mainPartsManager () {
+    int choice;
+    do {
+        std::cout << "----- UPRAVLJANJE DIJELOVIMA -----" << std::endl;
+        std::cout << "1. Kreiraj dio" << std::endl;
+        std::cout << "2. Prikazi dijelove" << std::endl;
+        std::cout << "3. Uredi dio" << std::endl;
+        std::cout << "4. Obrisi dio" << std::endl;
+        std::cout << "0. Izlaz iz upravljanja dijelovima" << std::endl;
+        std::cout << "Unesite vas izbor (0-4): ";
+        std::cin >> choice;
+        std::cin.ignore ();  // Clear newline character from input buffer
+
+        switch (choice) {
+            case 1:
+                createPart ();
+                break;
+            case 2:
+                listParts ();
+                break;
+            case 3:
+                editPart ();
+                break;
+            case 4:
+                deletePart ();
+                break;
+            case 0:
+                std::cout << "Izlaz iz upravljanja dijelovima." << std::endl;
+                break;
+            default:
+                std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
+        }
+    } while (choice != 0);
+}

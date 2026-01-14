@@ -778,3 +778,43 @@ void WorkOrderManager::generateWorkOrderTXTFile (int workOrderId) {
     file.close ();
     std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
 }
+
+void WorkOrderManager::mainWorkOrdersManager (int id) {
+    int choice;
+    do {
+        std::cout << "\n----- MENADZER RADNIH NALOGA -----" << std::endl;
+        std::cout << "1. Kreiraj radni nalog" << std::endl;
+        std::cout << "2. Prikazi radne naloge" << std::endl;
+        std::cout << "3. Azuriraj radni nalog" << std::endl;
+        std::cout << "4. Obrisi radni nalog" << std::endl;
+        std::cout << "5. Prikazi gotove radne naloge" << std::endl;
+        std::cout << "0. Izlaz iz menadzera radnih naloga" << std::endl;
+
+        std::cout << "Unesite vas izbor: ";
+        std::cin >> choice;
+        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline character from input buffer
+
+        switch (choice) {
+            case 1:
+                createWorkOrder (id);
+                break;
+            case 2:
+                listWorkOrders ();
+                break;
+            case 3:
+                updateWorkOrders ();
+                break;
+            case 4:
+                deleteWorkOrder ();
+                break;
+            case 5:
+                listCompletedWorkOrders ();
+                break;
+            case 0:
+                std::cout << "Izlaz iz menadzera radnih naloga." << std::endl;
+                break;
+            default:
+                std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
+        }
+    } while (choice != 0);
+}
