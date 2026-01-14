@@ -321,6 +321,82 @@ bool EmployeeManager::searchForEmployee (int employeeId) {
     return false;
 }
 
+bool EmployeeManager::searchForEmployeeByEmail (std::string& email) {
+    // Opening CSV file
+    CSVData employees;
+    try {
+        employees = CSVData ("./data/employees.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        return false;
+    }  //------------------
+
+    // Check if employee exists
+    for (int rowIndex = 1; rowIndex < employees.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (employees.get_value (rowIndex, 3) == email) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int EmployeeManager::getEmployeePINByEmail (std::string& email) {
+    // Opening CSV file
+    CSVData employees;
+    try {
+        employees = CSVData ("./data/employees.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        return -1;
+    }  //------------------
+
+    // Check if employee exists
+    for (int rowIndex = 1; rowIndex < employees.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (employees.get_value (rowIndex, 3) == email) {
+            return std::stoi (employees.get_value (rowIndex, 5));
+        }
+    }
+    return -1;
+}
+
+int EmployeeManager::getEmployeeIdByEmail (std::string& email) {
+    // Opening CSV file
+    CSVData employees;
+    try {
+        employees = CSVData ("./data/employees.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        return -1;
+    }  //------------------
+
+    // Check if employee exists
+    for (int rowIndex = 1; rowIndex < employees.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (employees.get_value (rowIndex, 3) == email) {
+            return std::stoi (employees.get_value (rowIndex, 0));
+        }
+    }
+    return -1;
+}
+
+std::string EmployeeManager::getEmployeeRoleByEmail (std::string& email) {
+    // Opening CSV file
+    CSVData employees;
+    try {
+        employees = CSVData ("./data/employees.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        return "";
+    }  //------------------
+
+    // Check if employee exists
+    for (int rowIndex = 1; rowIndex < employees.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (employees.get_value (rowIndex, 3) == email) {
+            return employees.get_value (rowIndex, 6);
+        }
+    }
+    return "";
+}
+
 void EmployeeManager::mainEmployeesManagement () {
     int choice = -1;
     while (choice != 0) {
