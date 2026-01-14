@@ -131,6 +131,10 @@ void EmployeeManager::listEmployees () {
     employees.add_row (header, 0);  // Re-add header row
     //------------------
 
+    // Delete PIN column
+    employees.delete_col (5);
+    //------------------
+
     // Print employees list
     std::cout << "----- LISTA ZAPOSLENIH -----" << std::endl;
     employees.print_csv_data ();

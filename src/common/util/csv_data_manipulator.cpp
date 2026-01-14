@@ -267,7 +267,7 @@ void CSVData::make_data_unique () {
 }
 
 void CSVData::print_csv_data () {
-    cout << "\n=== CSV Data (" << m_rows << " rows, " << m_cols << " cols) ===" << endl;
+    // cout << "\n=== CSV Data (" << m_rows << " rows, " << m_cols << " cols) ===" << endl;
     for (int i = 0; i < m_rows; i++) {
         vector<string> row = CSVData::get_row (i);
         for (int j = 0; j < row.size (); j++) {
