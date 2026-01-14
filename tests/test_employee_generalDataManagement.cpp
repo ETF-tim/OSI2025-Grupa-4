@@ -52,7 +52,7 @@ class GeneralDataManagementTest : public ::testing::Test {
 
 TEST_F (GeneralDataManagementTest, ListGeneralDataSuccess) {
     testing::internal::CaptureStdout ();
-    GeneralDataManagement gdm;
+    GeneralDataManager gdm;
     gdm.listGeneralData ();
     std::string output = testing::internal::GetCapturedStdout ();
 
@@ -69,7 +69,7 @@ TEST_F (GeneralDataManagementTest, ListGeneralDataFileNotFound) {
 
     testing::internal::CaptureStdout ();
     testing::internal::CaptureStderr ();
-    GeneralDataManagement gdm;
+    GeneralDataManager gdm;
     gdm.listGeneralData ();
     std::string stdout_output = testing::internal::GetCapturedStdout ();
     std::string stderr_output = testing::internal::GetCapturedStderr ();
@@ -82,7 +82,7 @@ TEST_F (GeneralDataManagementTest, EditGeneralDataServiceName) {
     auto old_cin = std::cin.rdbuf (input.rdbuf ());
 
     testing::internal::CaptureStdout ();
-    GeneralDataManagement gdm;
+    GeneralDataManager gdm;
     gdm.editGeneralData ();
     testing::internal::GetCapturedStdout ();
 
@@ -97,7 +97,7 @@ TEST_F (GeneralDataManagementTest, EditGeneralDataAddress) {
     auto old_cin = std::cin.rdbuf (input.rdbuf ());
 
     testing::internal::CaptureStdout ();
-    GeneralDataManagement gdm;
+    GeneralDataManager gdm;
     gdm.editGeneralData ();
     testing::internal::GetCapturedStdout ();
 
@@ -112,7 +112,7 @@ TEST_F (GeneralDataManagementTest, EditGeneralDataEmail) {
     auto old_cin = std::cin.rdbuf (input.rdbuf ());
 
     testing::internal::CaptureStdout ();
-    GeneralDataManagement gdm;
+    GeneralDataManager gdm;
     gdm.editGeneralData ();
     testing::internal::GetCapturedStdout ();
 
@@ -127,7 +127,7 @@ TEST_F (GeneralDataManagementTest, EditGeneralDataPhone) {
     auto old_cin = std::cin.rdbuf (input.rdbuf ());
 
     testing::internal::CaptureStdout ();
-    GeneralDataManagement gdm;
+    GeneralDataManager gdm;
     gdm.editGeneralData ();
     testing::internal::GetCapturedStdout ();
 
@@ -142,7 +142,7 @@ TEST_F (GeneralDataManagementTest, EditGeneralDataJIB) {
     auto old_cin = std::cin.rdbuf (input.rdbuf ());
 
     testing::internal::CaptureStdout ();
-    GeneralDataManagement gdm;
+    GeneralDataManager gdm;
     gdm.editGeneralData ();
     testing::internal::GetCapturedStdout ();
 
@@ -157,7 +157,7 @@ TEST_F (GeneralDataManagementTest, EditGeneralDataInvalidChoice) {
     auto old_cin = std::cin.rdbuf (input.rdbuf ());
 
     testing::internal::CaptureStdout ();
-    GeneralDataManagement gdm;
+    GeneralDataManager gdm;
     gdm.editGeneralData ();
     std::string output = testing::internal::GetCapturedStdout ();
 
@@ -171,7 +171,7 @@ TEST_F (GeneralDataManagementTest, EditGeneralDataFileNotFound) {
 
     testing::internal::CaptureStdout ();
     testing::internal::CaptureStderr ();
-    GeneralDataManagement gdm;
+    GeneralDataManager gdm;
     gdm.editGeneralData ();
     testing::internal::GetCapturedStdout ();
     std::string stderr_output = testing::internal::GetCapturedStderr ();
