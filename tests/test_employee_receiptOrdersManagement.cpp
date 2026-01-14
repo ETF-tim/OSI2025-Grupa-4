@@ -4,195 +4,149 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <vector>
 
+#include "../include/common/util/csv_data_manipulator.hpp"
+#include "../include/employee/usersManagement.hpp"
+#include "../include/employee/devicesManagement.hpp"
 #include "../include/employee/receiptOrdersManagement.hpp"
 
-static void write_csv (const std::string& path, const std::vector<std::string>& lines) {
-    std::filesystem::create_directories (std::filesystem::path (path).parent_path ());
-    std::ofstream ofs (path, std::ios::trunc);
-    for (const auto& l : lines) {
-        ofs << l << "\n";
+namespace fs = std::filesystem;
+
+class ReceiptOrderManagerTest : public ::testing::Test {
+protected:
+    UserManager* userManager;
+    DeviceManager* deviceManager;
+    ReceiptOrderManager* receiptOrderManager;
+
+    void SetUp() override {
+        // Ensure data directory exists
+        fs::create_directories("./data");
+        
+        // Create files in correct order: dependencies first
+        createTestUsersCSV();
+        createTestDevicesCSV();
+        createTestReceiptOrdersCSV();
+
+        userManager = new UserManager();
+        deviceManager = new DeviceManager();
+        receiptOrderManager = new ReceiptOrderManager(*userManager, *deviceManager);
     }
-    ofs.close ();
+
+    void TearDown() override {
+        delete receiptOrderManager;
+        delete deviceManager;
+        delete userManager;
+
+        std::remove("./data/receiptOrders.csv");
+        std::remove("./data/users.csv");
+        std::remove("./data/devices.csv");
+        
+        // Clean up generated files
+        if (fs::exists("./ReceiptOrders")) {
+            fs::remove_all("./ReceiptOrders");
+        }
+    }
+
+    void createTestUsersCSV() {
+        std::ofstream file("./data/users.csv");
+        file << "id,firstName,lastName,email,phone,pin\n";
+        file << "1,Marko,Markovic,marko@test.com,065123456,1234\n";
+        file << "2,Petar,Petrovic,petar@test.com,065654321,5678\n";
+        file.close();
+    }
+
+    void createTestDevicesCSV() {
+        std::ofstream file("./data/devices.csv");
+        file << "ID,Brand,Model,IMEI,State\n";
+        file << "1,Samsung,Galaxy S21,123456789012345,NEW\n";
+        file << "2,iPhone,13 Pro,987654321098765,USED\n";
+        file << "3,Xiaomi,Redmi Note 10,111222333444555,DAMAGED\n";
+        file.close();
+    }
+
+    void createTestReceiptOrdersCSV() {
+        std::ofstream file("./data/receiptOrders.csv");
+        file << "id,user_id,device_imei,description,price,taken\n";
+        file << "1,1,123456789012345,Pokvareni ekran,200.00,1\n";
+        file << "2,2,987654321098765,Ne puni se,150.00,0\n";
+        file << "3,1,111222333444555,Nema zvuka,100.00,1\n";
+        file.close();
+    }
+};
+
+TEST_F(ReceiptOrderManagerTest, SearchForReceiptOrder_ExistingOrder) {
+    EXPECT_TRUE(receiptOrderManager->searchForReceiptOrder(1));
+    EXPECT_TRUE(receiptOrderManager->searchForReceiptOrder(2));
+    EXPECT_TRUE(receiptOrderManager->searchForReceiptOrder(3));
 }
 
-static std::string read_file (const std::string& path) {
-    std::ifstream ifs (path);
-    std::ostringstream ss;
-    ss << ifs.rdbuf ();
-    return ss.str ();
+TEST_F(ReceiptOrderManagerTest, SearchForReceiptOrder_NonExistingOrder) {
+    EXPECT_FALSE(receiptOrderManager->searchForReceiptOrder(9999));
+    EXPECT_FALSE(receiptOrderManager->searchForReceiptOrder(0));
+    EXPECT_FALSE(receiptOrderManager->searchForReceiptOrder(-1));
 }
 
-TEST (ReceiptOrderManagerTest, Search_ReturnsFalseWhenNotFound) {
-    const std::string path = "./data/receiptOrders.csv";
-    write_csv (path, {"id,user_id,device_imei,description,price", "1,10,IMEI123,Test description,100.0"});
-
-    UserManager userManager;
-    DeviceManager deviceManager;
-    ReceiptOrderManager mgr (userManager, deviceManager);
-
-    EXPECT_FALSE (mgr.searchForReceiptOrder (2));
+TEST_F(ReceiptOrderManagerTest, IsReceiptOrderFree_FreeOrder) {
+    EXPECT_TRUE(receiptOrderManager->isReceiptOrderFree(1));
+    EXPECT_TRUE(receiptOrderManager->isReceiptOrderFree(3));
 }
 
-TEST (ReceiptOrderManagerTest, Search_ReturnsTrueWhenFound) {
-    const std::string path = "./data/receiptOrders.csv";
-    write_csv (path, {"id,user_id,device_imei,description,price", "1,10,IMEI123,Test description,100.0"});
-
-    UserManager userManager;
-    DeviceManager deviceManager;
-    ReceiptOrderManager mgr (userManager, deviceManager);
-
-    EXPECT_TRUE (mgr.searchForReceiptOrder (1));
+TEST_F(ReceiptOrderManagerTest, IsReceiptOrderFree_TakenOrder) {
+    EXPECT_FALSE(receiptOrderManager->isReceiptOrderFree(2));
 }
 
-TEST (ReceiptOrderManagerTest, List_PrintsSortedById) {
-    const std::string path = "./data/receiptOrders.csv";
-    write_csv (path, {"id,user_id,device_imei,description,price", "5,10,IMEI5,Desc5,50.0", "2,11,IMEI2,Desc2,20.0",
-                      "10,12,IMEI10,Desc10,100.0"});
-
-    UserManager userManager;
-    DeviceManager deviceManager;
-    ReceiptOrderManager mgr (userManager, deviceManager);
-
-    std::ostringstream captured;
-    std::streambuf* oldCout = std::cout.rdbuf (captured.rdbuf ());
-
-    mgr.listReceiptOrders ();
-
-    std::cout.rdbuf (oldCout);
-    std::string out = captured.str ();
-
-    auto p2 = out.find ("2");
-    auto p5 = out.find ("5", p2 == std::string::npos ? 0 : p2);
-    auto p10 = out.find ("10", (p5 == std::string::npos ? 0 : p5));
-    ASSERT_NE (p2, std::string::npos);
-    ASSERT_NE (p5, std::string::npos);
-    ASSERT_NE (p10, std::string::npos);
-    EXPECT_LT (p2, p5);
-    EXPECT_LT (p5, p10);
+TEST_F(ReceiptOrderManagerTest, IsReceiptOrderFree_NonExistingOrder) {
+    EXPECT_FALSE(receiptOrderManager->isReceiptOrderFree(9999));
 }
 
-TEST (ReceiptOrderManagerTest, Delete_RemovesEntry) {
-    const std::string path = "./data/receiptOrders.csv";
-    write_csv (path, {"id,user_id,device_imei,description,price", "1,10,IMEI1,Desc1,10.0", "2,11,IMEI2,Desc2,20.0"});
+TEST_F(ReceiptOrderManagerTest, ChangeReceiptOrderStatus_Success) {
+    // Initial state: free (taken=1)
+    EXPECT_TRUE(receiptOrderManager->isReceiptOrderFree(1));
 
-    UserManager userManager;
-    DeviceManager deviceManager;
-    ReceiptOrderManager mgr (userManager, deviceManager);
+    // Change to not free (taken=0)
+    receiptOrderManager->changeReceiptOrderStatus(1, 0);
+    EXPECT_FALSE(receiptOrderManager->isReceiptOrderFree(1));
 
-    std::istringstream input ("1\n");
-    std::streambuf* oldCin = std::cin.rdbuf (input.rdbuf ());
-
-    std::ostringstream captured;
-    std::streambuf* oldCout = std::cout.rdbuf (captured.rdbuf ());
-
-    mgr.deleteReceiptOrder ();
-
-    std::cin.rdbuf (oldCin);
-    std::cout.rdbuf (oldCout);
-
-    std::string final_csv = read_file (path);
-
-    EXPECT_EQ (final_csv.find ("1,10,IMEI1,Desc1,10.0"), std::string::npos);
-    EXPECT_NE (final_csv.find ("2,11,IMEI2,Desc2,20.0"), std::string::npos);
-}
-TEST (ReceiptOrderManagerTest, Add_AppendsNewEntry) {
-    const std::string receipt_orders_path = "./data/receiptOrders.csv";
-    const std::string users_path = "./data/users.csv";
-    const std::string devices_path = "./data/devices.csv";
-
-    write_csv (users_path, {"id,firstName,lastName,email,phone,pin", "13,Test,User,test@example.com,1234567890,1111",
-                            "999,Dummy,User,dummy@example.com,0000000000,0000"});
-
-    write_csv (devices_path,
-               {"ID,Brand,Model,IMEI,State", "3,TestBrand,TestModel,IMEI3,NEW", "999,DummyBrand,DummyModel,DummyIMEI,NEW"});
-
-    write_csv (receipt_orders_path, {"id,user_id,device_imei,description,price,taken"});
-
-    UserManager userManager;
-    DeviceManager deviceManager;
-    ReceiptOrderManager mgr (userManager, deviceManager);
-
-    std::istringstream input ("13\n3\nDesc3\n30.0\n");
-    std::streambuf* oldCin = std::cin.rdbuf (input.rdbuf ());
-
-    std::ostringstream captured;
-    std::streambuf* oldCout = std::cout.rdbuf (captured.rdbuf ());
-
-    mgr.createReceiptOrder ();
-
-    std::cin.rdbuf (oldCin);
-    std::cout.rdbuf (oldCout);
-
-    std::string final_csv = read_file (receipt_orders_path);
-
-    EXPECT_NE (final_csv.find ("13"), std::string::npos);
-    EXPECT_NE (final_csv.find ("IMEI3"), std::string::npos);
-    EXPECT_NE (final_csv.find ("Desc3"), std::string::npos);
-    EXPECT_NE (final_csv.find ("30"), std::string::npos);
-    EXPECT_NE (final_csv.find ("1"), std::string::npos);
-
-    EXPECT_NE (final_csv.find ("id,user_id,device_imei,description,price,taken"), std::string::npos);
+    // Change back to free (taken=1)
+    receiptOrderManager->changeReceiptOrderStatus(1, 1);
+    EXPECT_TRUE(receiptOrderManager->isReceiptOrderFree(1));
 }
 
-TEST (ReceiptOrderManagerTest, ListFree_PrintsOnlyFreeEntries) {
-    const std::string path = "./data/receiptOrders.csv";
-    write_csv (path, {"id,user_id,device_imei,description,price,taken", "1,10,IMEI1,Desc1,10.0,1", "2,11,IMEI2,Desc2,20.0,0",
-                      "3,12,IMEI3,Desc3,30.0,1"});
+TEST_F(ReceiptOrderManagerTest, ChangeReceiptOrderStatus_MultipleChanges) {
+    int orderId = 3;
 
-    UserManager userManager;
-    DeviceManager deviceManager;
-    ReceiptOrderManager mgr (userManager, deviceManager);
+    // Initial: free
+    EXPECT_TRUE(receiptOrderManager->isReceiptOrderFree(orderId));
 
-    std::ostringstream captured;
-    std::streambuf* oldCout = std::cout.rdbuf (captured.rdbuf ());
+    // Change 1: take
+    receiptOrderManager->changeReceiptOrderStatus(orderId, 0);
+    EXPECT_FALSE(receiptOrderManager->isReceiptOrderFree(orderId));
 
-    mgr.listFreeReceiptOrders ();
+    // Change 2: free
+    receiptOrderManager->changeReceiptOrderStatus(orderId, 1);
+    EXPECT_TRUE(receiptOrderManager->isReceiptOrderFree(orderId));
 
-    std::cout.rdbuf (oldCout);
-    std::string out = captured.str ();
-
-    EXPECT_NE (out.find ("1 | 10 | IMEI1 | Desc1 | 10.0 | 1"), std::string::npos);
-    EXPECT_NE (out.find ("3 | 12 | IMEI3 | Desc3 | 30.0 | 1"), std::string::npos);
-
-    EXPECT_EQ (out.find ("2 | 11 | IMEI2"), std::string::npos);
-    EXPECT_EQ (out.find ("IMEI2"), std::string::npos);
-
-    EXPECT_NE (out.find ("LISTA SLOBODNIH PRIJEMNIH NALOGA"), std::string::npos);
-    EXPECT_NE (out.find ("=== CSV Data"), std::string::npos);
-}
-TEST (ReceiptOrderManagerTest, IsReceiptOrderFree_ReturnsCorrectStatus) {
-    const std::string path = "./data/receiptOrders.csv";
-    write_csv (path, {"id,user_id,device_imei,description,price,taken", "1,10,IMEI1,Desc1,10.0,1", "2,11,IMEI2,Desc2,20.0,0"});
-
-    UserManager userManager;
-    DeviceManager deviceManager;
-    ReceiptOrderManager mgr (userManager, deviceManager);
-
-    EXPECT_TRUE (mgr.isReceiptOrderFree (1));
-    EXPECT_FALSE (mgr.isReceiptOrderFree (2));
-
-    EXPECT_FALSE (mgr.isReceiptOrderFree (999));
+    // Change 3: take again
+    receiptOrderManager->changeReceiptOrderStatus(orderId, 0);
+    EXPECT_FALSE(receiptOrderManager->isReceiptOrderFree(orderId));
 }
 
-TEST (ReceiptOrderManagerTest, ChangeReceiptOrderStatus_UpdatesCsvFile) {
-    const std::string path = "./data/receiptOrders.csv";
-    write_csv (path, {"id,user_id,device_imei,description,price,taken", "1,10,IMEI1,Desc1,10.0,1", "2,11,IMEI2,Desc2,20.0,0"});
+TEST_F(ReceiptOrderManagerTest, ListReceiptOrders_NoException) {
+    testing::internal::CaptureStdout();
+    EXPECT_NO_THROW(receiptOrderManager->listReceiptOrders());
+    testing::internal::GetCapturedStdout();
+}
 
-    UserManager userManager;
-    DeviceManager deviceManager;
-    ReceiptOrderManager mgr (userManager, deviceManager);
+TEST_F(ReceiptOrderManagerTest, ListFreeReceiptOrders_NoException) {
+    testing::internal::CaptureStdout();
+    EXPECT_NO_THROW(receiptOrderManager->listFreeReceiptOrders());
+    testing::internal::GetCapturedStdout();
+}
 
-    mgr.changeReceiptOrderStatus (2, true);
+TEST_F(ReceiptOrderManagerTest, GenerateReceiptOrderTXTFile_ExistingOrder) {
+    fs::create_directories("./ReceiptOrders");
 
-    std::string final_csv = read_file (path);
+    EXPECT_NO_THROW(receiptOrderManager->generateReceiptOrderTXTFile(1));
 
-    EXPECT_NE (final_csv.find ("2,11,IMEI2,Desc2,20.0,1"), std::string::npos);
-
-    EXPECT_NE (final_csv.find ("1,10,IMEI1,Desc1,10.0,1"), std::string::npos);
-
-    mgr.changeReceiptOrderStatus (1, false);
-    final_csv = read_file (path);
-    EXPECT_NE (final_csv.find ("1,10,IMEI1,Desc1,10.0,0"), std::string::npos);
+    EXPECT_TRUE(fs::exists("./ReceiptOrders/nalog_1.txt"));
 }

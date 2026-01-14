@@ -170,6 +170,7 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
     CSVData parts;
 
     try {
+        serviceReport = CSVData ("./data/serviceReports.csv");
         workOrders = CSVData ("./data/workOrders.csv");
         receiptOrders = CSVData ("./data/receiptOrders.csv");
         users = CSVData ("./data/users.csv");
@@ -193,7 +194,7 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
         return;
     }  //------------------
 
-    std::string workOrderId = workOrders.get_value (foundserviceReportRow, 1);
+    std::string workOrderId = serviceReport.get_value (foundserviceReportRow, 1);  // FIX: changed from workOrders to serviceReport
     int foundWorkOrderRow = -1;
 
     for (rowIndex = 1; rowIndex < workOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
@@ -251,7 +252,7 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
     int foundDeviceRow = -1;
 
     for (rowIndex = 1; rowIndex < devices.rows (); rowIndex++) {  // Start from 1 to skip header row
-        if (std::stoi (devices.get_value (rowIndex, 3)) == std::stoi (deviceIMEI)) {
+        if (devices.get_value (rowIndex, 3) == deviceIMEI) {
             foundDeviceRow = rowIndex;
             break;
         }
