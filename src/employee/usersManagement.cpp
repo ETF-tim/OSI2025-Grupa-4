@@ -119,7 +119,7 @@ void UserManager::listUsers () {
     //------------------
 
     // Delete PIN column
-    employees.delete_col (5);
+    users.delete_col (5);
     //------------------
 
     // Print parts list

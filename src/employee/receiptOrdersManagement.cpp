@@ -18,11 +18,11 @@ ReceiptOrderManager::ReceiptOrderManager (UserManager& userManager, DeviceManage
 
 void ReceiptOrderManager::createReceiptOrder () {
     char confirm;
-    std::cout << "Da li ste sigurni da zelite kreirati radni nalog? (d/n): ";
+    std::cout << "Da li ste sigurni da zelite kreirati prijemni nalog? (d/n): ";
     std::cin >> confirm;
 
     if (confirm != 'd' && confirm != 'D') {
-        std::cout << "Kreiranje radnog naloga otkazano." << std::endl;
+        std::cout << "Kreiranje prijemnog naloga otkazano." << std::endl;
         return;
     }
 
