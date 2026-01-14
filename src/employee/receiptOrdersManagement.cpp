@@ -381,8 +381,8 @@ void ReceiptOrderManager::generateReceiptOrderTXTFile (int receiptOrderId) {
 <<<<<<< HEAD
     file << "\nPotpis servisa: ____________\n";
 
-=======
+    == == == =
 >>>>>>> 1a971dc03f47d262a0f6310ab6a1c3e050adab2a
-    file.close ();
+                 file.close ();
     std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
 }
