@@ -1,6 +1,5 @@
 #include "../../include/employee/serviceReportsManagement.hpp"
 
-#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -266,11 +265,10 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
 
     std::string brand = devices.get_value (foundDeviceRow, 1);
     std::string model = devices.get_value (foundDeviceRow, 2);
-    std::filesystem::create_directories ("./data/ServiceReports");
 
     std::string fileName = "nalog_" + std::to_string (serviceReportID);
 
-    std::ofstream file ("./data/ServiceReports/" + fileName + ".txt");
+    std::ofstream file ("./ServiceReports/" + fileName + ".txt");
 
     if (!file) {
         std::cout << "Nije moguce kreirati fajl!\n";

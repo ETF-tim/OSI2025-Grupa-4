@@ -1,6 +1,5 @@
 #include "../../include/employee/billsManagement.hpp"
 
-#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -215,11 +214,10 @@ void BillManager::generateBillTXTFile (int billId) {
 
     std::time_t currentDate = std::time (nullptr);
     std::string opisPopravke = receiptOrders.get_value (foundReceiptOrderRow, 3);
-    std::filesystem::create_directories ("./data/Bills");
 
     std::string fileName = "racun_" + std::to_string (billId);
 
-    std::ofstream file ("./data/Bills/" + fileName + ".txt");
+    std::ofstream file ("./Bills/" + fileName + ".txt");
 
     if (!file) {
         std::cout << "Nije moguce kreirati fajl!\n";
