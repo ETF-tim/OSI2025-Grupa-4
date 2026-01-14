@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <iostream>
 #include <limits>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -82,6 +83,9 @@ std::string formatTimestamp (const std::string& timestampStr) {
     oss << std::put_time (timeinfo, "%d.%m.%Y %H:%M:%S");
     return oss.str ();
 }
+
+WorkOrderManager::WorkOrderManager (ReceiptOrderManager& receiptOrderManager, PartManager& partManager)
+    : receiptOrderManager (receiptOrderManager), partManager (partManager) {}
 
 void WorkOrderManager::createWorkOrder (int technicianID) {
     // Opening CSV file
