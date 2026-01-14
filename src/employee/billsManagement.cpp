@@ -10,7 +10,6 @@
 #include "../../include/common/util/GenerateUniqueId.hpp"
 #include "../../include/common/util/Validate.hpp"
 #include "../../include/common/util/csv_data_manipulator.hpp"
-#include "billsManagement.hpp"
 
 std::string BillManager::paymentMethodToString (int paymentMethodInt) {
     if (paymentMethodInt == 1)

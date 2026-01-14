@@ -15,9 +15,8 @@
 #include "../../include/employee/employeesManagement.hpp"
 #include "../../include/employee/partsManagement.hpp"
 #include "../../include/employee/receiptOrdersManagement.hpp"
-#include "workOrdersManagement.hpp"
 
-std::string statusToString (WorkOrderStatus status) {
+std::string WorkOrderManager::statusToString (WorkOrderStatus status) {
     switch (status) {
         case WorkOrderStatus::IN_DIAGNOSTICS:
             return "IN_DIAGNOSTICS";
@@ -32,7 +31,7 @@ std::string statusToString (WorkOrderStatus status) {
     }
 }
 
-std::string partsToString (const std::map<int, int>& parts) {
+std::string WorkOrderManager::partsToString (const std::map<int, int>& parts) {
     if (parts.empty ()) return "";
     std::string result;
     for (const auto& p : parts) {
@@ -42,7 +41,7 @@ std::string partsToString (const std::map<int, int>& parts) {
     return result;
 }
 
-std::map<int, int> stringToParts (const std::string s) {
+std::map<int, int> WorkOrderManager::stringToParts (const std::string s) {
     std::map<int, int> parts;
     if (s.empty ()) return parts;
 

@@ -12,7 +12,6 @@
 #include "../../include/common/util/csv_data_manipulator.hpp"
 #include "../../include/employee/devicesManagement.hpp"
 #include "../../include/employee/usersManagement.hpp"
-#include "receiptOrdersManagement.hpp"
 
 ReceiptOrderManager::ReceiptOrderManager (UserManager& userManager, DeviceManager& deviceManager)
     : userManager (userManager), deviceManager (deviceManager) {}

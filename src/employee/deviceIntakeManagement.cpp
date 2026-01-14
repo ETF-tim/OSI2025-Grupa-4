@@ -10,7 +10,6 @@
 #include "../../include/common/util/GenerateUniqueId.hpp"
 #include "../../include/common/util/Validate.hpp"
 #include "../../include/common/util/csv_data_manipulator.hpp"
-#include "../../include/employee/devicesManagement.hpp"
 
 DeviceIntakeManager::DeviceIntakeManager (UserManager& um, DeviceManager& dm, ReceiptOrderManager& rom)
     : userManager (um), deviceManager (dm), receiptOrderManager (rom) {}

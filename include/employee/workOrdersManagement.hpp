@@ -26,4 +26,5 @@ class WorkOrderManager {
     private:
         std::string statusToString (WorkOrderStatus status);
         std::string partsToString (const std::map<int, int>& parts);
+        std::map<int, int> stringToParts (const std::string s);
 };
