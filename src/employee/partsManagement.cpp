@@ -373,6 +373,25 @@ bool PartManager::increasePartStock (int partID, int quantity) {
     return false;
 }
 
+double getPartPrice (int partId) {
+    // Opening CSV file
+    CSVData parts;
+    try {
+        parts = CSVData ("./data/parts.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        std::cerr << "Neuspjesno dobijanje cijene dijela";
+        return 0.0;
+    }  //------------------
+
+    for (int rowIndex = 1; rowIndex < parts.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (parts.get_value (rowIndex, 0)) == partId) {
+            return std::stod (parts.get_value (rowIndex, 4));
+        }
+    }
+    return 0.0;
+}
+
 void PartManager::mainPartsManager () {
     int choice;
     do {
