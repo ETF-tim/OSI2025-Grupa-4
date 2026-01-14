@@ -1,7 +1,8 @@
 #pragma once
 
-class GeneralDataManagement {
+class GeneralDataManager {
     public:
         void listGeneralData ();
         void editGeneralData ();
+        void mainGeneralDataManagement ();
 };

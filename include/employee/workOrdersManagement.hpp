@@ -23,7 +23,7 @@ class WorkOrderManager {
         void generateWorkOrderTXTFile (int workOrderId);
         double calculateTotalPrice (int workOrderId);
 
-        void mainWorkOrdersManager (int id);
+        void mainWorkOrdersManagement (int id);
 
     private:
         std::string statusToString (WorkOrderStatus status);

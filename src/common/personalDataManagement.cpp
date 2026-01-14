@@ -20,9 +20,9 @@ std::string roleToString (int roleInt) {
         return "UNKNOWN";
 }
 
-PersonalDataManagement::PersonalDataManagement (UserManager& um, EmployeeManager& em) : userManager (um), employeeManager (em) {}
+PersonalDataManager::PersonalDataManager (UserManager& um, EmployeeManager& em) : userManager (um), employeeManager (em) {}
 
-void PersonalDataManagement::listPersonalData (int id, std::string role) {
+void PersonalDataManager::listPersonalData (int id, std::string role) {
     if (role == "user") {
         // Opening CSV file
         CSVData users;
@@ -79,7 +79,7 @@ void PersonalDataManagement::listPersonalData (int id, std::string role) {
     }
 }
 
-void PersonalDataManagement::editPersonalData (int id, std::string role) {
+void PersonalDataManager::editPersonalData (int id, std::string role) {
     std::cout << "---- Trenutni podaci korisnika su ----" << std::endl;
     listPersonalData (id, role);
 

@@ -6,7 +6,7 @@
 #include "../../include/common/util/Validate.hpp"
 #include "../../include/common/util/csv_data_manipulator.hpp"
 
-void GeneralDataManagement::listGeneralData () {
+void GeneralDataManager::listGeneralData () {
     // Opening CSV file
     CSVData generalData;
     try {
@@ -26,7 +26,7 @@ void GeneralDataManagement::listGeneralData () {
     std::cout << "JIB: " << generalData.get_value (1, 4) << std::endl;
     std::cout << "----------------------------" << std::endl << std::endl;
 }
-void GeneralDataManagement::editGeneralData () {
+void GeneralDataManager::editGeneralData () {
     // Opening CSV file
     CSVData generalData;
     try {
@@ -97,4 +97,31 @@ void GeneralDataManagement::editGeneralData () {
     // Print updated general data
     listGeneralData ();
     std::cout << "Uspjesno uređen podatak servisa!" << std::endl;
+}
+
+void GeneralDataManager::mainGeneralDataManagement () {
+    int choice;
+    do {
+        std::cout << "----- UPRAVLJANJE PODACIMA SERVISA -----" << std::endl;
+        std::cout << "1. Prikazi podatke servisa" << std::endl;
+        std::cout << "2. Uredi podatke servisa" << std::endl;
+        std::cout << "0. Izlaz iz upravljanja podacima servisa" << std::endl;
+        std::cout << "Unesite vas izbor (0-2): ";
+        std::cin >> choice;
+        std::cin.ignore ();  // Clear newline character from input buffer
+
+        switch (choice) {
+            case 1:
+                listGeneralData ();
+                break;
+            case 2:
+                editGeneralData ();
+                break;
+            case 0:
+                std::cout << "Izlaz iz upravljanja podacima servisa." << std::endl;
+                break;
+            default:
+                std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
+        }
+    } while (choice != 0);
 }

@@ -5,11 +5,11 @@
 #include "../../include/employee/usersManagement.hpp"
 #include "../../include/employee/workOrdersManagement.hpp"
 
-PaymentManagement::PaymentManagement (WorkOrderManager& workOrderManager, BillManager& billManager,
-                                      ServiceReportManager& serviceReportManager)
+PaymentManager::PaymentManager (WorkOrderManager& workOrderManager, BillManager& billManager,
+                                ServiceReportManager& serviceReportManager)
     : workOrderManager (workOrderManager), billManager (billManager), serviceReportManager (serviceReportManager) {}
 
-void PaymentManagement::createPayment () {
+void PaymentManager::createPayment () {
     workOrderManager.listWorkOrders ();
 
     std::cout << "Izaberite ID radnog naloga za naplatu:";

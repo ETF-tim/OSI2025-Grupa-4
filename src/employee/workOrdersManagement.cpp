@@ -808,7 +808,7 @@ double WorkOrderManager::calculateTotalPrice (int workOrderId) {
     throw std::logic_error ("Radni nalog sa unesenim ID-em nije pronadjen.");
 }
 
-void WorkOrderManager::mainWorkOrdersManager (int id) {
+void WorkOrderManager::mainWorkOrdersManagement (int id) {
     int choice;
     do {
         std::cout << "\n----- MENADZER RADNIH NALOGA -----" << std::endl;

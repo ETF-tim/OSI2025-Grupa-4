@@ -56,6 +56,8 @@ bool Authentication::login (bool isEmployeeSystem, int& id, std::string& role) {
 bool Authentication::logout (int& id, std::string& role) {
     id = -1;
     role = "";
-    std::cout << "Uspjesno odjavljen korisnik." << std::endl;
+    std::cout << "==============================" << std::endl << std::endl;
+    std::cout << " Uspjesno odjavljen korisnik  " << std::endl;
+    std::cout << "==============================" << std::endl << std::endl;
     return true;
 }

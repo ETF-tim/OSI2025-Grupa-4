@@ -2,12 +2,12 @@
 #include "../employee/employeesManagement.hpp"
 #include "../employee/usersManagement.hpp"
 
-class PersonalDataManagement {
+class PersonalDataManager {
         UserManager& userManager;
         EmployeeManager& employeeManager;
 
     public:
-        PersonalDataManagement (UserManager& um, EmployeeManager& em);
+        PersonalDataManager (UserManager& um, EmployeeManager& em);
 
         void listPersonalData (int id, std::string role);
         void editPersonalData (int id, std::string role);

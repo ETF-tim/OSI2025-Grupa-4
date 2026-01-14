@@ -50,7 +50,7 @@ int ServiceReportManager::createServiceReport (int WorkOrderID) {
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
         std::cerr << "Neuspjesno kreiranje novog servisnog izvjestaja";
-        return;
+        return -1;
     }
 
     // Store and remove header row
@@ -65,7 +65,7 @@ int ServiceReportManager::createServiceReport (int WorkOrderID) {
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
         std::cerr << "Neuspjesno kreiranje novog uredjaja";
-        return;
+        return -1;
     }  //------------------
 
     serviceReports.add_row (header, 0);  // Re-add header row

@@ -5,12 +5,12 @@
 
 enum class PaymentMethod;
 
-class PaymentManagement {
+class PaymentManager {
         WorkOrderManager& workOrderManager;
         BillManager& billManager;
         ServiceReportManager& serviceReportManager;
 
     public:
-        PaymentManagement (WorkOrderManager& workOrderManager, BillManager& billManager, ServiceReportManager& serviceReportManager);
+        PaymentManager (WorkOrderManager& workOrderManager, BillManager& billManager, ServiceReportManager& serviceReportManager);
         void createPayment ();
 };

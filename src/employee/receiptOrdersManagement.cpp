@@ -381,7 +381,7 @@ void ReceiptOrderManager::generateReceiptOrderTXTFile (int receiptOrderId) {
     std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
 }
 
-void ReceiptOrderManager::mainReceiptOrdersManager () {
+void ReceiptOrderManager::mainReceiptOrdersManagement () {
     int choice;
     do {
         std::cout << "\n----- MENADZER PRIJEMNIH NALOGA -----" << std::endl;

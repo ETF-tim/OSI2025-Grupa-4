@@ -9,11 +9,14 @@
 				"-fdiagnostics-color=always",
 				"-g",
 				"${workspaceFolder}\\src\\*.cpp",
+				"${workspaceFolder}\\src\\client\\*.cpp",
+				"${workspaceFolder}\\src\\common\\*.cpp",
 				"${workspaceFolder}\\src\\common\\models\\*.cpp",
 				"${workspaceFolder}\\src\\common\\util\\*.cpp",
-				"${workspaceFolder}\\tests\\*.cpp",
+				"${workspaceFolder}\\src\\employee\\*.cpp",
+				//"${workspaceFolder}\\tests\\*.cpp",
 				"-o",
-				"${fileDirname}\\${fileBasenameNoExtension}.exe"
+				"${workspaceFolder}\\${fileBasenameNoExtension}.exe"
 			],
 			"options": {
 				"cwd": "c:\\msys64\\ucrt64\\bin"

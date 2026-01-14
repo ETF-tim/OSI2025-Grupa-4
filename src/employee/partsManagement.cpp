@@ -373,7 +373,7 @@ bool PartManager::increasePartStock (int partID, int quantity) {
     return false;
 }
 
-double getPartPrice (int partId) {
+double PartManager::getPartPrice (int partId) {
     // Opening CSV file
     CSVData parts;
     try {
@@ -392,7 +392,7 @@ double getPartPrice (int partId) {
     return 0.0;
 }
 
-void PartManager::mainPartsManager () {
+void PartManager::mainPartsManagement () {
     int choice;
     do {
         std::cout << "----- UPRAVLJANJE DIJELOVIMA -----" << std::endl;
