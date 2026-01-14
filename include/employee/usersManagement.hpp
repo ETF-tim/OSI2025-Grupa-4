@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 class UserManager {
     public:
@@ -7,5 +8,10 @@ class UserManager {
         void editUser ();
         void deleteUser ();
         bool searchForUser (int userId);
+
+        bool searchForUserByEmail (std::string& email);
+        int getUserPINByEmail (std::string& email);
+        int getUserIdByEmail (std::string& email);
+
         void mainUserManagement ();
 };

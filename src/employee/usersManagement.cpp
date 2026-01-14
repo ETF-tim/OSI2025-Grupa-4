@@ -293,6 +293,63 @@ bool UserManager::searchForUser (int userId) {
     return false;
 }
 
+bool UserManager::searchForUserByEmail (std::string& email) {
+    // Opening CSV file
+    CSVData users;
+    try {
+        users = CSVData ("./data/users.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        return false;
+    }  //------------------
+
+    // Check if user exists
+    for (int rowIndex = 1; rowIndex < users.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (users.get_value (rowIndex, 3) == email) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int UserManager::getUserPINByEmail (std::string& email) {
+    // Opening CSV file
+    CSVData users;
+    try {
+        users = CSVData ("./data/users.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        return -1;
+    }  //------------------
+
+    // Check if user exists
+    for (int rowIndex = 1; rowIndex < users.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (users.get_value (rowIndex, 3) == email) {
+            return std::stoi (users.get_value (rowIndex, 5));
+        }
+    }
+    return -1;
+}
+
+int UserManager::getUserIdByEmail (std::string& email) {
+    // Opening CSV file
+    CSVData users;
+    try {
+        users = CSVData ("./data/users.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        return -1;
+    }  //------------------
+
+    // Check if user exists
+    for (int rowIndex = 1; rowIndex < users.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (users.get_value (rowIndex, 3) == email) {
+            return std::stoi (users.get_value (rowIndex, 0));
+        }
+    }
+    return -1;
+}
+
 void UserManager::mainUserManagement () {
     int choice;
     do {
