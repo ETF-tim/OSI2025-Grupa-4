@@ -85,7 +85,6 @@ void GeneralDataManagement::editGeneralData () {
             } while (!Validate::isValidJIB (newValue));
             break;
     }
-    std::getline (std::cin, newValue);
 
     // Update attribute in CSV data
     generalData.set_value (1, attributeChoice - 1, newValue);

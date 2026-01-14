@@ -9,7 +9,6 @@
 #include "../../include/common/util/GenerateUniqueId.hpp"
 #include "../../include/common/util/Validate.hpp"
 #include "../../include/common/util/csv_data_manipulator.hpp"
-#include "serviceReportsManagement.hpp"
 
 std::map<int, int> stringToParts (const std::string s) {
     std::map<int, int> parts;
@@ -171,6 +170,7 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
     CSVData parts;
 
     try {
+        serviceReport = CSVData ("./data/serviceReports.csv");
         workOrders = CSVData ("./data/workOrders.csv");
         receiptOrders = CSVData ("./data/receiptOrders.csv");
         users = CSVData ("./data/users.csv");
@@ -194,7 +194,7 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
         return;
     }  //------------------
 
-    std::string workOrderId = workOrders.get_value (foundserviceReportRow, 1);
+    std::string workOrderId = serviceReport.get_value (foundserviceReportRow, 1);  // FIX: changed from workOrders to serviceReport
     int foundWorkOrderRow = -1;
 
     for (rowIndex = 1; rowIndex < workOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
@@ -252,7 +252,7 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
     int foundDeviceRow = -1;
 
     for (rowIndex = 1; rowIndex < devices.rows (); rowIndex++) {  // Start from 1 to skip header row
-        if (std::stoi (devices.get_value (rowIndex, 3)) == std::stoi (deviceIMEI)) {
+        if (devices.get_value (rowIndex, 3) == deviceIMEI) {
             foundDeviceRow = rowIndex;
             break;
         }
@@ -301,4 +301,31 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
 
     file.close ();
     std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
+}
+
+void ServiceReportManager::mainServiceReportsManager () {
+    int choice;
+    do {
+        std::cout << "\n----- MENADZER SERVISNIH IZVJESTAJA -----" << std::endl;
+        std::cout << "1. Prikazi servisne izvjestaje" << std::endl;
+        std::cout << "2. Obrisi servisni izvjestaj" << std::endl;
+        std::cout << "0. Izlaz iz menadzera servisnih izvjestaja" << std::endl;
+        std::cout << "Unesite vas izbor: ";
+        std::cin >> choice;
+        std::cin.ignore ();
+        switch (choice) {
+            case 1:
+                listServiceReport ();
+                break;
+            case 2:
+                deleteServiceReport ();
+                break;
+            case 0:
+                std::cout << "Izlaz iz menadzera servisnih izvjestaja." << std::endl;
+                break;
+            default:
+                std::cout << "Nepostojeca opcija. Pokusajte ponovo." << std::endl;
+                break;
+        }
+    } while (choice != 0);
 }

@@ -12,7 +12,6 @@
 #include "../../include/common/util/csv_data_manipulator.hpp"
 #include "../../include/employee/devicesManagement.hpp"
 #include "../../include/employee/usersManagement.hpp"
-#include "receiptOrdersManagement.hpp"
 
 ReceiptOrderManager::ReceiptOrderManager (UserManager& userManager, DeviceManager& deviceManager)
     : userManager (userManager), deviceManager (deviceManager) {}
@@ -385,4 +384,36 @@ void ReceiptOrderManager::generateReceiptOrderTXTFile (int receiptOrderId) {
 >>>>>>> 1a971dc03f47d262a0f6310ab6a1c3e050adab2a
     file.close ();
     std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
+}
+
+void ReceiptOrderManager::mainReceiptOrdersManager () {
+    int choice;
+    do {
+        std::cout << "\n----- MENADZER PRIJEMNIH NALOGA -----" << std::endl;
+        std::cout << "1. Kreiraj prijemni nalog" << std::endl;
+        std::cout << "2. Prikazi prijemne naloge" << std::endl;
+        std::cout << "3. Obrisi prijemni nalog" << std::endl;
+        std::cout << "0. Izlaz iz menadzera prijemnih naloga" << std::endl;
+        std::cout << "Unesite vas izbor: ";
+        std::cin >> choice;
+        std::cin.ignore ();  // Clear newline character from input buffer
+
+        switch (choice) {
+            case 1:
+                createReceiptOrder ();
+                break;
+            case 2:
+                listReceiptOrders ();
+                break;
+            case 3:
+                deleteReceiptOrder ();
+                break;
+            case 0:
+                std::cout << "Izlaz iz menadzera prijemnih naloga." << std::endl;
+                break;
+            default:
+                std::cout << "Pogresan izbor. Pokusajte ponovo." << std::endl;
+                break;
+        }
+    } while (choice != 0);
 }

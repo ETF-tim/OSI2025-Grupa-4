@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <iostream>
 #include <limits>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -15,9 +16,8 @@
 #include "../../include/employee/employeesManagement.hpp"
 #include "../../include/employee/partsManagement.hpp"
 #include "../../include/employee/receiptOrdersManagement.hpp"
-#include "workOrdersManagement.hpp"
 
-std::string statusToString (WorkOrderStatus status) {
+std::string WorkOrderManager::statusToString (WorkOrderStatus status) {
     switch (status) {
         case WorkOrderStatus::IN_DIAGNOSTICS:
             return "IN_DIAGNOSTICS";
@@ -32,7 +32,7 @@ std::string statusToString (WorkOrderStatus status) {
     }
 }
 
-std::string partsToString (const std::map<int, int>& parts) {
+std::string WorkOrderManager::partsToString (const std::map<int, int>& parts) {
     if (parts.empty ()) return "";
     std::string result;
     for (const auto& p : parts) {
@@ -42,7 +42,7 @@ std::string partsToString (const std::map<int, int>& parts) {
     return result;
 }
 
-std::map<int, int> stringToParts (const std::string s) {
+std::map<int, int> WorkOrderManager::stringToParts (const std::string s) {
     std::map<int, int> parts;
     if (s.empty ()) return parts;
 
@@ -83,6 +83,9 @@ std::string formatTimestamp (const std::string& timestampStr) {
     oss << std::put_time (timeinfo, "%d.%m.%Y %H:%M:%S");
     return oss.str ();
 }
+
+WorkOrderManager::WorkOrderManager (ReceiptOrderManager& receiptOrderManager, PartManager& partManager)
+    : receiptOrderManager (receiptOrderManager), partManager (partManager) {}
 
 void WorkOrderManager::createWorkOrder (int technicianID) {
     // Opening CSV file
@@ -793,4 +796,44 @@ void WorkOrderManager::generateWorkOrderTXTFile (int workOrderId) {
 >>>>>>> 1a971dc03f47d262a0f6310ab6a1c3e050adab2a
     file.close ();
     std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
+}
+
+void WorkOrderManager::mainWorkOrdersManager (int id) {
+    int choice;
+    do {
+        std::cout << "\n----- MENADZER RADNIH NALOGA -----" << std::endl;
+        std::cout << "1. Kreiraj radni nalog" << std::endl;
+        std::cout << "2. Prikazi radne naloge" << std::endl;
+        std::cout << "3. Azuriraj radni nalog" << std::endl;
+        std::cout << "4. Obrisi radni nalog" << std::endl;
+        std::cout << "5. Prikazi gotove radne naloge" << std::endl;
+        std::cout << "0. Izlaz iz menadzera radnih naloga" << std::endl;
+
+        std::cout << "Unesite vas izbor: ";
+        std::cin >> choice;
+        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline character from input buffer
+
+        switch (choice) {
+            case 1:
+                createWorkOrder (id);
+                break;
+            case 2:
+                listWorkOrders ();
+                break;
+            case 3:
+                updateWorkOrders ();
+                break;
+            case 4:
+                deleteWorkOrder ();
+                break;
+            case 5:
+                listCompletedWorkOrders ();
+                break;
+            case 0:
+                std::cout << "Izlaz iz menadzera radnih naloga." << std::endl;
+                break;
+            default:
+                std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
+        }
+    } while (choice != 0);
 }
