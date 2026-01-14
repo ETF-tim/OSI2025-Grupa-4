@@ -53,7 +53,9 @@ void receptionistMainMenu () {
         std::cout << "2. Upravljanje korisnickim nalozima" << std::endl;
         std::cout << "3. Upravljanje prijemnim nalozima" << std::endl;
         std::cout << "4. Pregled statistike" << std::endl;
-        std::cout << "5. Naplata" << std::endl << std::endl;
+        std::cout << "5. Naplata" << std::endl << std::endl << std::endl;
+
+        std::cout << "6. Upravljanje ličnim podacima" << std::endl << std::endl;
 
         std::cout << "0. Odjava sa sistema" << std::endl;
 
@@ -62,7 +64,7 @@ void receptionistMainMenu () {
             std::cout << "Unesite vas izbor: ";
             std::cin >> choice;
             std::cin.ignore ();  // Clear newline character from input buffer
-        } while (choice < 0 || choice > 5);
+        } while (choice < 0 || choice > 6);
 
         switch (choice) {
             case 1:
@@ -79,6 +81,9 @@ void receptionistMainMenu () {
                 break;
             case 5:
                 paymentManager.createPayment ();
+                break;
+            case 6:
+                personalDataManager.mainPersonalDataManagement (id, role);
                 break;
             case 0:
                 return;
@@ -106,6 +111,8 @@ void technicianMainMenu () {
         std::cout << "6. Pregled statistike" << std::endl;
         std::cout << "7. Naplata" << std::endl << std::endl << std::endl;
 
+        std::cout << "8. Upravljanje ličnim podacima" << std::endl << std::endl;
+
         std::cout << "0. Odjava sa sistema" << std::endl;
 
         int choice;
@@ -113,7 +120,7 @@ void technicianMainMenu () {
             std::cout << "Unesite vas izbor: ";
             std::cin >> choice;
             std::cin.ignore ();  // Clear newline character from input buffer
-        } while (choice < 0 || choice > 7);
+        } while (choice < 0 || choice > 8);
 
         switch (choice) {
             case 1:
@@ -136,6 +143,9 @@ void technicianMainMenu () {
                 break;
             case 7:
                 paymentManager.createPayment ();
+                break;
+            case 8:
+                personalDataManager.mainPersonalDataManagement (id, role);
                 break;
             case 0:
                 return;
@@ -167,6 +177,8 @@ void serviceOwnerMainMenu () {
         std::cout << "8. Pregled statistike" << std::endl;
         std::cout << "9. Naplata" << std::endl << std::endl << std::endl;
 
+        std::cout << "10. Upravljanje ličnim podacima" << std::endl << std::endl;
+
         std::cout << "0. Odjava sa sistema" << std::endl;
 
         int choice;
@@ -174,7 +186,7 @@ void serviceOwnerMainMenu () {
             std::cout << "Unesite vas izbor: ";
             std::cin >> choice;
             std::cin.ignore ();  // Clear newline character from input buffer
-        } while (choice < 0 || choice > 9);
+        } while (choice < 0 || choice > 10);
 
         switch (choice) {
             case 1:
@@ -203,6 +215,9 @@ void serviceOwnerMainMenu () {
                 break;
             case 9:
                 paymentManager.createPayment ();
+                break;
+            case 10:
+                personalDataManager.mainPersonalDataManagement (id, role);
                 break;
             case 0:
                 return;

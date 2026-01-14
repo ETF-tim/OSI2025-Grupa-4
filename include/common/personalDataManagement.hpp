@@ -11,4 +11,6 @@ class PersonalDataManager {
 
         void listPersonalData (int id, std::string role);
         void editPersonalData (int id, std::string role);
+
+        void mainPersonalDataManagement (int id, std::string role);
 };

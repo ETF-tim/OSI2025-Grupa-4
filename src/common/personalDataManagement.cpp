@@ -274,3 +274,29 @@ void PersonalDataManager::editPersonalData (int id, std::string role) {
     std::cout << "---- Novi podaci korisnika su ----" << std::endl;
     listPersonalData (id, role);
 }
+
+void PersonalDataManager::mainPersonalDataManagement (int id, std::string role) {
+    int choice;
+    do {
+        std::cout << "----- UPRAVLJANJE LICNIM PODACIMA -----" << std::endl;
+        std::cout << "1. Prikazi licne podatke" << std::endl;
+        std::cout << "2. Izmeni licne podatke" << std::endl;
+        std::cout << "0. Izlaz" << std::endl;
+        std::cout << "Izaberite opciju (0-4): ";
+        std::cin >> choice;
+        std::cin.ignore ();
+        switch (choice) {
+            case 1:
+                listPersonalData (id, role);
+                break;
+            case 2:
+                editPersonalData (id, role);
+                break;
+            case 0:
+                std::cout << "Izlaz iz upravljanja licnim podacima." << std::endl;
+                break;
+            default:
+                std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
+        }
+    } while (choice != 0);
+}
