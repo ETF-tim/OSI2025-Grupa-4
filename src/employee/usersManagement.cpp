@@ -69,8 +69,21 @@ void UserManager::createUser () {
     // -> Generate PIN for user account
     int tempPin = generatePIN ();
     // -------------------
+    bool userFound = false;
+    int rowIndex;
+    for (rowIndex = 1; rowIndex < users.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (((users.get_value (rowIndex, 1))) == tempFirstName && ((users.get_value (rowIndex, 2))) == tempLastName &&
+            ((users.get_value (rowIndex, 3))) == tempEmail) {
+            userFound = true;
+            break;
+        }
+    }
+    if (userFound) {
+        std::cerr << "Korisnik sa unesenim imenom, prezimenom i email-om je vec pronadjen u bazi." << std::endl;
+        return;
+    }
 
-    // Re-add header and new part to CSV data
+    // Re-add header and new user to CSV data
     users.add_row (header, 0);  // Re-add header row
     users.add_row ({std::to_string (tempId), tempFirstName, tempLastName, tempEmail, tempPhone, std::to_string (tempPin)});
     //------------------
