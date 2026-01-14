@@ -8,8 +8,8 @@ class EmployeeManager {
         void editEmployee ();
         void deleteEmployee ();
         bool searchForEmployee (int employeeId);
-        void mainEmployeesManagement();
+        void mainEmployeesManagement ();
+
     private:
         std::string roleToString (int roleInt);
-        
 };

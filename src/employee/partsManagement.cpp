@@ -373,7 +373,7 @@ bool PartManager::increasePartStock (int partID, int quantity) {
     return false;
 }
 
-void PartManager::mainPartsManager() {
+void PartManager::mainPartsManager () {
     int choice;
     do {
         std::cout << "----- UPRAVLJANJE DIJELOVIMA -----" << std::endl;

@@ -321,9 +321,7 @@ bool EmployeeManager::searchForEmployee (int employeeId) {
     return false;
 }
 
-void EmployeeManager::mainEmployeesManagement() {
-
-    
+void EmployeeManager::mainEmployeesManagement () {
     int choice = -1;
     while (choice != 0) {
         std::cout << "\n========================================\n";
@@ -337,27 +335,27 @@ void EmployeeManager::mainEmployeesManagement() {
         std::cout << "----------------------------------------\n";
         std::cout << "Unesite izbor: ";
         std::cin >> choice;
-        
+
         switch (choice) {
             case 1:
-                listEmployees();
+                listEmployees ();
                 break;
-                
+
             case 2:
-                createEmployee();
+                createEmployee ();
                 break;
-                
+
             case 3:
-                editEmployee();
+                editEmployee ();
                 break;
             case 4:
-                deleteEmployee();
+                deleteEmployee ();
                 break;
-                
+
             case 0:
                 std::cout << "Povratak na izborni meni...\n";
                 break;
-                
+
             default:
                 std::cout << "Pogresan izbor. Pokusajte ponovo.\n";
                 break;

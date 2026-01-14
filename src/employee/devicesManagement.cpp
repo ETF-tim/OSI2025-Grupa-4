@@ -314,7 +314,7 @@ std::string DeviceManager::getDeviceIMEI (int deviceId) {
     return "";
 }
 
-void DeviceManager::mainDeviceManager() {
+void DeviceManager::mainDeviceManager () {
     int choice;
     do {
         std::cout << "----- UPRAVLJANJE UREDJAJIMA -----" << std::endl;

@@ -19,4 +19,6 @@ class ReceiptOrderManager {
 
         void changeReceiptOrderStatus (int receiptOrderId, bool newStatus);
         void generateReceiptOrderTXTFile (int receiptOrderId);
+
+        void mainReceiptOrdersManager ();
 };

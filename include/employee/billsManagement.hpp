@@ -10,6 +10,7 @@ class BillManager {
         void deleteBill ();
         bool searchForBill (int billId);
         void generateBillTXTFile (int billId);
+        void mainBillsManagement ();
 
     private:
         std::string paymentMethodToString (int paymentMethodInt);

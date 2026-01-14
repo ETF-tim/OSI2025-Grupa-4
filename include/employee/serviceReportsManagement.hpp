@@ -8,4 +8,6 @@ class ServiceReportManager {
         void deleteServiceReport ();
         bool searchForServiceReport (int serviceReportID);
         void generateServiceReportTXTFile (int serviceReportID);
+
+        void mainServiceReportsManager ();
 };
