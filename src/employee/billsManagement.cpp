@@ -10,6 +10,7 @@
 #include "../../include/common/util/GenerateUniqueId.hpp"
 #include "../../include/common/util/Validate.hpp"
 #include "../../include/common/util/csv_data_manipulator.hpp"
+#include <filesystem>
 
 std::string BillManager::paymentMethodToString (int paymentMethodInt) {
     if (paymentMethodInt == 1)
@@ -214,10 +215,11 @@ void BillManager::generateBillTXTFile (int billId) {
 
     std::time_t currentDate = std::time (nullptr);
     std::string opisPopravke = receiptOrders.get_value (foundReceiptOrderRow, 3);
+    std::filesystem::create_directories ("./data/Bills");
 
     std::string fileName = "racun_" + std::to_string (billId);
 
-    std::ofstream file ("./Bills/" + fileName + ".txt");
+    std::ofstream file ("./data/Bills/" + fileName + ".txt");
 
     if (!file) {
         std::cout << "Nije moguce kreirati fajl!\n";

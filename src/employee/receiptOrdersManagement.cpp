@@ -1,5 +1,6 @@
 #include "../../include/employee/receiptOrdersManagement.hpp"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -358,8 +359,9 @@ void ReceiptOrderManager::generateReceiptOrderTXTFile (int receiptOrderId) {
     std::string state = devices.get_value (foundDeviceRow, 4);
 
     std::string fileName = "nalog_" + std::to_string (receiptOrderId);
+    std::filesystem::create_directories ("./data/ReceiptOrders");
 
-    std::ofstream file ("./ReceiptOrders/" + fileName + ".txt");
+    std::ofstream file ("./data/ReceiptOrders/" + fileName + ".txt");
 
     if (!file) {
         std::cout << "Nije moguce kreirati fajl!\n";
