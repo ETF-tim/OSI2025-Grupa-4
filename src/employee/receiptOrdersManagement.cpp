@@ -378,8 +378,11 @@ void ReceiptOrderManager::generateReceiptOrderTXTFile (int receiptOrderId) {
     file << "Opis: " << description << "\n";
     file << "Stanje uredjaja: " << state << "\n";
     file << "Procjena cijene: " << priceAssessment << "\n";
+<<<<<<< HEAD
     file << "\nPotpis servisa: ____________\n";
 
+=======
+>>>>>>> 1a971dc03f47d262a0f6310ab6a1c3e050adab2a
     file.close ();
     std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
 }

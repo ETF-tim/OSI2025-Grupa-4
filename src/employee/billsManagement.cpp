@@ -1,5 +1,7 @@
 #include "../../include/employee/billsManagement.hpp"
 
+#include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -8,6 +10,7 @@
 #include "../../include/common/util/GenerateUniqueId.hpp"
 #include "../../include/common/util/Validate.hpp"
 #include "../../include/common/util/csv_data_manipulator.hpp"
+#include "billsManagement.hpp"
 
 std::string BillManager::paymentMethodToString (int paymentMethodInt) {
     if (paymentMethodInt == 1)
@@ -154,4 +157,84 @@ bool BillManager::searchForBill (int billId) {
         }
     }
     return false;
+}
+
+void BillManager::generateBillTXTFile (int billId) {
+    CSVData bills;
+    CSVData workOrders;
+    CSVData receiptOrders;
+
+    try {
+        workOrders = CSVData ("./data/workOrders.csv");
+        receiptOrders = CSVData ("./data/receiptOrders.csv");
+        bills = CSVData ("./data/bills.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        throw std::logic_error ("Neuspjesno kreiranje TXT fajla ");
+    }  //------------------
+    int foundBillRow = -1;
+    int rowIndex = -1;
+
+    for (rowIndex = 1; rowIndex < bills.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (bills.get_value (rowIndex, 0)) == billId) {
+            foundBillRow = rowIndex;
+            break;
+        }
+    }
+    if (foundBillRow == -1) {
+        std::cerr << "Racun sa unesenim ID-em nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+    std::string WorkOrderId = bills.get_value (foundBillRow, 1);
+
+    int foundWorkOrderRow = -1;
+
+    for (rowIndex = 1; rowIndex < workOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (workOrders.get_value (rowIndex, 0)) == std::stoi (WorkOrderId)) {
+            foundWorkOrderRow = rowIndex;
+            break;
+        }
+    }
+    if (foundWorkOrderRow == -1) {
+        std::cerr << "Radni nalog sa zadatim  ID-em nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+
+    int foundReceiptOrderRow = -1;
+    std::string receiptOrderId = workOrders.get_value (foundWorkOrderRow, 1);
+    for (rowIndex = 1; rowIndex < receiptOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (receiptOrders.get_value (rowIndex, 0)) == std::stoi (receiptOrderId)) {
+            foundReceiptOrderRow = rowIndex;
+            break;
+        }
+    }
+    if (foundReceiptOrderRow == -1) {
+        std::cerr << "Prijemni nalog sa unesenim ID-em nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+
+    std::time_t currentDate = std::time (nullptr);
+    std::string opisPopravke = receiptOrders.get_value (foundReceiptOrderRow, 3);
+
+    std::string fileName = "racun_" + std::to_string (billId);
+
+    std::ofstream file ("./Bills/" + fileName + ".txt");
+
+    if (!file) {
+        std::cout << "Nije moguce kreirati fajl!\n";
+        return;
+    }
+    file << "====== FISKALNI RACUN ======\n";
+
+    file << "Datum: " << std::put_time (std::localtime (&currentDate), "%Y-%m-%d %H:%M:%S") << "\n";
+    file << "Opis popravke " << opisPopravke << "\n";
+    file << "1:Cijena usluge " << bills.get_value (foundBillRow, 3) << "KM\n";
+    file << "2: Rad servisa:" << "20 KM" << "\n";
+    file << "Ukupno za platiti: " << std::fixed << std::setprecision (2) << (std::stod (bills.get_value (foundBillRow, 3)) + 20.0)
+         << " KM\n";
+    file << "Nacin placanja: " << bills.get_value (foundBillRow, 2) << "\n";
+    file << "\nKraj fiskalnog racuna\n";
+    file << "\nHvala na povjerenju!\n";
+    file.close ();
+    std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
 }
