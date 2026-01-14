@@ -20,6 +20,7 @@ class WorkOrderManager {
         bool searchForWorkOrder (int workOrderId);
         void listCompletedWorkOrders ();
         bool isWorkOrderCompleted (int workOrderId);
+        void generateWorkOrderTXTFile (int workOrderId);
 
     private:
         std::string statusToString (WorkOrderStatus status);

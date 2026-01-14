@@ -1,0 +1,4 @@
+
+void DeviceRepairStatusManager::checkRepairStatus () {
+    return;
+}
