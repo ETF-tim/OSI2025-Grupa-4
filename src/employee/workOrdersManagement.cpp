@@ -42,7 +42,7 @@ std::string WorkOrderManager::partsToString (const std::map<int, int>& parts) {
     return result;
 }
 
-std::map<int, int> WorkOrderManager::stringToParts (const std::string s) {
+std::map<int, int> WorkOrderManager::stringToParts (const std::string& s) {
     std::map<int, int> parts;
     if (s.empty ()) return parts;
 
@@ -780,6 +780,32 @@ void WorkOrderManager::generateWorkOrderTXTFile (int workOrderId) {
     file << "Cijena rada: " << servicePrice << "\n";
     file.close ();
     std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
+}
+
+double WorkOrderManager::calculateTotalPrice (int workOrderId) {
+    // Opening CSV file
+    CSVData workOrders;
+    try {
+        workOrders = CSVData ("./data/workOrders.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        throw std::logic_error ("Neuspjesno racunanje ukupne cijene radnog naloga ");
+    }  //------------------
+
+    double totalPrice = 0.0;
+    for (int rowIndex = 1; rowIndex < workOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (workOrders.get_value (rowIndex, 0)) == workOrderId) {
+            // Dodavanje cijene dijelova
+            for (const auto& [partId, qty] : stringToParts (workOrders.get_value (rowIndex, 7))) {
+                totalPrice += partManager.getPartPrice (partId) * qty;
+            }
+
+            // Dodavanje cijene rada
+            totalPrice += std::stod (workOrders.get_value (rowIndex, 8));
+            return totalPrice;
+        }
+    }
+    throw std::logic_error ("Radni nalog sa unesenim ID-em nije pronadjen.");
 }
 
 void WorkOrderManager::mainWorkOrdersManager (int id) {

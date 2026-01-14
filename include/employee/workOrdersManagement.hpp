@@ -21,10 +21,12 @@ class WorkOrderManager {
         void listCompletedWorkOrders ();
         bool isWorkOrderCompleted (int workOrderId);
         void generateWorkOrderTXTFile (int workOrderId);
+        double calculateTotalPrice (int workOrderId);
+
         void mainWorkOrdersManager (int id);
 
     private:
         std::string statusToString (WorkOrderStatus status);
         std::string partsToString (const std::map<int, int>& parts);
-        std::map<int, int> stringToParts (const std::string s);
+        std::map<int, int> stringToParts (const std::string& s);
 };

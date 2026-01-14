@@ -41,7 +41,7 @@ std::map<int, int> stringToParts (const std::string s) {
     return parts;
 }
 
-void ServiceReportManager::createServiceReport (int WorkOrderID) {
+int ServiceReportManager::createServiceReport (int WorkOrderID) {
     // Opening CSV file
 
     CSVData serviceReports;
@@ -77,6 +77,7 @@ void ServiceReportManager::createServiceReport (int WorkOrderID) {
     serviceReports.write_data ("./data/serviceReports.csv");
     //------------------
     std::cout << "Uspjesno kreiran novi servisni izvjestaj!" << std::endl;
+    return tempId;
 }
 
 void ServiceReportManager::listServiceReport () {
