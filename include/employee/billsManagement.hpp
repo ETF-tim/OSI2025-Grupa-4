@@ -5,11 +5,11 @@ enum class PaymentMethod;
 
 class BillManager {
     public:
-        void createBill (int workOrderID, PaymentMethod paymentMethod, double price);
+        int createBill (int workOrderID, PaymentMethod paymentMethod, double price);
         void listBills ();
         void deleteBill ();
         bool searchForBill (int billId);
-        void generateBillTXTFile (int billId);
+        void generateBillTXTFile (int billId, int workOrderId);
         void mainBillsManagement ();
 
     private:

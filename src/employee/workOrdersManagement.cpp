@@ -782,6 +782,24 @@ void WorkOrderManager::generateWorkOrderTXTFile (int workOrderId) {
     std::cout << "Fajl uspjesno kreiran:" << fileName << "\n";
 }
 
+double WorkOrderManager::getServicePrice (int workOrderId) {
+    // Opening CSV file
+    CSVData workOrders;
+    try {
+        workOrders = CSVData ("./data/workOrders.csv");
+    } catch (std::exception& e) {
+        std::cout << e.what () << std::endl;
+        throw std::logic_error ("Neuspjesno dobijanje cijene usluge radnog naloga ");
+    }  //------------------
+
+    for (int rowIndex = 1; rowIndex < workOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (workOrders.get_value (rowIndex, 0)) == workOrderId) {
+            return std::stod (workOrders.get_value (rowIndex, 8));
+        }
+    }
+    throw std::logic_error ("Radni nalog sa unesenim ID-em nije pronadjen.");
+}
+
 double WorkOrderManager::calculateTotalPrice (int workOrderId) {
     // Opening CSV file
     CSVData workOrders;

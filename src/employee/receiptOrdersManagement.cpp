@@ -114,7 +114,9 @@ void ReceiptOrderManager::createReceiptOrder () {
     // Writing updated data back to CSV file
     receiptOrders.write_data ("./data/receiptOrders.csv");
     //------------------
-    std::cout << "Uspjesno kreiran novi prijemni nalog!" << std::endl;
+    std::cout << "Uspjesno kreiran novi prijemni nalog u bazi!" << std::endl;
+
+    generateReceiptOrderTXTFile (tempId);
 }
 
 void ReceiptOrderManager::listReceiptOrders () {
@@ -359,7 +361,7 @@ void ReceiptOrderManager::generateReceiptOrderTXTFile (int receiptOrderId) {
     std::string state = devices.get_value (foundDeviceRow, 4);
 
     std::string fileName = "nalog_" + std::to_string (receiptOrderId);
-    std::filesystem::create_directories ("./data/ReceiptOrders");
+    std::filesystem::create_directory ("./data/ReceiptOrders");
 
     std::ofstream file ("./data/ReceiptOrders/" + fileName + ".txt");
 
