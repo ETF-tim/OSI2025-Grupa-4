@@ -21,6 +21,8 @@ class WorkOrderManager {
         void listCompletedWorkOrders ();
         bool isWorkOrderCompleted (int workOrderId);
         void generateWorkOrderTXTFile (int workOrderId);
+
+        double getServicePrice (int workOrderId);
         double calculateTotalPrice (int workOrderId);
 
         void mainWorkOrdersManagement (int id);

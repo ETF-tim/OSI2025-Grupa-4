@@ -1,5 +1,6 @@
 #include "../../include/employee/billsManagement.hpp"
 
+#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -22,7 +23,7 @@ std::string BillManager::paymentMethodToString (int paymentMethodInt) {
         return "UNKNOWN";
 }
 
-void BillManager::createBill (int workOrderID, PaymentMethod paymentMethod, double price) {
+int BillManager::createBill (int workOrderID, PaymentMethod paymentMethod, double price) {
     // Opening CSV file
     CSVData bills;
     try {
@@ -30,7 +31,7 @@ void BillManager::createBill (int workOrderID, PaymentMethod paymentMethod, doub
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
         std::cerr << "Neuspjesno kreiranje novog racuna";
-        return;
+        return -1;
     }
 
     // Store and remove header row
@@ -45,7 +46,7 @@ void BillManager::createBill (int workOrderID, PaymentMethod paymentMethod, doub
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
         std::cerr << "Neuspjesno kreiranje novog racuna";
-        return;
+        return -1;
     }  //------------------
 
     // Re-add header and new bill to CSV data
@@ -59,6 +60,7 @@ void BillManager::createBill (int workOrderID, PaymentMethod paymentMethod, doub
     //------------------
 
     std::cout << "Uspjesno kreiran novi racun!" << std::endl;
+    return tempId;
 }
 
 void BillManager::listBills () {
@@ -158,14 +160,12 @@ bool BillManager::searchForBill (int billId) {
     return false;
 }
 
-void BillManager::generateBillTXTFile (int billId) {
+void BillManager::generateBillTXTFile (int billId, int workOrderId) {
     CSVData bills;
     CSVData workOrders;
-    CSVData receiptOrders;
 
     try {
         workOrders = CSVData ("./data/workOrders.csv");
-        receiptOrders = CSVData ("./data/receiptOrders.csv");
         bills = CSVData ("./data/bills.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
@@ -184,40 +184,28 @@ void BillManager::generateBillTXTFile (int billId) {
         std::cerr << "Racun sa unesenim ID-em nije pronadjen." << std::endl;
         return;
     }  //------------------
-    std::string WorkOrderId = bills.get_value (foundBillRow, 1);
 
     int foundWorkOrderRow = -1;
-
     for (rowIndex = 1; rowIndex < workOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
-        if (std::stoi (workOrders.get_value (rowIndex, 0)) == std::stoi (WorkOrderId)) {
+        if (std::stoi (workOrders.get_value (rowIndex, 0)) == workOrderId) {
             foundWorkOrderRow = rowIndex;
             break;
         }
     }
     if (foundWorkOrderRow == -1) {
-        std::cerr << "Radni nalog sa zadatim  ID-em nije pronadjen." << std::endl;
-        return;
-    }  //------------------
-
-    int foundReceiptOrderRow = -1;
-    std::string receiptOrderId = workOrders.get_value (foundWorkOrderRow, 1);
-    for (rowIndex = 1; rowIndex < receiptOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
-        if (std::stoi (receiptOrders.get_value (rowIndex, 0)) == std::stoi (receiptOrderId)) {
-            foundReceiptOrderRow = rowIndex;
-            break;
-        }
-    }
-    if (foundReceiptOrderRow == -1) {
-        std::cerr << "Prijemni nalog sa unesenim ID-em nije pronadjen." << std::endl;
+        std::cerr << "Radni nalog sa zadatim ID-em nije pronadjen." << std::endl;
         return;
     }  //------------------
 
     std::time_t currentDate = std::time (nullptr);
-    std::string opisPopravke = receiptOrders.get_value (foundReceiptOrderRow, 3);
+    std::string opisPopravke = workOrders.get_value (foundWorkOrderRow, 3);
 
+    std::string dirPath = "./data/Bills";
     std::string fileName = "racun_" + std::to_string (billId);
+    std::string fullPath = dirPath + "/" + fileName + ".txt";
 
-    std::ofstream file ("./Bills/" + fileName + ".txt");
+    std::filesystem::create_directory (dirPath);
+    std::ofstream file (fullPath);
 
     if (!file) {
         std::cout << "Nije moguce kreirati fajl!\n";
@@ -226,11 +214,8 @@ void BillManager::generateBillTXTFile (int billId) {
     file << "====== FISKALNI RACUN ======\n";
 
     file << "Datum: " << std::put_time (std::localtime (&currentDate), "%Y-%m-%d %H:%M:%S") << "\n";
-    file << "Opis popravke " << opisPopravke << "\n";
-    file << "1:Cijena usluge " << bills.get_value (foundBillRow, 3) << "KM\n";
-    file << "2: Rad servisa:" << "20 KM" << "\n";
-    file << "Ukupno za platiti: " << std::fixed << std::setprecision (2) << (std::stod (bills.get_value (foundBillRow, 3)) + 20.0)
-         << " KM\n";
+    file << "Opis popravke: " << opisPopravke << "\n";
+    file << "Ukupno za platiti: " << std::fixed << std::setprecision (2) << (std::stod (bills.get_value (foundBillRow, 3))) << " KM\n";
     file << "Nacin placanja: " << bills.get_value (foundBillRow, 2) << "\n";
     file << "\nKraj fiskalnog racuna\n";
     file << "\nHvala na povjerenju!\n";

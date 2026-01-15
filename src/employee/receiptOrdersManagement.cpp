@@ -1,5 +1,6 @@
 #include "../../include/employee/receiptOrdersManagement.hpp"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -18,11 +19,11 @@ ReceiptOrderManager::ReceiptOrderManager (UserManager& userManager, DeviceManage
 
 void ReceiptOrderManager::createReceiptOrder () {
     char confirm;
-    std::cout << "Da li ste sigurni da zelite kreirati radni nalog? (d/n): ";
+    std::cout << "Da li ste sigurni da zelite kreirati prijemni nalog? (d/n): ";
     std::cin >> confirm;
 
     if (confirm != 'd' && confirm != 'D') {
-        std::cout << "Kreiranje radnog naloga otkazano." << std::endl;
+        std::cout << "Kreiranje prijemnog naloga otkazano." << std::endl;
         return;
     }
 
@@ -113,7 +114,9 @@ void ReceiptOrderManager::createReceiptOrder () {
     // Writing updated data back to CSV file
     receiptOrders.write_data ("./data/receiptOrders.csv");
     //------------------
-    std::cout << "Uspjesno kreiran novi prijemni nalog!" << std::endl;
+    std::cout << "Uspjesno kreiran novi prijemni nalog u bazi!" << std::endl;
+
+    generateReceiptOrderTXTFile (tempId);
 }
 
 void ReceiptOrderManager::listReceiptOrders () {
@@ -358,8 +361,9 @@ void ReceiptOrderManager::generateReceiptOrderTXTFile (int receiptOrderId) {
     std::string state = devices.get_value (foundDeviceRow, 4);
 
     std::string fileName = "nalog_" + std::to_string (receiptOrderId);
+    std::filesystem::create_directory ("./data/ReceiptOrders");
 
-    std::ofstream file ("./ReceiptOrders/" + fileName + ".txt");
+    std::ofstream file ("./data/ReceiptOrders/" + fileName + ".txt");
 
     if (!file) {
         std::cout << "Nije moguce kreirati fajl!\n";

@@ -7,7 +7,7 @@ class ServiceReportManager {
         void listServiceReport ();
         void deleteServiceReport ();
         bool searchForServiceReport (int serviceReportID);
-        void generateServiceReportTXTFile (int serviceReportID);
+        void generateServiceReportTXTFile (int serviceReportID, int billID);
 
         void mainServiceReportsManager ();
 };

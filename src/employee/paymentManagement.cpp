@@ -36,9 +36,11 @@ void PaymentManager::createPayment () {
 
     double tempPrice = workOrderManager.calculateTotalPrice (tempWorkOrderID);
 
-    billManager.createBill (tempWorkOrderID, tempPaymentMethod, tempPrice);
+    int tempBillID = billManager.createBill (tempWorkOrderID, tempPaymentMethod, tempPrice);
     int tempServiceReportID = serviceReportManager.createServiceReport (tempWorkOrderID);
 
-    billManager.generateBillTXTFile (tempWorkOrderID);
-    serviceReportManager.generateServiceReportTXTFile (tempServiceReportID);
+    billManager.generateBillTXTFile (tempBillID, tempWorkOrderID);
+    serviceReportManager.generateServiceReportTXTFile (tempServiceReportID, tempBillID);
+
+    getchar ();
 }

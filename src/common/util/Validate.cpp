@@ -27,6 +27,11 @@ bool isValidNonNegative (int amount) {
         return false;
     }
 }
+bool isValidIntegerChoice (const std::string& choice) {
+    return !choice.empty () && std::all_of (choice.begin (), choice.end (), [] (char c) {
+        return std::isdigit (static_cast<unsigned char> (c));
+    });
+}
 
 // -- Service data ---
 bool isValidServiceName (const std::string& name) {

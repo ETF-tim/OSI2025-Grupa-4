@@ -118,6 +118,10 @@ void UserManager::listUsers () {
     users.add_row (header, 0);  // Re-add header row
     //------------------
 
+    // Delete PIN column
+    users.delete_col (5);
+    //------------------
+
     // Print parts list
     std::cout << "----- LISTA KORISNIKA -----" << std::endl;
     users.print_csv_data ();

@@ -1,5 +1,6 @@
 #include "../../include/employee/serviceReportsManagement.hpp"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -162,13 +163,14 @@ bool ServiceReportManager::searchForServiceReport (int serviceReportID) {
     }
     return false;
 }
-void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
+void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID, int billID) {
     CSVData serviceReport;
     CSVData workOrders;
     CSVData receiptOrders;
     CSVData users;
     CSVData devices;
     CSVData parts;
+    CSVData bills;
 
     try {
         serviceReport = CSVData ("./data/serviceReports.csv");
@@ -177,6 +179,7 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
         users = CSVData ("./data/users.csv");
         devices = CSVData ("./data/devices.csv");
         parts = CSVData ("./data/parts.csv");
+        bills = CSVData ("./data/bills.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
         throw std::logic_error ("Neuspjesno kreiranje TXT fajla ");
@@ -209,10 +212,22 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
         return;
     }  //------------------
 
+    int foundBillRow = -1;
+    for (rowIndex = 1; rowIndex < bills.rows (); rowIndex++) {  // Start from 1 to skip header row
+        if (std::stoi (bills.get_value (rowIndex, 0)) == billID) {
+            foundBillRow = rowIndex;
+            break;
+        }
+    }
+    if (foundBillRow == -1) {
+        std::cerr << "Racun sa unesenim ID-em nije pronadjen." << std::endl;
+        return;
+    }  //------------------
+
     std::string receiptOrderId = workOrders.get_value (foundWorkOrderRow, 1);
     std::string comment = workOrders.get_value (foundWorkOrderRow, 3);
     std::string usedParts = workOrders.get_value (foundWorkOrderRow, 7);
-    std::string servicePrice = workOrders.get_value (foundWorkOrderRow, 8);
+    std::string servicePrice = bills.get_value (foundBillRow, 3);
 
     int foundReceiptOrderRow = -1;
 
@@ -265,10 +280,11 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
 
     std::string brand = devices.get_value (foundDeviceRow, 1);
     std::string model = devices.get_value (foundDeviceRow, 2);
+    std::filesystem::create_directory ("./data/ServiceReports");
 
     std::string fileName = "nalog_" + std::to_string (serviceReportID);
 
-    std::ofstream file ("./ServiceReports/" + fileName + ".txt");
+    std::ofstream file ("./data/ServiceReports/" + fileName + ".txt");
 
     if (!file) {
         std::cout << "Nije moguce kreirati fajl!\n";
@@ -283,7 +299,7 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID) {
     file << "IMEI uredjaja: " << deviceIMEI << "\n";
     file << "Model: " << model << "\n";
     file << "Opis: " << description << "\n";
-    file << "Izvrseni radovi: " << comment << "\n";
+    file << "Komentar servisera: " << comment << "\n";
 
     file << "Dijelovi korisceni u popravci:" << "\n";
     for (const auto& [partId, qty] : dijelovi) {
