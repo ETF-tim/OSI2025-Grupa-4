@@ -109,10 +109,18 @@ void BillManager::deleteBill () {
 
     // Choose bill to delete by ID and check if it exists
     // -> Choose bill to delete by ID
-    std::cout << "Unesite ID racuna koji zelite obrisati: ";
+
+    std::string deleteIdString;
     int deleteId;
-    std::cin >> deleteId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID racuna koji zelite obrisati: ";
+    std::getline (std::cin, deleteIdString);
+
+    if (!Validate::isValidInteger (deleteIdString)) {
+        std::cerr << "Pogresan unos ID-a racuna." << std::endl;
+        return;
+    } else {
+        deleteId = std::stoi (deleteIdString);
+    }
 
     // -> Check if it exists
     bool billFound = false;
@@ -224,15 +232,20 @@ void BillManager::generateBillTXTFile (int billId, int workOrderId) {
 }
 
 void BillManager::mainBillsManagement () {
-    int choice = -1;
-    while (choice != 0) {
+    int choice;
+    do {
         std::cout << "\n----- MENADZMENT RACUNA -----\n";
         std::cout << "1. Prikaz liste racuna\n";
         std::cout << "2. Brisanje racuna\n";
         std::cout << "0. Za povratak na izborni meni\n";
         std::cout << "-----------------------------\n";
-        std::cout << "Unesite izbor: ";
-        std::cin >> choice;
+
+        std::string choiceString;
+        do {
+            std::cout << "Izaberite opciju (0-2): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 2);
+
         switch (choice) {
             case 1:
                 listBills ();
@@ -240,13 +253,8 @@ void BillManager::mainBillsManagement () {
             case 2:
                 deleteBill ();
                 break;
-
             case 0:
                 break;
-
-            default:
-                std::cout << "Pogresan izbor. Pokusajte ponovo.\n";
-                break;
         }
-    }
+    } while (choice != 0);
 }

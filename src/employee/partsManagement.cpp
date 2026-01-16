@@ -45,28 +45,30 @@ void PartManager::createPart () {
     } while (!Validate::isValidPartName (tempName));
 
     // -> Input and validation for part amount
+    std::string tempAmountString;
     int tempAmount;
     do {
         std::cout << "Unesite kolicinu dijela: ";
-        std::cin >> tempAmount;
-    } while (!Validate::isValidNonNegative (tempAmount));
-    std::cin.ignore ();  // Clear newline character from input buffer
+        std::getline (std::cin, tempAmountString);
+    } while (!Validate::isValidInteger (tempAmountString) ||
+             !Validate::isValidNonNegative (tempAmount = std::stoi (tempAmountString)));
 
     // -> Input and validation for part critical amount
+    std::string tempCriticalAmountString;
     int tempCriticalAmount;
     do {
         std::cout << "Unesite kriticnu kolicinu dijela: ";
-        std::cin >> tempCriticalAmount;
-    } while (!Validate::isValidNonNegative (tempCriticalAmount));
-    std::cin.ignore ();  // Clear newline character from input buffer
+        std::getline (std::cin, tempCriticalAmountString);
+    } while (!Validate::isValidInteger (tempCriticalAmountString) ||
+             !Validate::isValidNonNegative (tempCriticalAmount = std::stoi (tempCriticalAmountString)));
 
     // -> Input and validation for part price
+    std::string tempPriceString;
     double tempPrice;
     do {
         std::cout << "Unesite cijenu dijela: ";
-        std::cin >> tempPrice;
-    } while (!Validate::isValidPrice (tempPrice));
-    std::cin.ignore ();  // Clear newline character from input buffer
+        std::getline (std::cin, tempPriceString);
+    } while (!Validate::isValidDouble (tempPriceString) || !Validate::isValidPrice (tempPrice = std::stod (tempPriceString)));
     //------------------
 
     // Re-add header and new part to CSV data
@@ -125,10 +127,17 @@ void PartManager::editPart () {
 
     // Choose part to edit by ID and check if it exists
     // -> Choose part to edit by ID
-    std::cout << "Unesite ID dijela koji zelite urediti: ";
+
+    std::string editIdString;
     int editId;
-    std::cin >> editId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID dijela koji zelite urediti: ";
+    std::getline (std::cin, editIdString);
+    if (!Validate::isValidInteger (editIdString)) {
+        std::cerr << "Pogresan unos ID-a dijela." << std::endl;
+        return;
+    } else {
+        editId = std::stoi (editIdString);
+    }
 
     // -> Check if it exists
     bool partFound = false;
@@ -150,12 +159,14 @@ void PartManager::editPart () {
     std::cout << "2. Kolicina dijela" << std::endl;
     std::cout << "3. Kriticna kolicina dijela" << std::endl;
     std::cout << "4. Cijena dijela" << std::endl;
+
+    std::string attributeChoiceString;
     int attributeChoice;
     do {
         std::cout << "Unesite broj atributa (1-4): ";
-        std::cin >> attributeChoice;
-        std::cin.ignore ();  // Clear newline character from input buffer
-    } while (attributeChoice < 1 || attributeChoice > 4);
+        std::getline (std::cin, attributeChoiceString);
+    } while (!Validate::isValidInteger (attributeChoiceString) || (attributeChoice = std::stoi (attributeChoiceString)) < 1 ||
+             attributeChoice > 4);
     //------------------
 
     // Input and validation for new attribute value
@@ -169,33 +180,35 @@ void PartManager::editPart () {
             break;
         }
         case 2: {  // Part amount
+            std::string tempAmountString;
             int tempAmount;
             do {
-                std::cout << "Unesite novu kolicinu dijela: ";
-                std::cin >> tempAmount;
-                std::cin.ignore ();  // Clear newline character from input buffer
-            } while (!Validate::isValidNonNegative (tempAmount));
-            newValue = std::to_string (tempAmount);
+                std::cout << "Unesite kolicinu dijela: ";
+                std::getline (std::cin, tempAmountString);
+            } while (!Validate::isValidInteger (tempAmountString) ||
+                     !Validate::isValidNonNegative (tempAmount = std::stoi (tempAmountString)));
+            newValue = tempAmountString;
             break;
         }
         case 3: {  // Part critical amount
+            std::string tempCriticalAmountString;
             int tempCriticalAmount;
             do {
-                std::cout << "Unesite novu kriticnu kolicinu dijela: ";
-                std::cin >> tempCriticalAmount;
-                std::cin.ignore ();  // Clear newline character from input buffer
-            } while (!Validate::isValidNonNegative (tempCriticalAmount));
-            newValue = std::to_string (tempCriticalAmount);
+                std::cout << "Unesite kriticnu kolicinu dijela: ";
+                std::getline (std::cin, tempCriticalAmountString);
+            } while (!Validate::isValidInteger (tempCriticalAmountString) ||
+                     !Validate::isValidNonNegative (tempCriticalAmount = std::stoi (tempCriticalAmountString)));
+            newValue = tempCriticalAmountString;
             break;
         }
         case 4: {  // Part price
+            std::string tempPriceString;
             double tempPrice;
             do {
-                std::cout << "Unesite novu cijenu dijela: ";
-                std::cin >> tempPrice;
-                std::cin.ignore ();  // Clear newline character from input buffer
-            } while (!Validate::isValidPrice (tempPrice));
-            newValue = std::to_string (tempPrice);
+                std::cout << "Unesite cijenu dijela: ";
+                std::getline (std::cin, tempPriceString);
+            } while (!Validate::isValidDouble (tempPriceString) || !Validate::isValidPrice (tempPrice = std::stod (tempPriceString)));
+            newValue = tempPriceString;
             break;
         }
     }  //------------------
@@ -230,10 +243,17 @@ void PartManager::deletePart () {
 
     // Choose part to delete by ID and check if it exists
     // -> Choose part to delete by ID
-    std::cout << "Unesite ID dijela koji zelite obrisati: ";
+    std::string deleteIdString;
     int deleteId;
-    std::cin >> deleteId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID dijela koji zelite obrisati: ";
+    std::getline (std::cin, deleteIdString);
+
+    if (!Validate::isValidInteger (deleteIdString)) {
+        std::cerr << "Pogresan unos ID-a dijela." << std::endl;
+        return;
+    } else {
+        deleteId = std::stoi (deleteIdString);
+    }
 
     // -> Check if it exists
     bool partFound = false;
@@ -401,9 +421,12 @@ void PartManager::mainPartsManagement () {
         std::cout << "3. Uredi dio" << std::endl;
         std::cout << "4. Obrisi dio" << std::endl;
         std::cout << "0. Izlaz iz upravljanja dijelovima" << std::endl;
-        std::cout << "Unesite vas izbor (0-4): ";
-        std::cin >> choice;
-        std::cin.ignore ();  // Clear newline character from input buffer
+
+        std::string choiceString;
+        do {
+            std::cout << "Izaberite opciju (0-4): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 4);
 
         switch (choice) {
             case 1:
@@ -421,8 +444,6 @@ void PartManager::mainPartsManagement () {
             case 0:
                 std::cout << "Izlaz iz upravljanja dijelovima." << std::endl;
                 break;
-            default:
-                std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
         }
     } while (choice != 0);
 }

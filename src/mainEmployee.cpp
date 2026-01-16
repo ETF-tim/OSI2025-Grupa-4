@@ -4,6 +4,7 @@
 
 #include "../include/common/authentication.hpp"
 #include "../include/common/personalDataManagement.hpp"
+#include "../include/common/util/Validate.hpp"
 #include "../include/employee/billsManagement.hpp"
 #include "../include/employee/deviceIntakeManagement.hpp"
 #include "../include/employee/devicesManagement.hpp"
@@ -55,16 +56,16 @@ void receptionistMainMenu () {
         std::cout << "4. Pregled statistike" << std::endl;
         std::cout << "5. Naplata" << std::endl << std::endl << std::endl;
 
-        std::cout << "6. Upravljanje ličnim podacima" << std::endl << std::endl;
+        std::cout << "6. Upravljanje licnim podacima" << std::endl << std::endl;
 
         std::cout << "0. Odjava sa sistema" << std::endl;
 
+        std::string choiceString;
         int choice;
         do {
-            std::cout << "Unesite vas izbor: ";
-            std::cin >> choice;
-            std::cin.ignore ();  // Clear newline character from input buffer
-        } while (choice < 0 || choice > 6);
+            std::cout << "Unesite vas izbor (0-6): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 6);
 
         switch (choice) {
             case 1:
@@ -111,16 +112,16 @@ void technicianMainMenu () {
         std::cout << "6. Pregled statistike" << std::endl;
         std::cout << "7. Naplata" << std::endl << std::endl << std::endl;
 
-        std::cout << "8. Upravljanje ličnim podacima" << std::endl << std::endl;
+        std::cout << "8. Upravljanje licnim podacima" << std::endl << std::endl;
 
         std::cout << "0. Odjava sa sistema" << std::endl;
 
+        std::string choiceString;
         int choice;
         do {
-            std::cout << "Unesite vas izbor: ";
-            std::cin >> choice;
-            std::cin.ignore ();  // Clear newline character from input buffer
-        } while (choice < 0 || choice > 8);
+            std::cout << "Unesite vas izbor (0-8): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 8);
 
         switch (choice) {
             case 1:
@@ -177,16 +178,16 @@ void serviceOwnerMainMenu () {
         std::cout << "8. Pregled statistike" << std::endl;
         std::cout << "9. Naplata" << std::endl << std::endl << std::endl;
 
-        std::cout << "10. Upravljanje ličnim podacima" << std::endl << std::endl;
+        std::cout << "10. Upravljanje licnim podacima" << std::endl << std::endl;
 
         std::cout << "0. Odjava sa sistema" << std::endl;
 
+        std::string choiceString;
         int choice;
         do {
-            std::cout << "Unesite vas izbor: ";
-            std::cin >> choice;
-            std::cin.ignore ();  // Clear newline character from input buffer
-        } while (choice < 0 || choice > 10);
+            std::cout << "Unesite vas izbor (0-10): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 10);
 
         switch (choice) {
             case 1:

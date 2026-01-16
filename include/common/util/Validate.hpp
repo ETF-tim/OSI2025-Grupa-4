@@ -13,7 +13,8 @@ namespace Validate {
 // ---Common---
 bool isValidId (int id);
 bool isValidNonNegative (int amount);  // (za amount, criticalAmount)
-bool isValidIntegerChoice (const std::string& choice);
+bool isValidInteger (const std::string& choice);
+bool isValidDouble (const std::string& choice);
 
 // -- Service data ---
 bool isValidServiceName (const std::string& name);

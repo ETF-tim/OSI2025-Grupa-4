@@ -5,6 +5,7 @@
 #include "../include/client/deviceRepairStatusManagement.hpp"
 #include "../include/common/authentication.hpp"
 #include "../include/common/personalDataManagement.hpp"
+#include "../include/common/util/Validate.hpp"
 #include "../include/employee/employeesManagement.hpp"
 #include "../include/employee/usersManagement.hpp"
 //-----------------------------------------------------------------------
@@ -35,12 +36,12 @@ void clientMainMenu () {
 
         std::cout << "0. Odjava sa sistema" << std::endl;
 
+        std::string choiceString;
         int choice;
         do {
-            std::cout << "Unesite vas izbor: ";
-            std::cin >> choice;
-            std::cin.ignore ();  // Clear newline character from input buffer
-        } while (choice < 0 || choice > 2);
+            std::cout << "Unesite vas izbor (0-2): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 2);
 
         switch (choice) {
             case 1:
