@@ -198,7 +198,7 @@ void statFunk::ispisZaradaPoServisnomTehnicaru () {
 }
 
 void statFunk::mainStat () {
-    int izbor;
+    int choice;
     do {
         std::cout << "-----STATISTIKE-----" << std::endl;
         std::cout << "1. Ispis zaradjenog novca" << std::endl;
@@ -206,10 +206,14 @@ void statFunk::mainStat () {
         std::cout << "3. Ispis uspjesnosti servisnih tehnicara" << std::endl;
         std::cout << "4. Ispis zarada po servisnom tehnicaru" << std::endl;
         std::cout << "0. Povratak na prethodni meni" << std::endl;
-        std::cout << "Unesite vas izbor: ";
-        std::cin >> izbor;
-        std::cout << "==========================" << std::endl;
-        switch (izbor) {
+
+        std::string choiceString;
+        do {
+            std::cout << "Izaberite opciju (0-4): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 4);
+
+        switch (choice) {
             case 1:
                 ispisZaradjenogNovca ();
                 break;
@@ -222,11 +226,9 @@ void statFunk::mainStat () {
             case 4:
                 ispisZaradaPoServisnomTehnicaru ();
                 break;
-            case 5:
+            case 0:
                 std::cout << "Povratak na prethodni meni..." << std::endl;
                 break;
-            default:
-                std::cout << "Nepostojeca opcija, pokusajte ponovo." << std::endl;
         }
-    } while (izbor != 0);
+    } while (choice != 0);
 }

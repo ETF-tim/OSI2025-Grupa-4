@@ -17,11 +17,11 @@ bool Authentication::login (bool isEmployeeSystem, int& id, std::string& role) {
         return false;
     }
 
+    std::string pinString;
     int pin;
     std::cout << "Enter PIN: ";
-    std::cin >> pin;
-    std::cin.ignore ();
-    if (!Validate::isValidPin (pin)) {
+    std::getline (std::cin, pinString);
+    if (!Validate::isValidInteger (pinString) || !Validate::isValidPin (pin)) {
         std::cerr << "Neuspjesna prijava." << std::endl;
         return false;
     }

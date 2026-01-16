@@ -121,10 +121,14 @@ void WorkOrderManager::createWorkOrder (int technicianID) {
 
     // ----------------
 
+    std::string temptReceiptOrderIDString;
     int temptReceiptOrderID;
     std::cout << "Unesite ID prijemnog naloga za koji kreirate radni nalog: ";
-    std::cin >> temptReceiptOrderID;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::getline (std::cin, temptReceiptOrderIDString);
+    if (!Validate::isValidInteger (temptReceiptOrderIDString) || (temptReceiptOrderID = std::stoi (temptReceiptOrderIDString)) < 0) {
+        std::cerr << "Pogresan unos ID-a prijemnog naloga." << std::endl;
+        return;
+    }
     // ----------------
 
     // Check if receipt order exists
@@ -190,13 +194,14 @@ void WorkOrderManager::createWorkOrder (int technicianID) {
     std::cout << "Prezime klijenta:" << prezimeKlijenta << std::endl;
     std::cout << "IMEI uredjaja klijenta:" << IMEIUredjaja << std::endl;
 
-    std::cout << "Da li su ovi podaci tacni? (d/n): ";
-    char confirm;
-    std::cin >> confirm;
-    std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
+    std::string confirm;
+    do {
+        std::cout << "Da li su ovi podaci tacni? (d/n): ";
+        std::getline (std::cin, confirm);
+    } while (confirm != "d" && confirm != "D" && confirm != "n" && confirm != "N");
 
-    if (confirm != 'd' && confirm != 'D') {
-        std::cout << "Kreiranje radnog naloga prekinuto." << std::endl;
+    if (confirm == "n" || confirm == "N") {
+        std::cout << "Kreiranje prijemnog naloga otkazano." << std::endl;
         return;
     }
 
@@ -211,16 +216,14 @@ void WorkOrderManager::createWorkOrder (int technicianID) {
     std::time_t endDate = 0;
     double servicePrice = 0;  // Will be updated when work is COMPLETED
     std::string comment;
-    int response;
-    std::cout << "Da li zelite uneti komentar: (d=1/n=2)" << std::endl;
-    do {
-        std::cout << "Unesite odgovor: ";
-        std::cin >> response;
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline character from input buffer
-    } while (response < 1 || response > 2);
 
-    if (response == 1) {
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
+    std::string response;
+    do {
+        std::cout << "Da li zelite uneti komentar: (d/n)" << std::endl;
+        std::getline (std::cin, response);
+    } while (response != "d" && response != "D" && response != "n" && response != "N");
+
+    if (response == "d" || response == "D") {
         std::cout << "Unesite komentar:" << std::endl;
         std::getline (std::cin, comment);
     }
@@ -283,13 +286,17 @@ void WorkOrderManager::updateWorkOrders () {
     workOrders.delete_row (0);  // Remove header row
     // ----------------
 
-    int temptWorkOrderID;
     bool found = false;
     int foundIndex = -1;
+
+    std::string temptWorkOrderIDString;
+    int temptWorkOrderID;
     std::cout << "Unesite ID radnog naloga koji zelite azurirati: ";
-    std::cin >> temptWorkOrderID;
-    std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline character from input buffer
-    // ----------------
+    std::getline (std::cin, temptWorkOrderIDString);
+    if (!Validate::isValidInteger (temptWorkOrderIDString) || (temptWorkOrderID = std::stoi (temptWorkOrderIDString)) < 0) {
+        std::cerr << "Pogresan unos ID-a radnog naloga." << std::endl;
+        return;
+    }  // ----------------
 
     for (int rowIndex = 0; rowIndex < workOrders.rows (); rowIndex++) {
         if (std::stoi (workOrders.get_value (rowIndex, 0)) == temptWorkOrderID) {
@@ -356,21 +363,28 @@ void WorkOrderManager::updateWorkOrders () {
     std::cout << "Ako nema dodavanja novih dijelova, u sljedecoj poruci unesite n/N" << std::endl;
 
     while (true) {
-        std::cout << "Dodaj dio u popravku ili promijeni kolicinu nekog dijela? (d/n):";
-        char choice;
-        std::cin >> choice;
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline from buffer
+        std::string choice;
+        do {
+            std::cout << "Dodaj dio u popravku ili promijeni kolicinu nekog dijela? (d/n):";
+            std::getline (std::cin, choice);
+        } while (choice != "d" && choice != "D" && choice != "n" && choice != "N");
+        if (choice == "n" || choice == "N") break;  // If input is 'n', exit from the loop
 
-        if (choice == 'n' || choice == 'N') break;  // If input is 'n', exit from the loop
+        std::string partIdString;
+        int partId;
+        do {
+            std::cout << "Unesite ID dijela koji zelite dodati/promijeniti: ";
+            std::getline (std::cin, partIdString);
+        } while (!Validate::isValidInteger (partIdString) || (partId = std::stoi (partIdString)) < 0);
 
-        int partId, quantity;
-
-        std::cout << "Unesite id dijela koji zelite dodati/promijeniti: ";
-        std::cin >> partId;
-        std::cout << "Unesite pozitivnu kolicinu za uzimanje dijelova,\n";
-        std::cout << "ili negativnu za vracanje dijelova na skladiste.\n";
-        std::cin >> quantity;
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline from buffer
+        std::string quantityString;
+        int quantity;
+        do {
+            std::cout << "Unesite pozitivnu kolicinu za uzimanje dijelova,\n";
+            std::cout << "ili negativnu za vracanje dijelova na skladiste.\n";
+            std::getline (std::cin, quantityString);
+        } while (!Validate::isValidInteger (quantityString));
+        quantity = std::stoi (quantityString);
 
         // Check 1: does part exist
         if (!partManager.searchForPart (partId)) {
@@ -428,12 +442,13 @@ void WorkOrderManager::updateWorkOrders () {
     std::cout << "3. WAITING_FOR_PARTS" << std::endl;
     std::cout << "4. COMPLETED" << std::endl;
 
+    std::string attributeChoiceString;
     int attributeChoice;
     do {
         std::cout << "Unesite broj stanja (1-4): ";
-        std::cin >> attributeChoice;
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline character from input buffer
-    } while (attributeChoice < 1 || attributeChoice > 4);
+        std::getline (std::cin, attributeChoiceString);
+    } while (!Validate::isValidInteger (attributeChoiceString) || (attributeChoice = std::stoi (attributeChoiceString)) < 1 ||
+             attributeChoice > 4);
 
     switch (attributeChoice) {
         case 1:
@@ -449,51 +464,57 @@ void WorkOrderManager::updateWorkOrders () {
             currentStatus = WorkOrderStatus::COMPLETED;
             break;
     }
-    double servicePrice = 0;
-    std::string comment;
-    int response;
-    std::cout << "Da li zelite uneti komentar: (d=1/n=2)" << std::endl;
-    do {
-        std::cout << "Unesite odgovor: ";
-        std::cin >> response;
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline character from input buffer
-    } while (response < 1 || response > 2);
 
-    if (response == 1) {
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
+    std::string response;
+
+    std::string comment;
+    do {
+        std::cout << "Da li zelite uneti komentar: (d/n)" << std::endl;
+        std::getline (std::cin, response);
+    } while (response != "d" && response != "D" && response != "n" && response != "N");
+
+    if (response == "d" || response == "D") {
         std::cout << "Unesite komentar:" << std::endl;
         std::getline (std::cin, comment);
     }
 
-    std::cout << "Da li zelite promijeniti cijenu popravke uredjaja: (d=1/n=2)" << std::endl;
+    double servicePrice = std::stod (workOrders.get_value (foundIndex, 8));
     do {
-        std::cout << "Unesite odgovor: ";
-        std::cin >> response;
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
-        // Clear newline character from input buffer
-    } while (response < 1 || response > 2);
+        std::cout << "Da li zelite promijeniti cijenu popravke uredjaja: (d/n)" << std::endl;
+        std::getline (std::cin, response);
+    } while (response != "d" && response != "D" && response != "n" && response != "N");
 
-    if (response == 1) {
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
-        std::cout << "Unesite cijenu:" << std::endl;
-        std::cin >> servicePrice;
+    if (response == "d" || response == "D") {
+        std::string tempServicePriceString;
+        double tempServicePrice;
+        do {
+            std::cout << "Unesite cijenu: ";
+            std::getline (std::cin, tempServicePriceString);
+        } while (!Validate::isValidDouble (tempServicePriceString) ||
+                 !Validate::isValidPrice (tempServicePrice = std::stod (tempServicePriceString)));
+        servicePrice = tempServicePrice;
     }
 
-    std::cout << "Da li je radni nalog zaista zavrsen: (d=1/n=2)" << std::endl;
+    std::string confirm;
     do {
-        std::cout << "Unesite odgovor: ";
-        std::cin >> response;
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');
-        // Clear newline character from input buffer
-    } while (response < 1 || response > 2);
+        std::cout << "Da li je radni nalog zaista zavrsen: (d/n)" << std::endl;
+        std::getline (std::cin, confirm);
+    } while (confirm != "d" && confirm != "D" && confirm != "n" && confirm != "N");
 
-    if (response == 1) {
+    if (confirm == "d" || confirm == "D") {
         std::time_t endDate = std::time (nullptr);  // Current date/time
         workOrders.set_value (foundIndex, 5, std::to_string (endDate));
+
+        if (servicePrice <= 0) std::cout << "Unesite finalnu cijenu popravke uredjaja (>0):" << std::endl;
+
+        std::string tempServicePriceString;
+        double tempServicePrice;
         do {
-            if (servicePrice <= 0) std::cout << "Unesite finalnu cijenu popravke uredjaja (>0):" << std::endl;
-            std::cin >> servicePrice;
-        } while (servicePrice <= 0);
+            std::cout << "Unesite cijenu: ";
+            std::getline (std::cin, tempServicePriceString);
+        } while (!Validate::isValidDouble (tempServicePriceString) ||
+                 !Validate::isValidPrice (tempServicePrice = std::stod (tempServicePriceString)));
+        servicePrice = tempServicePrice;
     }
 
     workOrders.set_value (foundIndex, 2, statusToString (currentStatus));
@@ -526,10 +547,17 @@ void WorkOrderManager::deleteWorkOrder () {
 
     // Choose work order to delete by ID and check if it exists
     // -> Choose work order to delete by ID
-    std::cout << "Unesite ID radnog naloga koji zelite obrisati: ";
+    std::string deleteIdString;
     int deleteId;
-    std::cin >> deleteId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID radnog naloga koji zelite obrisati: ";
+    std::getline (std::cin, deleteIdString);
+
+    if (!Validate::isValidInteger (deleteIdString)) {
+        std::cerr << "Pogresan unos ID-a radnog naloga." << std::endl;
+        return;
+    } else {
+        deleteId = std::stoi (deleteIdString);
+    }
 
     // -> Check if it exists
     bool workOrderFound = false;
@@ -837,9 +865,11 @@ void WorkOrderManager::mainWorkOrdersManagement (int id) {
         std::cout << "5. Prikazi gotove radne naloge" << std::endl;
         std::cout << "0. Izlaz iz menadzera radnih naloga" << std::endl;
 
-        std::cout << "Unesite vas izbor: ";
-        std::cin >> choice;
-        std::cin.ignore (std::numeric_limits<std::streamsize>::max (), '\n');  // Clear newline character from input buffer
+        std::string choiceString;
+        do {
+            std::cout << "Izaberite opciju (0-5): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 5);
 
         switch (choice) {
             case 1:
@@ -860,8 +890,6 @@ void WorkOrderManager::mainWorkOrdersManagement (int id) {
             case 0:
                 std::cout << "Izlaz iz menadzera radnih naloga." << std::endl;
                 break;
-            default:
-                std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
         }
     } while (choice != 0);
 }

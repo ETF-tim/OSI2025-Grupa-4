@@ -73,12 +73,13 @@ void DeviceManager::createDevice () {
     std::cout << "Izaberite stanje uredjaja:" << std::endl;
     std::cout << "1. NEW" << std::endl;
     std::cout << "2. USED" << std::endl;
+    std::string attributeChoiceString;
     int attributeChoice;
     do {
         std::cout << "Unesite broj stanja (1-2): ";
-        std::cin >> attributeChoice;
-        std::cin.ignore ();  // Clear newline character from input buffer
-    } while (attributeChoice < 1 || attributeChoice > 2);
+        std::getline (std::cin, attributeChoiceString);
+    } while (!Validate::isValidInteger (attributeChoiceString) || (attributeChoice = std::stoi (attributeChoiceString)) < 1 ||
+             attributeChoice > 2);
     //------------------
 
     bool deviceFound = false;
@@ -137,10 +138,16 @@ void DeviceManager::editDevice () {
 
     // Choose device to edit by ID and check if it exists
     // -> Choose device to edit by ID
-    std::cout << "Unesite ID uredjaja koji zelite urediti: ";
+    std::string editIdString;
     int editId;
-    std::cin >> editId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID uredjaja koji zelite urediti: ";
+    std::getline (std::cin, editIdString);
+    if (!Validate::isValidInteger (editIdString)) {
+        std::cerr << "Pogresan unos ID-a uredjaja." << std::endl;
+        return;
+    } else {
+        editId = std::stoi (editIdString);
+    }
 
     // -> Check if it exists
     bool deviceFound = false;
@@ -162,12 +169,14 @@ void DeviceManager::editDevice () {
     std::cout << "2. Model uredjaja" << std::endl;
     std::cout << "3. IMEI uredjaja" << std::endl;
     std::cout << "4. Stanje uredjaja" << std::endl;
+
+    std::string attributeChoiceString;
     int attributeChoice;
     do {
         std::cout << "Unesite broj atributa (1-4): ";
-        std::cin >> attributeChoice;
-        std::cin.ignore ();  // Clear newline character from input buffer
-    } while (attributeChoice < 1 || attributeChoice > 4);
+        std::getline (std::cin, attributeChoiceString);
+    } while (!Validate::isValidInteger (attributeChoiceString) || (attributeChoice = std::stoi (attributeChoiceString)) < 1 ||
+             attributeChoice > 4);
     //------------------
 
     // Input and validation for new attribute value
@@ -183,7 +192,6 @@ void DeviceManager::editDevice () {
             break;
         }
         case 2: {  // Model name
-
             do {
                 std::cout << "Unesite novi model uredjaja: ";
                 std::getline (std::cin, newModel);
@@ -203,13 +211,14 @@ void DeviceManager::editDevice () {
             std::cout << "Izaberite novo stanje uredjaja:" << std::endl;
             std::cout << "1. NEW" << std::endl;
             std::cout << "2. USED" << std::endl;
+            std::string attributeChoiceString;
             int attributeChoice;
             do {
                 std::cout << "Unesite broj stanja (1-2): ";
-                std::cin >> attributeChoice;
-                std::cin.ignore ();  // Clear newline character from input buffer
-            } while (attributeChoice < 1 || attributeChoice > 2);
-            newItem = stateToString (attributeChoice);
+                std::getline (std::cin, attributeChoiceString);
+            } while (!Validate::isValidInteger (attributeChoiceString) || (attributeChoice = std::stoi (attributeChoiceString)) < 1 ||
+                     attributeChoice > 2);
+            newItem = attributeChoiceString;
             break;
         }
     }  //------------------
@@ -244,10 +253,17 @@ void DeviceManager::deleteDevice () {
 
     // Choose device to delete by ID and check if it exists
     // -> Choose device to delete by ID
-    std::cout << "Unesite ID uredjaja koji zelite obrisati: ";
+    std::string deleteIdString;
     int deleteId;
-    std::cin >> deleteId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID racuna koji zelite obrisati: ";
+    std::getline (std::cin, deleteIdString);
+
+    if (!Validate::isValidInteger (deleteIdString)) {
+        std::cerr << "Pogresan unos ID-a racuna." << std::endl;
+        return;
+    } else {
+        deleteId = std::stoi (deleteIdString);
+    }
 
     // -> Check if it exists
     bool serviceReportFound = false;
@@ -323,9 +339,13 @@ void DeviceManager::mainDeviceManager () {
         std::cout << "3. Uredi uredjaj" << std::endl;
         std::cout << "4. Obrisi uredjaj" << std::endl;
         std::cout << "0. Izlaz" << std::endl;
-        std::cout << "Izaberite opciju (0-4): ";
-        std::cin >> choice;
-        std::cin.ignore ();
+
+        std::string choiceString;
+        do {
+            std::cout << "Izaberite opciju (0-4): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 4);
+
         switch (choice) {
             case 1:
                 createDevice ();
@@ -342,8 +362,6 @@ void DeviceManager::mainDeviceManager () {
             case 0:
                 std::cout << "Izlaz iz upravljanja uredjajima." << std::endl;
                 break;
-            default:
-                std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
         }
     } while (choice != 0);
 }

@@ -44,12 +44,13 @@ void GeneralDataManager::editGeneralData () {
     std::cout << "3. Email servisa" << std::endl;
     std::cout << "4. Kontakt telefon" << std::endl;
     std::cout << "5. JIB" << std::endl;
+    std::string attributeChoiceString;
     int attributeChoice;
     do {
-        std::cout << "Unesite broj podatka (1-5): ";
-        std::cin >> attributeChoice;
-        std::cin.ignore ();  // Clear newline character from input buffer
-    } while (attributeChoice < 1 || attributeChoice > 5);
+        std::cout << "Unesite broj atributa (1-5): ";
+        std::getline (std::cin, attributeChoiceString);
+    } while (!Validate::isValidInteger (attributeChoiceString) || (attributeChoice = std::stoi (attributeChoiceString)) < 1 ||
+             attributeChoice > 5);
 
     // Input new value for chosen attribute
     std::string newValue;
@@ -106,9 +107,12 @@ void GeneralDataManager::mainGeneralDataManagement () {
         std::cout << "1. Prikazi podatke servisa" << std::endl;
         std::cout << "2. Uredi podatke servisa" << std::endl;
         std::cout << "0. Izlaz iz upravljanja podacima servisa" << std::endl;
-        std::cout << "Unesite vas izbor (0-2): ";
-        std::cin >> choice;
-        std::cin.ignore ();  // Clear newline character from input buffer
+
+        std::string choiceString;
+        do {
+            std::cout << "Izaberite opciju (0-2): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 2);
 
         switch (choice) {
             case 1:
@@ -120,8 +124,6 @@ void GeneralDataManager::mainGeneralDataManagement () {
             case 0:
                 std::cout << "Izlaz iz upravljanja podacima servisa." << std::endl;
                 break;
-            default:
-                std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
         }
     } while (choice != 0);
 }

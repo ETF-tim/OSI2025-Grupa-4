@@ -114,10 +114,18 @@ void ServiceReportManager::deleteServiceReport () {
 
     // Choose service report to delete by ID and check if it exists
     // -> Choose service report to delete by ID
-    std::cout << "Unesite ID servisnih izvjestaja koji zelite obrisati: ";
+
+    std::string deleteIdString;
     int deleteId;
-    std::cin >> deleteId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID servisnog izvjestaja koji zelite obrisati: ";
+    std::getline (std::cin, deleteIdString);
+
+    if (!Validate::isValidInteger (deleteIdString)) {
+        std::cerr << "Pogresan unos ID-a servisnog izvjestaja." << std::endl;
+        return;
+    } else {
+        deleteId = std::stoi (deleteIdString);
+    }
 
     // -> Check if it exists
     bool reportFound = false;
@@ -327,9 +335,13 @@ void ServiceReportManager::mainServiceReportsManager () {
         std::cout << "1. Prikazi servisne izvjestaje" << std::endl;
         std::cout << "2. Obrisi servisni izvjestaj" << std::endl;
         std::cout << "0. Izlaz iz menadzera servisnih izvjestaja" << std::endl;
-        std::cout << "Unesite vas izbor: ";
-        std::cin >> choice;
-        std::cin.ignore ();
+
+        std::string choiceString;
+        do {
+            std::cout << "Izaberite opciju (0-2): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 2);
+
         switch (choice) {
             case 1:
                 listServiceReport ();
@@ -339,9 +351,6 @@ void ServiceReportManager::mainServiceReportsManager () {
                 break;
             case 0:
                 std::cout << "Izlaz iz menadzera servisnih izvjestaja." << std::endl;
-                break;
-            default:
-                std::cout << "Nepostojeca opcija. Pokusajte ponovo." << std::endl;
                 break;
         }
     } while (choice != 0);

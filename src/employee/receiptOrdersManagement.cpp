@@ -18,11 +18,13 @@ ReceiptOrderManager::ReceiptOrderManager (UserManager& userManager, DeviceManage
     : userManager (userManager), deviceManager (deviceManager) {}
 
 void ReceiptOrderManager::createReceiptOrder () {
-    char confirm;
-    std::cout << "Da li ste sigurni da zelite kreirati prijemni nalog? (d/n): ";
-    std::cin >> confirm;
+    std::string confirm;
+    do {
+        std::cout << "Da li ste sigurni da zelite kreirati prijemni nalog? (d/n): ";
+        std::getline (std::cin, confirm);
+    } while (confirm != "d" && confirm != "D" && confirm != "n" && confirm != "N");
 
-    if (confirm != 'd' && confirm != 'D') {
+    if (confirm == "n" || confirm == "N") {
         std::cout << "Kreiranje prijemnog naloga otkazano." << std::endl;
         return;
     }
@@ -52,16 +54,19 @@ void ReceiptOrderManager::createReceiptOrder () {
         return;
     }  //------------------
 
-    // Print users list
+    // Print users list+
     userManager.listUsers ();
     //------------------
 
     // Choose user by ID to assign with receipt order
+    std::string tempUserIdString;
     int tempUserId;
     std::cout << "Unesite ID korisnika za kojeg kreirate prijemni nalog: ";
-    std::cin >> tempUserId;
-    std::cin.ignore ();  // Clear newline character from input buffer
-    // ----------------
+    std::getline (std::cin, tempUserIdString);
+    if (!Validate::isValidInteger (tempUserIdString) && (tempUserId = std::stoi (tempUserIdString)) < 0) {
+        std::cerr << "Pogresan unos ID-a korisnika." << std::endl;
+        return;
+    }  // ----------------
 
     // Check if user exists
     if (!userManager.searchForUser (tempUserId)) {
@@ -74,11 +79,14 @@ void ReceiptOrderManager::createReceiptOrder () {
     //------------------
 
     // Choose device by ID to assign with receipt order
+    std::string tempDeviceIdString;
     int tempDeviceId;
     std::cout << "Unesite ID uredjaja za kojeg kreirate prijemni nalog: ";
-    std::cin >> tempDeviceId;
-    std::cin.ignore ();  // Clear newline character from input buffer
-    // ----------------
+    std::getline (std::cin, tempDeviceIdString);
+    if (!Validate::isValidInteger (tempDeviceIdString) && (tempDeviceId = std::stoi (tempDeviceIdString)) < 0) {
+        std::cerr << "Pogresan unos ID-a uredjaja." << std::endl;
+        return;
+    }  // ----------------
 
     // Check if device exists
     if (!deviceManager.searchForDevice (tempDeviceId)) {
@@ -98,12 +106,13 @@ void ReceiptOrderManager::createReceiptOrder () {
     } while (!Validate::isValidDescription (tempDescription));
 
     // Input and validation for device price assessment
+    std::string tempPriceAssessmentString;
     double tempPriceAssessment;
     do {
         std::cout << "Unesite procjenu cijene uredjaja: ";
-        std::cin >> tempPriceAssessment;
-    } while (!Validate::isValidPriceAssessment (tempPriceAssessment));
-    std::cin.ignore ();  // Clear newline character from input buffer
+        std::getline (std::cin, tempPriceAssessmentString);
+    } while (!Validate::isValidDouble (tempPriceAssessmentString) ||
+             !Validate::isValidPrice (tempPriceAssessment = std::stod (tempPriceAssessmentString)));
 
     // Re-add header and new part to CSV data
     receiptOrders.add_row (header, 0);  // Re-add header row
@@ -164,10 +173,17 @@ void ReceiptOrderManager::deleteReceiptOrder () {
 
     // Choose receipt order to delete by ID and check if it exists
     // -> Choose receipt order to delete by ID
-    std::cout << "Unesite ID prijemnog naloga koji zelite obrisati: ";
+    std::string deleteIdString;
     int deleteId;
-    std::cin >> deleteId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID prijemnog naloga koji zelite obrisati: ";
+    std::getline (std::cin, deleteIdString);
+
+    if (!Validate::isValidInteger (deleteIdString)) {
+        std::cerr << "Pogresan unos ID-a prijemnog naloga." << std::endl;
+        return;
+    } else {
+        deleteId = std::stoi (deleteIdString);
+    }
 
     // -> Check if it exists
     bool receiptOrderFound = false;
@@ -393,9 +409,12 @@ void ReceiptOrderManager::mainReceiptOrdersManagement () {
         std::cout << "2. Prikazi prijemne naloge" << std::endl;
         std::cout << "3. Obrisi prijemni nalog" << std::endl;
         std::cout << "0. Izlaz iz menadzera prijemnih naloga" << std::endl;
-        std::cout << "Unesite vas izbor: ";
-        std::cin >> choice;
-        std::cin.ignore ();  // Clear newline character from input buffer
+
+        std::string choiceString;
+        do {
+            std::cout << "Izaberite opciju (0-3): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 3);
 
         switch (choice) {
             case 1:
@@ -409,9 +428,6 @@ void ReceiptOrderManager::mainReceiptOrdersManagement () {
                 break;
             case 0:
                 std::cout << "Izlaz iz menadzera prijemnih naloga." << std::endl;
-                break;
-            default:
-                std::cout << "Pogresan izbor. Pokusajte ponovo." << std::endl;
                 break;
         }
     } while (choice != 0);

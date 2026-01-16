@@ -87,12 +87,14 @@ void EmployeeManager::createEmployee () {
     std::cout << "1. RECEPCIONER" << std::endl;
     std::cout << "2. TEHNICAR" << std::endl;
     std::cout << "3. VLASNIK SERVISA" << std::endl;
+
+    std::string attributeChoiceString;
     int attributeChoice;
     do {
         std::cout << "Unesite broj uloge (1-3): ";
-        std::cin >> attributeChoice;
-        std::cin.ignore ();  // Clear newline character from input buffer
-    } while (attributeChoice < 1 || attributeChoice > 3);
+        std::getline (std::cin, attributeChoiceString);
+    } while (!Validate::isValidInteger (attributeChoiceString) || (attributeChoice = std::stoi (attributeChoiceString)) < 1 ||
+             attributeChoice > 3);
     //------------------
 
     // Re-add header and new employee to CSV data
@@ -156,10 +158,16 @@ void EmployeeManager::editEmployee () {
 
     // Choose employee to edit by ID and check if it exists
     // -> Choose employee to edit by ID
-    std::cout << "Unesite ID zaposlenog koji zelite urediti: ";
+    std::string editIdString;
     int editId;
-    std::cin >> editId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID zaposlenog koji zelite urediti: ";
+    std::getline (std::cin, editIdString);
+    if (!Validate::isValidInteger (editIdString)) {
+        std::cerr << "Pogresan unos ID-a zaposlenog." << std::endl;
+        return;
+    } else {
+        editId = std::stoi (editIdString);
+    }
 
     // -> Check if it exists
     bool employeeFound = false;
@@ -183,12 +191,13 @@ void EmployeeManager::editEmployee () {
     std::cout << "4. Broj telefona zaposlenog" << std::endl;
     std::cout << "5. PIN zaposlenog" << std::endl;
     std::cout << "6. Uloga zaposlenog" << std::endl;
+    std::string attributeChoiceString;
     int attributeChoice;
     do {
         std::cout << "Unesite broj atributa (1-6): ";
-        std::cin >> attributeChoice;
-        std::cin.ignore ();  // Clear newline character from input buffer
-    } while (attributeChoice < 1 || attributeChoice > 6);
+        std::getline (std::cin, attributeChoiceString);
+    } while (!Validate::isValidInteger (attributeChoiceString) || (attributeChoice = std::stoi (attributeChoiceString)) < 1 ||
+             attributeChoice > 6);
     //------------------
 
     // Input and validation for new attribute value
@@ -232,13 +241,14 @@ void EmployeeManager::editEmployee () {
             std::cout << "1. RECEPCIONER" << std::endl;
             std::cout << "2. TEHNICAR" << std::endl;
             std::cout << "3. VLASNIK SERVISA" << std::endl;
+            std::string roleChoiceString;
             int roleChoice;
             do {
                 std::cout << "Unesite broj uloge (1-3): ";
-                std::cin >> roleChoice;
-                std::cin.ignore ();  // Clear newline character from input buffer
-            } while (roleChoice < 1 || roleChoice > 3);
-            newValue = roleToString (roleChoice);
+                std::getline (std::cin, roleChoiceString);
+            } while (!Validate::isValidInteger (roleChoiceString) || (roleChoice = std::stoi (roleChoiceString)) < 1 ||
+                     roleChoice > 3);
+            newValue = roleChoiceString;
             break;
         }
     }  //------------------
@@ -273,10 +283,17 @@ void EmployeeManager::deleteEmployee () {
 
     // Choose employee to delete by ID and check if it exists
     // -> Choose employee to delete by ID
-    std::cout << "Unesite ID zaposlenog koji zelite obrisati: ";
+    std::string deleteIdString;
     int deleteId;
-    std::cin >> deleteId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID zaposlenog kojeg zelite obrisati: ";
+    std::getline (std::cin, deleteIdString);
+
+    if (!Validate::isValidInteger (deleteIdString)) {
+        std::cerr << "Pogresan unos ID-a zaposlenog." << std::endl;
+        return;
+    } else {
+        deleteId = std::stoi (deleteIdString);
+    }
 
     // -> Check if it exists
     bool employeeFound = false;
@@ -402,8 +419,8 @@ std::string EmployeeManager::getEmployeeRoleByEmail (std::string& email) {
 }
 
 void EmployeeManager::mainEmployeesManagement () {
-    int choice = -1;
-    while (choice != 0) {
+    int choice;
+    do {
         std::cout << "\n========================================\n";
         std::cout << "     SISTEM ZA UPRAVLJANJE ZAPOSLENIMA    \n";
         std::cout << "========================================\n";
@@ -413,32 +430,29 @@ void EmployeeManager::mainEmployeesManagement () {
         std::cout << "4. Brisanje zaposlenog\n";
         std::cout << "0. Za povratak na izborni meni\n";
         std::cout << "----------------------------------------\n";
-        std::cout << "Unesite izbor: ";
-        std::cin >> choice;
+
+        std::string choiceString;
+        do {
+            std::cout << "Izaberite opciju (0-4): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 4);
 
         switch (choice) {
             case 1:
                 listEmployees ();
                 break;
-
             case 2:
                 createEmployee ();
                 break;
-
             case 3:
                 editEmployee ();
                 break;
             case 4:
                 deleteEmployee ();
                 break;
-
             case 0:
                 std::cout << "Povratak na izborni meni...\n";
                 break;
-
-            default:
-                std::cout << "Pogresan izbor. Pokusajte ponovo.\n";
-                break;
         }
-    }
+    } while (choice != 0);
 }

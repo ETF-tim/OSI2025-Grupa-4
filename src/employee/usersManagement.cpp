@@ -143,10 +143,17 @@ void UserManager::editUser () {
 
     // Choose user to edit by ID and check if it exists
     // -> Choose user to edit by ID
-    std::cout << "Unesite ID korisnika koji zelite urediti: ";
+
+    std::string editIdString;
     int editId;
-    std::cin >> editId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID korisnika koji zelite urediti: ";
+    std::getline (std::cin, editIdString);
+    if (!Validate::isValidInteger (editIdString)) {
+        std::cerr << "Pogresan unos ID-a korisnika." << std::endl;
+        return;
+    } else {
+        editId = std::stoi (editIdString);
+    }
 
     // -> Check if it exists
     bool userFound = false;
@@ -169,12 +176,14 @@ void UserManager::editUser () {
     std::cout << "3. Email korisnika" << std::endl;
     std::cout << "4. Broj telefona korisnika" << std::endl;
     std::cout << "5. PIN korisnika" << std::endl;
+
+    std::string attributeChoiceString;
     int attributeChoice;
     do {
         std::cout << "Unesite broj atributa (1-5): ";
-        std::cin >> attributeChoice;
-        std::cin.ignore ();  // Clear newline character from input buffer
-    } while (attributeChoice < 1 || attributeChoice > 5);
+        std::getline (std::cin, attributeChoiceString);
+    } while (!Validate::isValidInteger (attributeChoiceString) || (attributeChoice = std::stoi (attributeChoiceString)) < 1 ||
+             attributeChoice > 5);
     //------------------
 
     // Input and validation for new attribute value
@@ -245,10 +254,18 @@ void UserManager::deleteUser () {
 
     // Choose user to delete by ID and check if it exists
     // -> Choose user to delete by ID
-    std::cout << "Unesite ID korisnika koji zelite obrisati: ";
+
+    std::string deleteIdString;
     int deleteId;
-    std::cin >> deleteId;
-    std::cin.ignore ();  // Clear newline character from input buffer
+    std::cout << "Unesite ID korisnika koji zelite obrisati: ";
+    std::getline (std::cin, deleteIdString);
+
+    if (!Validate::isValidInteger (deleteIdString)) {
+        std::cerr << "Pogresan unos ID-a korisnika." << std::endl;
+        return;
+    } else {
+        deleteId = std::stoi (deleteIdString);
+    }
 
     // -> Check if it exists
     bool userFound = false;
@@ -363,9 +380,12 @@ void UserManager::mainUserManagement () {
         std::cout << "3. Uredi podatke korisnika" << std::endl;
         std::cout << "4. Obrisi korisnika" << std::endl;
         std::cout << "0. Izlaz iz upravljanja korisnicima" << std::endl;
-        std::cout << "Unesite vas izbor (0-4): ";
-        std::cin >> choice;
-        std::cin.ignore ();  // Clear newline character from input buffer
+
+        std::string choiceString;
+        do {
+            std::cout << "Izaberite opciju (0-4): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 4);
 
         switch (choice) {
             case 1:
@@ -380,11 +400,9 @@ void UserManager::mainUserManagement () {
             case 4:
                 deleteUser ();
                 break;
-            case 5:
+            case 0:
                 std::cout << "Izlaz iz upravljanja korisnicima..." << std::endl;
                 break;
-            default:
-                std::cerr << "Pogresan unos. Pokusajte ponovo." << std::endl;
         }
     } while (choice != 0);
 }

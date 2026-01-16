@@ -19,24 +19,22 @@ void DeviceIntakeManager::intakeDevice () {
     std::cout << "--------------------------" << std::endl;
 
     std::cout << "Da li je potrebno kreirati novog korisnika? (d/n): ";
-    char createNewUserChoice;
+    std::string createNewUserChoice;
     do {
-        std::cin >> createNewUserChoice;
-
-    } while (createNewUserChoice != 'd' && createNewUserChoice != 'D' && createNewUserChoice != 'n' && createNewUserChoice != 'N');
-    if (createNewUserChoice == 'd' || createNewUserChoice == 'D') {
+        std::getline (std::cin, createNewUserChoice);
+    } while (createNewUserChoice != "d" && createNewUserChoice != "D" && createNewUserChoice != "n" && createNewUserChoice != "N");
+    if (createNewUserChoice == "d" || createNewUserChoice == "D") {
         userManager.createUser ();
     }
     std::cout << "--------------------------" << std::endl;
 
     std::cout << "Da li je potrebno kreirati novi uredjaj? (d/n): ";
-    char createNewDeviceChoice;
+    std::string createNewDeviceChoice;
     do {
-        std::cin >> createNewDeviceChoice;
-
-    } while (createNewDeviceChoice != 'd' && createNewDeviceChoice != 'D' && createNewDeviceChoice != 'n' &&
-             createNewDeviceChoice != 'N');
-    if (createNewDeviceChoice == 'd' || createNewDeviceChoice == 'D') {
+        std::getline (std::cin, createNewDeviceChoice);
+    } while (createNewDeviceChoice != "d" && createNewDeviceChoice != "D" && createNewDeviceChoice != "n" &&
+             createNewDeviceChoice != "N");
+    if (createNewDeviceChoice == "d" || createNewDeviceChoice == "D") {
         deviceManager.createDevice ();
     }
     std::cout << "--------------------------" << std::endl;

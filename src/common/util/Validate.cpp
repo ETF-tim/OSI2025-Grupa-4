@@ -27,10 +27,35 @@ bool isValidNonNegative (int amount) {
         return false;
     }
 }
-bool isValidIntegerChoice (const std::string& choice) {
-    return !choice.empty () && std::all_of (choice.begin (), choice.end (), [] (char c) {
-        return std::isdigit (static_cast<unsigned char> (c));
-    });
+bool isValidInteger (const std::string& choice) {
+    if (choice.empty ()) {
+        return false;
+    }
+    try {
+        std::size_t idx;
+        std::stoi (choice, &idx);
+        // Ensure the entire string was consumed (no trailing garbage)
+        return idx == choice.length ();
+    } catch (const std::invalid_argument&) {
+        return false;
+    } catch (const std::out_of_range&) {
+        return false;
+    }
+}
+bool isValidDouble (const std::string& choice) {
+    if (choice.empty ()) {
+        return false;
+    }
+    try {
+        std::size_t idx;
+        std::stod (choice, &idx);
+        // Ensure the entire string was consumed (no trailing garbage)
+        return idx == choice.length ();
+    } catch (const std::invalid_argument&) {
+        return false;
+    } catch (const std::out_of_range&) {
+        return false;
+    }
 }
 
 // -- Service data ---

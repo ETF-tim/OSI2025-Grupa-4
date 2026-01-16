@@ -115,12 +115,14 @@ void PersonalDataManager::editPersonalData (int id, std::string role) {
         std::cout << "3. Email korisnika" << std::endl;
         std::cout << "4. Broj telefona korisnika" << std::endl;
         std::cout << "5. PIN korisnika" << std::endl;
+
+        std::string attributeChoiceString;
         int attributeChoice;
         do {
             std::cout << "Unesite broj atributa (1-5): ";
-            std::cin >> attributeChoice;
-            std::cin.ignore ();  // Clear newline character from input buffer
-        } while (attributeChoice < 1 || attributeChoice > 5);
+            std::getline (std::cin, attributeChoiceString);
+        } while (!Validate::isValidInteger (attributeChoiceString) || (attributeChoice = std::stoi (attributeChoiceString)) < 1 ||
+                 attributeChoice > 5);
         //------------------
 
         // Input and validation for new attribute value
@@ -202,12 +204,14 @@ void PersonalDataManager::editPersonalData (int id, std::string role) {
         std::cout << "4. Broj telefona zaposlenog" << std::endl;
         std::cout << "5. PIN zaposlenog" << std::endl;
         std::cout << "6. Uloga zaposlenog" << std::endl;
+
+        std::string attributeChoiceString;
         int attributeChoice;
         do {
             std::cout << "Unesite broj atributa (1-6): ";
-            std::cin >> attributeChoice;
-            std::cin.ignore ();  // Clear newline character from input buffer
-        } while (attributeChoice < 1 || attributeChoice > 6);
+            std::getline (std::cin, attributeChoiceString);
+        } while (!Validate::isValidInteger (attributeChoiceString) || (attributeChoice = std::stoi (attributeChoiceString)) < 1 ||
+                 attributeChoice > 6);
         //------------------
 
         // Input and validation for new attribute value
@@ -251,13 +255,14 @@ void PersonalDataManager::editPersonalData (int id, std::string role) {
                 std::cout << "1. RECEPCIONER" << std::endl;
                 std::cout << "2. TEHNICAR" << std::endl;
                 std::cout << "3. VLASNIK SERVISA" << std::endl;
+                std::string roleChoiceString;
                 int roleChoice;
                 do {
-                    std::cout << "Unesite broj uloge (1-3): ";
-                    std::cin >> roleChoice;
-                    std::cin.ignore ();  // Clear newline character from input buffer
-                } while (roleChoice < 1 || roleChoice > 3);
-                newValue = roleToString (roleChoice);
+                    std::cout << "Unesite broj atributa (1-3): ";
+                    std::getline (std::cin, roleChoiceString);
+                } while (!Validate::isValidInteger (roleChoiceString) || (roleChoice = std::stoi (roleChoiceString)) < 1 ||
+                         roleChoice > 3);
+                newValue = roleChoiceString;
                 break;
             }
         }  //------------------
@@ -282,9 +287,13 @@ void PersonalDataManager::mainPersonalDataManagement (int id, std::string role) 
         std::cout << "1. Prikazi licne podatke" << std::endl;
         std::cout << "2. Izmeni licne podatke" << std::endl;
         std::cout << "0. Izlaz" << std::endl;
-        std::cout << "Izaberite opciju (0-4): ";
-        std::cin >> choice;
-        std::cin.ignore ();
+
+        std::string choiceString;
+        do {
+            std::cout << "Izaberite opciju (0-2): ";
+            std::getline (std::cin, choiceString);
+        } while (!Validate::isValidInteger (choiceString) || (choice = std::stoi (choiceString)) < 0 || choice > 2);
+
         switch (choice) {
             case 1:
                 listPersonalData (id, role);
@@ -295,8 +304,6 @@ void PersonalDataManager::mainPersonalDataManagement (int id, std::string role) 
             case 0:
                 std::cout << "Izlaz iz upravljanja licnim podacima." << std::endl;
                 break;
-            default:
-                std::cout << "Pogresan unos. Pokusajte ponovo." << std::endl;
         }
     } while (choice != 0);
 }
