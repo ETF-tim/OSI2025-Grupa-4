@@ -857,6 +857,12 @@ double WorkOrderManager::calculateTotalPrice (int workOrderId) {
 void WorkOrderManager::mainWorkOrdersManagement (int id) {
     int choice;
     do {
+#ifdef _WIN32
+        system ("cls");  // Windows
+#else
+        system ("clear");  // Linux / macOS
+#endif
+
         std::cout << "\n----- MENADZER RADNIH NALOGA -----" << std::endl;
         std::cout << "1. Kreiraj radni nalog" << std::endl;
         std::cout << "2. Prikazi radne naloge" << std::endl;
@@ -874,21 +880,33 @@ void WorkOrderManager::mainWorkOrdersManagement (int id) {
         switch (choice) {
             case 1:
                 createWorkOrder (id);
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 2:
                 listWorkOrders ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 3:
                 updateWorkOrders ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 4:
                 deleteWorkOrder ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 5:
                 listCompletedWorkOrders ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 0:
                 std::cout << "Izlaz iz menadzera radnih naloga." << std::endl;
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
         }
     } while (choice != 0);

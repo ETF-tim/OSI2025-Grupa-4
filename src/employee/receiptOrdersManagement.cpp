@@ -404,6 +404,12 @@ void ReceiptOrderManager::generateReceiptOrderTXTFile (int receiptOrderId) {
 void ReceiptOrderManager::mainReceiptOrdersManagement () {
     int choice;
     do {
+#ifdef _WIN32
+        system ("cls");  // Windows
+#else
+        system ("clear");  // Linux / macOS
+#endif
+
         std::cout << "\n----- MENADZER PRIJEMNIH NALOGA -----" << std::endl;
         std::cout << "1. Kreiraj prijemni nalog" << std::endl;
         std::cout << "2. Prikazi prijemne naloge" << std::endl;
@@ -419,15 +425,23 @@ void ReceiptOrderManager::mainReceiptOrdersManagement () {
         switch (choice) {
             case 1:
                 createReceiptOrder ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 2:
                 listReceiptOrders ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 3:
                 deleteReceiptOrder ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 0:
                 std::cout << "Izlaz iz menadzera prijemnih naloga." << std::endl;
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
         }
     } while (choice != 0);

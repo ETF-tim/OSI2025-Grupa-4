@@ -11,6 +11,13 @@ PaymentManager::PaymentManager (WorkOrderManager& workOrderManager, BillManager&
     : workOrderManager (workOrderManager), billManager (billManager), serviceReportManager (serviceReportManager) {}
 
 void PaymentManager::createPayment () {
+#ifdef _WIN32
+    system ("cls");  // Windows
+#else
+    system ("clear");  // Linux / macOS
+#endif
+    std::cout << "----- NAPLATA -----" << std::endl;
+
     workOrderManager.listWorkOrders ();
 
     std::string tempWorkOrderIDString;
@@ -52,5 +59,6 @@ void PaymentManager::createPayment () {
     billManager.generateBillTXTFile (tempBillID, tempWorkOrderID);
     serviceReportManager.generateServiceReportTXTFile (tempServiceReportID, tempBillID);
 
-    getchar ();
+    std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+    std::getline (std::cin, choiceString);
 }

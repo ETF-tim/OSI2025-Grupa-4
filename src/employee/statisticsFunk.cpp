@@ -200,6 +200,12 @@ void statFunk::ispisZaradaPoServisnomTehnicaru () {
 void statFunk::mainStat () {
     int choice;
     do {
+#ifdef _WIN32
+        system ("cls");  // Windows
+#else
+        system ("clear");  // Linux / macOS
+#endif
+
         std::cout << "-----STATISTIKE-----" << std::endl;
         std::cout << "1. Ispis zaradjenog novca" << std::endl;
         std::cout << "2. Ispis broja servisiranih uredjaja po tipu uredjaja" << std::endl;
@@ -216,18 +222,28 @@ void statFunk::mainStat () {
         switch (choice) {
             case 1:
                 ispisZaradjenogNovca ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 2:
                 ispisBrojaServisiranihUredjajaPoTipuUredjaja ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 3:
                 ispisUspjesnostiServisnihTehnicara ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 4:
                 ispisZaradaPoServisnomTehnicaru ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 0:
                 std::cout << "Povratak na prethodni meni..." << std::endl;
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
         }
     } while (choice != 0);

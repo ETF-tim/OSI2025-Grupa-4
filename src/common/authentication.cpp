@@ -21,7 +21,7 @@ bool Authentication::login (bool isEmployeeSystem, int& id, std::string& role) {
     int pin;
     std::cout << "Enter PIN: ";
     std::getline (std::cin, pinString);
-    if (!Validate::isValidInteger (pinString) || !Validate::isValidPin (pin)) {
+    if (!Validate::isValidInteger (pinString) || !Validate::isValidPin (pin = std::stoi (pinString))) {
         std::cerr << "Neuspjesna prijava." << std::endl;
         return false;
     }

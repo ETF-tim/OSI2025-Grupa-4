@@ -103,6 +103,12 @@ void GeneralDataManager::editGeneralData () {
 void GeneralDataManager::mainGeneralDataManagement () {
     int choice;
     do {
+#ifdef _WIN32
+        system ("cls");  // Windows
+#else
+        system ("clear");  // Linux / macOS
+#endif
+
         std::cout << "----- UPRAVLJANJE PODACIMA SERVISA -----" << std::endl;
         std::cout << "1. Prikazi podatke servisa" << std::endl;
         std::cout << "2. Uredi podatke servisa" << std::endl;
@@ -117,12 +123,18 @@ void GeneralDataManager::mainGeneralDataManagement () {
         switch (choice) {
             case 1:
                 listGeneralData ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 2:
                 editGeneralData ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 0:
                 std::cout << "Izlaz iz upravljanja podacima servisa." << std::endl;
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
         }
     } while (choice != 0);
