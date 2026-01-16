@@ -177,7 +177,8 @@ void BillManager::generateBillTXTFile (int billId, int workOrderId) {
         bills = CSVData ("./data/bills.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
-        throw std::logic_error ("Neuspjesno kreiranje TXT fajla ");
+        std::cerr << "Neuspjesno kreiranje TXT fajla za racun";
+        return;
     }  //------------------
     int foundBillRow = -1;
     int rowIndex = -1;

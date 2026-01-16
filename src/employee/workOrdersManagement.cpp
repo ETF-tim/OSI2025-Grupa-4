@@ -677,7 +677,8 @@ void WorkOrderManager::generateWorkOrderTXTFile (int workOrderId) {
         parts = CSVData ("./data/parts.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
-        throw std::logic_error ("Neuspjesno kreiranje TXT fajla ");
+        std::cerr << "Neuspjesno kreiranje TXT fajla za radni nalog";
+        return;
     }  //------------------
     int foundWorkOrderRow = -1;
     int rowIndex = -1;
@@ -817,7 +818,8 @@ double WorkOrderManager::getServicePrice (int workOrderId) {
         workOrders = CSVData ("./data/workOrders.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
-        throw std::logic_error ("Neuspjesno dobijanje cijene usluge radnog naloga ");
+        std::cerr << "Neuspjesno dobijanje cijene usluge radnog naloga ";
+        return -1;
     }  //------------------
 
     for (int rowIndex = 1; rowIndex < workOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
@@ -825,7 +827,8 @@ double WorkOrderManager::getServicePrice (int workOrderId) {
             return std::stod (workOrders.get_value (rowIndex, 8));
         }
     }
-    throw std::logic_error ("Radni nalog sa unesenim ID-em nije pronadjen.");
+    std::cerr << "Radni nalog sa unesenim ID-em nije pronadjen.";
+    return -1;
 }
 
 double WorkOrderManager::calculateTotalPrice (int workOrderId) {
@@ -835,7 +838,8 @@ double WorkOrderManager::calculateTotalPrice (int workOrderId) {
         workOrders = CSVData ("./data/workOrders.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
-        throw std::logic_error ("Neuspjesno racunanje ukupne cijene radnog naloga ");
+        std::cerr << "Neuspjesno racunanje ukupne cijene radnog naloga ";
+        return -1;
     }  //------------------
 
     double totalPrice = 0.0;
@@ -851,7 +855,8 @@ double WorkOrderManager::calculateTotalPrice (int workOrderId) {
             return totalPrice;
         }
     }
-    throw std::logic_error ("Radni nalog sa unesenim ID-em nije pronadjen.");
+    std::cerr << "Radni nalog sa unesenim ID-em nije pronadjen.";
+    return -1;
 }
 
 void WorkOrderManager::mainWorkOrdersManagement (int id) {
