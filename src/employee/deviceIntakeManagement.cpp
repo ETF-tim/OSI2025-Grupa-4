@@ -15,6 +15,12 @@ DeviceIntakeManager::DeviceIntakeManager (UserManager& um, DeviceManager& dm, Re
     : userManager (um), deviceManager (dm), receiptOrderManager (rom) {}
 
 void DeviceIntakeManager::intakeDevice () {
+#ifdef _WIN32
+    system ("cls");  // Windows
+#else
+    system ("clear");  // Linux / macOS
+#endif
+
     std::cout << "Prijem uredjaja na servis" << std::endl;
     std::cout << "--------------------------" << std::endl;
 
@@ -40,4 +46,8 @@ void DeviceIntakeManager::intakeDevice () {
     std::cout << "--------------------------" << std::endl;
     std::cout << "Kreiranje naloga za prijem uredjaja na servis:" << std::endl;
     receiptOrderManager.createReceiptOrder ();
+
+    std::string choiceString;
+    std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+    std::getline (std::cin, choiceString);
 }

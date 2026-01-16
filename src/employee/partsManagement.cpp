@@ -415,6 +415,12 @@ double PartManager::getPartPrice (int partId) {
 void PartManager::mainPartsManagement () {
     int choice;
     do {
+#ifdef _WIN32
+        system ("cls");  // Windows
+#else
+        system ("clear");  // Linux / macOS
+#endif
+
         std::cout << "----- UPRAVLJANJE DIJELOVIMA -----" << std::endl;
         std::cout << "1. Kreiraj dio" << std::endl;
         std::cout << "2. Prikazi dijelove" << std::endl;
@@ -431,18 +437,28 @@ void PartManager::mainPartsManagement () {
         switch (choice) {
             case 1:
                 createPart ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 2:
                 listParts ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 3:
                 editPart ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 4:
                 deletePart ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 0:
                 std::cout << "Izlaz iz upravljanja dijelovima." << std::endl;
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
         }
     } while (choice != 0);

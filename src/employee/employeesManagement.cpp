@@ -421,6 +421,12 @@ std::string EmployeeManager::getEmployeeRoleByEmail (std::string& email) {
 void EmployeeManager::mainEmployeesManagement () {
     int choice;
     do {
+#ifdef _WIN32
+        system ("cls");  // Windows
+#else
+        system ("clear");  // Linux / macOS
+#endif
+
         std::cout << "\n========================================\n";
         std::cout << "     SISTEM ZA UPRAVLJANJE ZAPOSLENIMA    \n";
         std::cout << "========================================\n";
@@ -440,18 +446,28 @@ void EmployeeManager::mainEmployeesManagement () {
         switch (choice) {
             case 1:
                 listEmployees ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 2:
                 createEmployee ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 3:
                 editEmployee ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 4:
                 deleteEmployee ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 0:
                 std::cout << "Povratak na izborni meni...\n";
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
         }
     } while (choice != 0);

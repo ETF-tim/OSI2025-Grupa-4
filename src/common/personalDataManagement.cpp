@@ -283,6 +283,12 @@ void PersonalDataManager::editPersonalData (int id, std::string role) {
 void PersonalDataManager::mainPersonalDataManagement (int id, std::string role) {
     int choice;
     do {
+#ifdef _WIN32
+        system ("cls");  // Windows
+#else
+        system ("clear");  // Linux / macOS
+#endif
+
         std::cout << "----- UPRAVLJANJE LICNIM PODACIMA -----" << std::endl;
         std::cout << "1. Prikazi licne podatke" << std::endl;
         std::cout << "2. Izmeni licne podatke" << std::endl;
@@ -297,12 +303,18 @@ void PersonalDataManager::mainPersonalDataManagement (int id, std::string role) 
         switch (choice) {
             case 1:
                 listPersonalData (id, role);
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 2:
                 editPersonalData (id, role);
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 0:
                 std::cout << "Izlaz iz upravljanja licnim podacima." << std::endl;
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
         }
     } while (choice != 0);

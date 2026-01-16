@@ -374,6 +374,12 @@ int UserManager::getUserIdByEmail (std::string& email) {
 void UserManager::mainUserManagement () {
     int choice;
     do {
+#ifdef _WIN32
+        system ("cls");  // Windows
+#else
+        system ("clear");  // Linux / macOS
+#endif
+
         std::cout << "----- UPRAVLJANJE KORISNICIMA -----" << std::endl;
         std::cout << "1. Kreiraj novog korisnika" << std::endl;
         std::cout << "2. Prikazi listu korisnika" << std::endl;
@@ -390,18 +396,28 @@ void UserManager::mainUserManagement () {
         switch (choice) {
             case 1:
                 createUser ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 2:
                 listUsers ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 3:
                 editUser ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 4:
                 deleteUser ();
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
             case 0:
                 std::cout << "Izlaz iz upravljanja korisnicima..." << std::endl;
+                std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+                std::getline (std::cin, choiceString);
                 break;
         }
     } while (choice != 0);

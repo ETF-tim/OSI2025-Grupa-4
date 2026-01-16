@@ -21,6 +21,12 @@ std::string DeviceRepairStatusManager::formatTimestamp (const std::string& times
 }
 
 void DeviceRepairStatusManager::checkRepairStatus (int userID) {
+#ifdef _WIN32
+    system ("cls");  // Windows
+#else
+    system ("clear");  // Linux / macOS
+#endif
+
     // Opening CSV file
     CSVData users;
     try {
@@ -138,4 +144,8 @@ void DeviceRepairStatusManager::checkRepairStatus (int userID) {
         FoundDevice = FoundWorkOrder = false;
         i++;
     }
+
+    std::string choiceString;
+    std::cout << "Pritisnite bilo koje dugme za nastavak..." << std::endl;
+    std::getline (std::cin, choiceString);
 }
