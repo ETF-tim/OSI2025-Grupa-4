@@ -294,7 +294,8 @@ void ReceiptOrderManager::changeReceiptOrderStatus (int receiptOrderId, bool new
         receiptOrders = CSVData ("./data/receiptOrders.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
-        throw std::logic_error ("Neuspjesno mijenjanje statusa prijemnog naloga");
+        std::cerr << "Neuspjesno mijenjanje statusa prijemnog naloga";
+        return;
     }  //------------------
 
     for (int rowIndex = 1; rowIndex < receiptOrders.rows (); rowIndex++) {  // Start from 1 to skip header row
@@ -318,7 +319,8 @@ void ReceiptOrderManager::generateReceiptOrderTXTFile (int receiptOrderId) {
         devices = CSVData ("./data/devices.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
-        throw std::logic_error ("Neuspjesno kreiranje TXT fajla ");
+        std::cerr << "Neuspjesno kreiranje TXT fajla za prijemni nalog";
+        return;
     }  //------------------
 
     int foundReceiptOrderRow = -1;

@@ -190,7 +190,8 @@ void ServiceReportManager::generateServiceReportTXTFile (int serviceReportID, in
         bills = CSVData ("./data/bills.csv");
     } catch (std::exception& e) {
         std::cout << e.what () << std::endl;
-        throw std::logic_error ("Neuspjesno kreiranje TXT fajla ");
+        std::cerr << "Neuspjesno kreiranje TXT fajla za servisni izvjestaj";
+        return;
     }  //------------------
     int foundserviceReportRow = -1;
     int rowIndex = -1;
