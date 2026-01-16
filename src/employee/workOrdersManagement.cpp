@@ -370,6 +370,9 @@ void WorkOrderManager::updateWorkOrders () {
         } while (choice != "d" && choice != "D" && choice != "n" && choice != "N");
         if (choice == "n" || choice == "N") break;  // If input is 'n', exit from the loop
 
+        parts = CSVData ("./data/parts.csv");
+        parts.print_csv_data ();
+
         std::string partIdString;
         int partId;
         do {
